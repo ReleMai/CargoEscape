@@ -56,6 +56,9 @@ class_name ItemData
 ## How much this item is worth (credits/gold)
 @export var value: int = 100
 
+## Weight in kilograms (affects inventory capacity)
+@export var weight: float = 1.0
+
 ## Rarity tier affects spawn rates and visual effects
 ## 0=Common, 1=Uncommon, 2=Rare, 3=Epic, 4=Legendary
 @export_range(0, 4) var rarity: int = 0
@@ -107,6 +110,11 @@ func get_value_density() -> float:
 	return float(value) / float(get_cell_count())
 
 
+## Get item weight
+func get_weight() -> float:
+	return weight
+
+
 ## Get rarity name as string
 func get_rarity_name() -> String:
 	match rarity:
@@ -145,4 +153,6 @@ static func create_item(item_name: String, width: int, height: int, item_value: 
 	item.grid_height = height
 	item.value = item_value
 	item.base_search_time = 1.0 + width * height * 0.5
+	# Set weight based on size (larger items are heavier)
+	item.weight = float(width * height) * 0.5
 	return item
