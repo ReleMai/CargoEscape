@@ -674,6 +674,9 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	item.rarity = def.get("rarity", 0)
 	item.category = def.get("category", ItemCategory.SCRAP)
 	
+	# Set weight from definition
+	item.weight = def.get("weight", 1.0)
+	
 	# Calculate value based on weight (heavier = more valuable for same rarity)
 	var base_value = def.get("base_value", 50)
 	var weight = def.get("weight", 1.0)
@@ -708,6 +711,9 @@ static func _create_module(item_id: String, def: Dictionary) -> ModuleData:
 	module.rarity = def.get("rarity", 1)
 	module.value = def.get("base_value", 500)
 	module.module_tier = def.get("tier", 1)
+	
+	# Set weight from definition
+	module.weight = def.get("weight", 5.0)
 	
 	# Set module type
 	var type_str = def.get("module_type", "FLIGHT")
