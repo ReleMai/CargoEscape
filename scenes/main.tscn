@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dh7xyz789hud" path="res://scenes/ui/hud.tscn" id="5_hud"]
 [ext_resource type="PackedScene" uid="uid://ei9xyz012gameover" path="res://scenes/ui/game_over_screen.tscn" id="6_gameover"]
 [ext_resource type="PackedScene" uid="uid://station123456" path="res://scenes/ui/station.tscn" id="7_station"]
-[ext_resource type="PackedScene" uid="uid://pause_manager_uid" path="res://scenes/ui/pause_manager.tscn" id="8_pause"]
+[ext_resource type="PackedScene" uid="uid://bpaxn8mxmxdmdc" path="res://scenes/ui/pause_manager.tscn" id="8_pause"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
