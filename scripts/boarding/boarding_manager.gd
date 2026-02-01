@@ -218,7 +218,7 @@ func _generate_ship() -> void:
 
 
 ## Convert new GeneratedLayout to legacy LayoutData format
-func _convert_generated_layout(generated) -> RefCounted:
+func _convert_generated_layout(generated: ShipGeneratorClass.GeneratedLayout) -> RefCounted:
 	# Create a legacy LayoutData compatible object
 	var layout = ShipLayoutClass.LayoutData.new()
 	layout.ship_tier = generated.ship_tier
