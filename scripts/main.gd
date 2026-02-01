@@ -681,6 +681,7 @@ func _on_player_hit() -> void:
 
 func _on_player_collision(impact_strength: float = 0.0) -> void:
 	# Camera shake based on impact strength (capped to prevent extreme shaking)
+	# Intensity is in legacy pixel scale (0-15 range)
 	var shake_intensity = minf(6.0 + impact_strength * 2.0, 10.0)
 	shake_camera(shake_intensity)
 
@@ -714,21 +715,22 @@ func _on_enemy_destroyed() -> void:
 
 func _on_asteroid_destroyed(asteroid: Asteroid) -> void:
 	# Trigger screen shake based on asteroid size (explosion effect)
+	# Using legacy pixel-based intensity values for consistency
 	var shake_intensity: float
 	
 	# Adjust intensity based on asteroid size
 	match asteroid.asteroid_size:
 		AsteroidClass.AsteroidSize.SMALL:
-			shake_intensity = 0.2
+			shake_intensity = 3.0   # Small explosion
 		AsteroidClass.AsteroidSize.MEDIUM:
-			shake_intensity = 0.4
+			shake_intensity = 6.0   # Medium explosion
 		AsteroidClass.AsteroidSize.LARGE:
-			shake_intensity = 0.7
+			shake_intensity = 10.5  # Large explosion
 		_:
-			shake_intensity = 0.3  # Fallback for unknown sizes
+			shake_intensity = 4.5   # Fallback for unknown sizes
 	
-	# Trigger shake for explosion (convert to legacy pixel scale)
-	shake_camera(shake_intensity * LEGACY_SHAKE_MAX)
+	# Trigger shake for explosion
+	shake_camera(shake_intensity)
 
 
 func _on_game_over() -> void:
