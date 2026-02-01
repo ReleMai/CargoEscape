@@ -66,7 +66,8 @@ func tick(delta: float) -> Status:
 	if distance <= arrival_distance:
 		# Move to next waypoint
 		current_waypoint_index = (current_waypoint_index + 1) % waypoints.size()
-		return Status.SUCCESS
+		# Keep running - patrol is continuous
+		return Status.RUNNING
 	
 	# Move toward waypoint
 	var direction = (target - agent.global_position).normalized()

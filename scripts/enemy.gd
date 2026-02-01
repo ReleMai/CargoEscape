@@ -115,6 +115,12 @@ signal destroyed
 ## AI behavior type preset
 @export_enum("Basic", "Aggressive", "Defensive") var ai_behavior_preset: String = "Basic"
 
+## Default patrol waypoint offset for X direction
+@export var default_patrol_offset_x: float = -200.0
+
+## Default patrol waypoint offset for Y direction
+@export var default_patrol_offset_y: float = 100.0
+
 
 @export_group("Health")
 ## Maximum health of this enemy (percentage-based like player)
@@ -264,8 +270,8 @@ func _setup_behavior_tree() -> void:
 		# Create default patrol waypoints if none specified
 		absolute_waypoints = [
 			global_position,
-			global_position + Vector2(-200, -100),
-			global_position + Vector2(-200, 100),
+			global_position + Vector2(default_patrol_offset_x, -default_patrol_offset_y),
+			global_position + Vector2(default_patrol_offset_x, default_patrol_offset_y),
 		]
 	else:
 		# Convert relative waypoints to absolute positions

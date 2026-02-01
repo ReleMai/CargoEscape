@@ -245,7 +245,9 @@ func make_aggressive():
 	var tree = get_meta("behavior_tree", null) as BehaviorTree
 	if tree:
 		tree.set_value("is_aggressive", true)
-		# Could rebuild tree or just use blackboard values in behaviors
+		# Note: You would need to create custom behavior nodes that check
+		# the blackboard for "is_aggressive" to make this work.
+		# This is just an example of how to use the blackboard.
 
 
 # TIP 3: Debug behavior trees

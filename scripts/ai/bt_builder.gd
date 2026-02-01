@@ -155,7 +155,9 @@ static func create_aggressive_tree() -> BTNode:
 				]),
 				chase(250.0, 120.0, 1000.0)  # Faster chase, longer pursuit
 			])
-		])
+		]),
+		# Fallback: Move forward slowly (hunting behavior)
+		patrol([Vector2.ZERO, Vector2(-300, 0)], 100.0)
 	])
 
 
