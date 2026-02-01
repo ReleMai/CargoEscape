@@ -44,7 +44,7 @@ const SCRAP_ITEMS = {
 		"weight": 5.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_metal.svg"
+		"icon": "res://assets/sprites/items/cargo/scrap_metal.png"
 	},
 	"scrap_plastics": {
 		"name": "Scrap Plastics",
@@ -54,7 +54,7 @@ const SCRAP_ITEMS = {
 		"weight": 1.5,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_plastics.svg"
+		"icon": "res://assets/sprites/items/cargo/scrap_plastics.png"
 	},
 	"scrap_electronics": {
 		"name": "Scrap Electronics",
@@ -64,7 +64,7 @@ const SCRAP_ITEMS = {
 		"weight": 2.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_electronics.svg"
+		"icon": "res://assets/sprites/items/cargo/scrap_electronics.png"
 	},
 	"scrap_mechanical": {
 		"name": "Scrap Mechanical",
@@ -74,7 +74,7 @@ const SCRAP_ITEMS = {
 		"weight": 8.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_mechanical.svg"
+		"icon": "res://assets/sprites/items/cargo/scrap_mechanical.png"
 	},
 	"wire_bundle": {
 		"name": "Wire Bundle",
@@ -84,7 +84,7 @@ const SCRAP_ITEMS = {
 		"weight": 2.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/wire_bundle.svg"
+		"icon": "res://assets/sprites/items/cargo/wire_bundle.png"
 	},
 	"hull_fragment": {
 		"name": "Hull Fragment",
@@ -94,7 +94,7 @@ const SCRAP_ITEMS = {
 		"weight": 10.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/hull_fragment.svg"
+		"icon": "res://assets/sprites/items/cargo/hull_fragment.png"
 	},
 	"corroded_pipe": {
 		"name": "Corroded Pipe",
@@ -104,7 +104,7 @@ const SCRAP_ITEMS = {
 		"weight": 4.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/corroded_pipe.svg"
+		"icon": "res://assets/sprites/items/cargo/corroded_pipe.png"
 	},
 	"broken_lens": {
 		"name": "Broken Lens",
@@ -114,7 +114,7 @@ const SCRAP_ITEMS = {
 		"weight": 0.5,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/broken_lens.svg"
+		"icon": "res://assets/sprites/items/cargo/broken_lens.png"
 	}
 }
 
@@ -132,7 +132,7 @@ const COMPONENT_ITEMS = {
 		"weight": 3.0,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/copper_wire.svg"
+		"icon": "res://assets/sprites/items/cargo/copper_wire.png"
 	},
 	"data_chip": {
 		"name": "Data Chip",
@@ -142,7 +142,7 @@ const COMPONENT_ITEMS = {
 		"weight": 0.2,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/data_chip.svg"
+		"icon": "res://assets/sprites/items/tech/data_chip.png"
 	},
 	"fuel_cell": {
 		"name": "Fuel Cell",
@@ -152,7 +152,7 @@ const COMPONENT_ITEMS = {
 		"weight": 4.0,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/fuel_cell.svg"
+		"icon": "res://assets/sprites/items/tech/fuel_cell.png"
 	},
 	"plasma_coil": {
 		"name": "Plasma Coil",
@@ -162,7 +162,7 @@ const COMPONENT_ITEMS = {
 		"weight": 6.0,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/plasma_coil.svg"
+		"icon": "res://assets/sprites/items/tech/plasma_coil.png"
 	},
 	"processor_unit": {
 		"name": "Processor Unit",
@@ -172,7 +172,7 @@ const COMPONENT_ITEMS = {
 		"weight": 1.0,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/processor_unit.svg"
+		"icon": "res://assets/sprites/items/tech/processor_unit.png"
 	},
 	"oxygen_canister": {
 		"name": "Oxygen Canister",
@@ -182,7 +182,7 @@ const COMPONENT_ITEMS = {
 		"weight": 3.5,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/oxygen_canister.svg"
+		"icon": "res://assets/sprites/items/medical/oxygen_canister.png"
 	},
 	"med_kit": {
 		"name": "Med Kit",
@@ -192,7 +192,7 @@ const COMPONENT_ITEMS = {
 		"weight": 2.0,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/med_kit.svg"
+		"icon": "res://assets/sprites/items/medical/med_kit.png"
 	},
 	"coolant_tube": {
 		"name": "Coolant Tube",
@@ -202,7 +202,7 @@ const COMPONENT_ITEMS = {
 		"weight": 2.5,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/coolant_tube.svg"
+		"icon": "res://assets/sprites/items/cargo/coolant_tube.png"
 	},
 	"nav_beacon": {
 		"name": "Navigation Beacon",
@@ -212,7 +212,7 @@ const COMPONENT_ITEMS = {
 		"weight": 1.5,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/nav_beacon.svg"
+		"icon": "res://assets/sprites/items/tech/nav_beacon.png"
 	}
 }
 
@@ -230,7 +230,7 @@ const VALUABLE_ITEMS = {
 		"weight": 12.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/gold_bar.svg"
+		"icon": "res://assets/sprites/items/luxury/gold_bar.png"
 	},
 	"rare_alloy": {
 		"name": "Rare Alloy Crystal",
@@ -240,7 +240,7 @@ const VALUABLE_ITEMS = {
 		"weight": 2.5,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/rare_alloy.svg"
+		"icon": "res://assets/sprites/items/luxury/rare_alloy.png"
 	},
 	"weapon_core": {
 		"name": "Weapon Core",
@@ -250,7 +250,7 @@ const VALUABLE_ITEMS = {
 		"weight": 8.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/weapon_core.svg"
+		"icon": "res://assets/sprites/items/weapons/weapon_core.png"
 	},
 	"nav_computer": {
 		"name": "Navigation Computer",
@@ -260,7 +260,7 @@ const VALUABLE_ITEMS = {
 		"weight": 5.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/nav_computer.svg"
+		"icon": "res://assets/sprites/items/tech/nav_computer.png"
 	},
 	"fusion_cell": {
 		"name": "Fusion Cell",
@@ -270,7 +270,7 @@ const VALUABLE_ITEMS = {
 		"weight": 6.0,
 		"rarity": 2,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/fusion_cell.svg"
+		"icon": "res://assets/sprites/items/tech/fusion_cell.png"
 	},
 	"targeting_array": {
 		"name": "Targeting Array",
@@ -280,7 +280,7 @@ const VALUABLE_ITEMS = {
 		"weight": 3.0,
 		"rarity": 2,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/targeting_array.svg"
+		"icon": "res://assets/sprites/items/tech/targeting_array.png"
 	},
 	"cryo_sample": {
 		"name": "Cryo Sample",
@@ -290,7 +290,7 @@ const VALUABLE_ITEMS = {
 		"weight": 4.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/cryo_sample.svg"
+		"icon": "res://assets/sprites/items/medical/cryo_sample.png"
 	},
 	"encrypted_drive": {
 		"name": "Encrypted Drive",
@@ -300,7 +300,7 @@ const VALUABLE_ITEMS = {
 		"weight": 0.3,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/encrypted_drive.svg"
+		"icon": "res://assets/sprites/items/tech/encrypted_drive.png"
 	}
 }
 
@@ -318,7 +318,7 @@ const EPIC_ITEMS = {
 		"weight": 3.0,
 		"rarity": 3,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/alien_artifact.svg"
+		"icon": "res://assets/sprites/items/luxury/alien_artifact.png"
 	},
 	"quantum_cpu": {
 		"name": "Quantum CPU",
@@ -328,7 +328,7 @@ const EPIC_ITEMS = {
 		"weight": 0.5,
 		"rarity": 3,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/quantum_cpu.svg"
+		"icon": "res://assets/sprites/items/tech/quantum_cpu.png"
 	},
 	"stealth_plating": {
 		"name": "Stealth Plating",
@@ -338,7 +338,7 @@ const EPIC_ITEMS = {
 		"weight": 15.0,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/stealth_plating.svg"
+		"icon": "res://assets/sprites/items/faction/stealth_plating.png"
 	},
 	"gravity_dampener": {
 		"name": "Gravity Dampener",
@@ -348,7 +348,7 @@ const EPIC_ITEMS = {
 		"weight": 8.0,
 		"rarity": 3,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/gravity_dampener.svg"
+		"icon": "res://assets/sprites/items/faction/gravity_dampener.png"
 	},
 	"void_shard": {
 		"name": "Void Shard",
@@ -358,7 +358,7 @@ const EPIC_ITEMS = {
 		"weight": 50.0,
 		"rarity": 3,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/void_shard.svg"
+		"icon": "res://assets/sprites/items/luxury/void_shard.png"
 	},
 	"captains_log": {
 		"name": "Captain's Log",
@@ -368,7 +368,7 @@ const EPIC_ITEMS = {
 		"weight": 0.5,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/captains_log.svg"
+		"icon": "res://assets/sprites/items/luxury/captains_log.png"
 	}
 }
 
@@ -386,7 +386,7 @@ const LEGENDARY_ITEMS = {
 		"weight": 5.0,
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/quantum_core.svg"
+		"icon": "res://assets/sprites/items/tech/quantum_core.png"
 	},
 	"dark_matter_vial": {
 		"name": "Dark Matter Vial",
@@ -396,7 +396,7 @@ const LEGENDARY_ITEMS = {
 		"weight": 0.1,
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/dark_matter_vial.svg"
+		"icon": "res://assets/sprites/items/contraband/dark_matter_vial.png"
 	},
 	"ancient_relic": {
 		"name": "Ancient Relic",
@@ -406,7 +406,7 @@ const LEGENDARY_ITEMS = {
 		"weight": 25.0,
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/ancient_relic.svg"
+		"icon": "res://assets/sprites/items/luxury/ancient_relic.png"
 	},
 	"prototype_engine": {
 		"name": "Prototype Engine",
@@ -416,7 +416,7 @@ const LEGENDARY_ITEMS = {
 		"weight": 40.0,
 		"rarity": 4,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/prototype_engine.svg"
+		"icon": "res://assets/sprites/items/faction/prototype_engine.png"
 	},
 	"singularity_gem": {
 		"name": "Singularity Gem",
@@ -426,7 +426,7 @@ const LEGENDARY_ITEMS = {
 		"weight": 1.0,
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/singularity_gem.svg"
+		"icon": "res://assets/sprites/items/luxury/singularity_gem.png"
 	}
 }
 
@@ -444,7 +444,7 @@ const MODULE_ITEMS = {
 		"weight": 15.0,
 		"rarity": 2,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/module_engine_booster.svg",
+		"icon": "res://assets/sprites/items/faction/module_engine_booster.png",
 		"module_type": "FLIGHT",
 		"speed_multiplier": 1.15,
 		"tier": 2
@@ -457,7 +457,7 @@ const MODULE_ITEMS = {
 		"weight": 12.0,
 		"rarity": 1,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/module_thrusters.svg",
+		"icon": "res://assets/sprites/items/faction/module_thrusters.png",
 		"module_type": "FLIGHT",
 		"drag_multiplier": 0.85,
 		"thrust_bonus": 50.0,
@@ -471,7 +471,7 @@ const MODULE_ITEMS = {
 		"weight": 8.0,
 		"rarity": 2,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/module_targeting.svg",
+		"icon": "res://assets/sprites/items/faction/module_targeting.png",
 		"module_type": "COMBAT",
 		"fire_rate_multiplier": 1.20,
 		"tier": 2
@@ -484,7 +484,7 @@ const MODULE_ITEMS = {
 		"weight": 6.0,
 		"rarity": 2,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/module_laser_amp.svg",
+		"icon": "res://assets/sprites/items/faction/module_laser_amp.png",
 		"module_type": "COMBAT",
 		"damage_multiplier": 1.25,
 		"tier": 2
@@ -497,7 +497,7 @@ const MODULE_ITEMS = {
 		"weight": 20.0,
 		"rarity": 3,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/module_shield.svg",
+		"icon": "res://assets/sprites/items/faction/module_shield.png",
 		"module_type": "UTILITY",
 		"health_bonus": 50.0,
 		"damage_reduction": 0.10,
@@ -511,7 +511,7 @@ const MODULE_ITEMS = {
 		"weight": 10.0,
 		"rarity": 1,
 		"category": ItemCategory.MODULE,
-		"icon": "res://assets/sprites/items/module_scanner.svg",
+		"icon": "res://assets/sprites/items/faction/module_scanner.png",
 		"module_type": "UTILITY",
 		"loot_multiplier": 1.15,
 		"tier": 1
