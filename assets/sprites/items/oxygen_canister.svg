@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="o2_grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2B6CB0"/>
+      <stop offset="50%" style="stop-color:#3182CE"/>
+      <stop offset="100%" style="stop-color:#2B6CB0"/>
+    </linearGradient>
+  </defs>
+  <!-- Tank body -->
+  <rect x="20" y="12" width="24" height="44" rx="8" fill="url(#o2_grad)" stroke="#1A365D" stroke-width="2"/>
+  <!-- Top valve assembly -->
+  <rect x="28" y="4" width="8" height="10" fill="#4A5568"/>
+  <circle cx="32" cy="6" r="4" fill="#718096" stroke="#2D3748" stroke-width="1"/>
+  <!-- Pressure gauge -->
+  <circle cx="32" cy="24" r="6" fill="#E2E8F0" stroke="#2D3748" stroke-width="1"/>
+  <line x1="32" y1="24" x2="35" y2="21" stroke="#E53E3E" stroke-width="2"/>
+  <!-- O2 label -->
+  <text x="32" y="40" text-anchor="middle" fill="white" font-size="10" font-weight="bold">O₂</text>
+  <!-- Pressure bands -->
+  <rect x="20" y="32" width="24" height="2" fill="#1A365D"/>
+  <rect x="20" y="46" width="24" height="2" fill="#1A365D"/>
+  <!-- Warning label -->
+  <rect x="24" y="48" width="16" height="6" fill="#ECC94B" rx="1"/>
+  <!-- Handle -->
+  <ellipse cx="32" cy="8" rx="6" ry="2" fill="none" stroke="#718096" stroke-width="2"/>
+</svg>

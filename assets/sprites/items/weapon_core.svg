@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="weapon_glow" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#FC8181"/>
+      <stop offset="70%" style="stop-color:#E53E3E"/>
+      <stop offset="100%" style="stop-color:#9B2C2C"/>
+    </radialGradient>
+  </defs>
+  <!-- Outer casing -->
+  <rect x="12" y="12" width="40" height="40" rx="4" fill="#2D3748" stroke="#E53E3E" stroke-width="2"/>
+  <!-- Energy core -->
+  <circle cx="32" cy="32" r="14" fill="url(#weapon_glow)"/>
+  <circle cx="32" cy="32" r="10" fill="none" stroke="#FED7D7" stroke-width="2" opacity="0.6"/>
+  <!-- Power conduits -->
+  <line x1="32" y1="12" x2="32" y2="18" stroke="#E53E3E" stroke-width="3"/>
+  <line x1="32" y1="46" x2="32" y2="52" stroke="#E53E3E" stroke-width="3"/>
+  <line x1="12" y1="32" x2="18" y2="32" stroke="#E53E3E" stroke-width="3"/>
+  <line x1="46" y1="32" x2="52" y2="32" stroke="#E53E3E" stroke-width="3"/>
+  <!-- Corner mounts -->
+  <circle cx="18" cy="18" r="3" fill="#4A5568"/>
+  <circle cx="46" cy="18" r="3" fill="#4A5568"/>
+  <circle cx="18" cy="46" r="3" fill="#4A5568"/>
+  <circle cx="46" cy="46" r="3" fill="#4A5568"/>
+  <!-- Warning symbol -->
+  <polygon points="32,24 28,30 36,30" fill="#FED7D7"/>
+</svg>

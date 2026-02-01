@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Exit Point - Airlock/Escape Pod Entrance -->
+  <defs>
+    <linearGradient id="airlockFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5A6A7A"/>
+      <stop offset="100%" style="stop-color:#3A4A5A"/>
+    </linearGradient>
+    <linearGradient id="airlockDoor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A5A6A"/>
+      <stop offset="100%" style="stop-color:#2A3A4A"/>
+    </linearGradient>
+    <radialGradient id="greenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4AFF4A;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#2A8A2A;stop-opacity:0"/>
+    </radialGradient>
+    <filter id="glowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Green glow effect -->
+  <ellipse cx="32" cy="32" rx="28" ry="28" fill="url(#greenGlow)" opacity="0.5"/>
+  <!-- Shadow -->
+  <ellipse cx="32" cy="60" rx="18" ry="4" fill="#1A1A1A" opacity="0.3"/>
+  <!-- Airlock frame outer -->
+  <rect x="8" y="6" width="48" height="52" fill="url(#airlockFrame)" rx="6"/>
+  <!-- Warning stripes on frame -->
+  <g fill="#DAA520" opacity="0.6">
+    <rect x="8" y="6" width="6" height="6"/>
+    <rect x="50" y="6" width="6" height="6"/>
+    <rect x="8" y="52" width="6" height="6"/>
+    <rect x="50" y="52" width="6" height="6"/>
+  </g>
+  <!-- Door panel -->
+  <rect x="14" y="12" width="36" height="42" fill="url(#airlockDoor)" rx="4"/>
+  <!-- Door seam (vertical split) -->
+  <line x1="32" y1="14" x2="32" y2="52" stroke="#1A2A3A" stroke-width="2"/>
+  <!-- Door handles/grips -->
+  <rect x="26" y="28" width="4" height="10" fill="#6A7A8A" rx="1"/>
+  <rect x="34" y="28" width="4" height="10" fill="#6A7A8A" rx="1"/>
+  <!-- Green "EXIT" light panel -->
+  <rect x="20" y="16" width="24" height="8" fill="#1A3A2A" rx="2"/>
+  <text x="32" y="22" font-size="6" fill="#4AFF4A" text-anchor="middle" font-family="monospace" font-weight="bold" filter="url(#glowFilter)">EXIT</text>
+  <!-- Status lights -->
+  <g filter="url(#glowFilter)">
+    <circle cx="20" cy="48" r="3" fill="#4AFF4A"/>
+    <circle cx="32" cy="48" r="3" fill="#4AFF4A"/>
+    <circle cx="44" cy="48" r="3" fill="#4AFF4A"/>
+  </g>
+  <!-- Arrows pointing in -->
+  <g fill="#4AFF4A" opacity="0.7" filter="url(#glowFilter)">
+    <polygon points="18,32 24,28 24,36"/>
+    <polygon points="46,32 40,28 40,36"/>
+  </g>
+  <!-- Frame bolts -->
+  <g fill="#4A5A6A">
+    <circle cx="12" cy="10" r="2"/>
+    <circle cx="52" cy="10" r="2"/>
+    <circle cx="12" cy="54" r="2"/>
+    <circle cx="52" cy="54" r="2"/>
+  </g>
+  <!-- Pressure indicator -->
+  <rect x="42" y="36" width="6" height="8" fill="#1A2A3A" rx="1"/>
+  <rect x="43" y="37" width="4" height="4" fill="#2A6A2A"/>
+</svg>

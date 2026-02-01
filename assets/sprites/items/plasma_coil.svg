@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="plasma_grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6B6B"/>
+      <stop offset="50%" style="stop-color:#FF8E53"/>
+      <stop offset="100%" style="stop-color:#FF6B6B"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer casing -->
+  <rect x="18" y="4" width="28" height="56" rx="6" fill="#2D3748" stroke="#4A5568" stroke-width="2"/>
+  <!-- Magnetic coils -->
+  <ellipse cx="32" cy="14" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="3"/>
+  <ellipse cx="32" cy="24" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="3"/>
+  <ellipse cx="32" cy="34" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="3"/>
+  <ellipse cx="32" cy="44" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="3"/>
+  <ellipse cx="32" cy="54" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="3"/>
+  <!-- Plasma core glow -->
+  <rect x="28" y="10" width="8" height="44" fill="url(#plasma_grad)" opacity="0.7" rx="2"/>
+  <!-- Energy indicators -->
+  <circle cx="22" cy="10" r="2" fill="#00FF00"/>
+  <circle cx="42" cy="10" r="2" fill="#00FF00"/>
+  <!-- Warning stripe -->
+  <rect x="18" y="28" width="28" height="4" fill="#FFD700" opacity="0.8"/>
+</svg>

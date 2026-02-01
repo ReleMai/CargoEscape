@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3 uid="uid://dxm7wq8kp5n4"]
+
+[ext_resource type="Script" path="res://scripts/boarding/loot_menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" uid="uid://dmn6xk2rav4qy" path="res://scenes/loot/inventory.tscn" id="2_inventory"]
+
+[node name="LootMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -300.0
+offset_right = 500.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "LOOTING CONTAINER"
+horizontal_alignment = 1
+
+[node name="ContentArea" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="ContainerSide" type="VBoxContainer" parent="Panel/VBox/ContentArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Panel/VBox/ContentArea/ContainerSide"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 16
+text = "CONTAINER ITEMS (Drag to inventory)"
+horizontal_alignment = 1
+
+[node name="ItemsPanel" type="PanelContainer" parent="Panel/VBox/ContentArea/ContainerSide"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Items" type="Control" parent="Panel/VBox/ContentArea/ContainerSide/ItemsPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 400)
+
+[node name="Separator" type="VSeparator" parent="Panel/VBox/ContentArea"]
+layout_mode = 2
+
+[node name="InventorySide" type="VBoxContainer" parent="Panel/VBox/ContentArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Panel/VBox/ContentArea/InventorySide"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 16
+text = "YOUR INVENTORY"
+horizontal_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="Panel/VBox/ContentArea/InventorySide"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 14
+text = "Inventory Value: $0"
+horizontal_alignment = 1
+
+[node name="InventoryGrid" parent="Panel/VBox/ContentArea/InventorySide" instance=ExtResource("2_inventory")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CloseButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "CLOSE [ESC]"

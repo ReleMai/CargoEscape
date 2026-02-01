@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://cm3xyz456enemy"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_enemy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_collision"]
+radius = 25.0
+
+[node name="Enemy" type="Area2D" groups=["enemies"]]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_enemy")
+base_speed = 200.0
+speed_variation = 50.0
+rotation_speed = 1.0
+use_difficulty_scaling = true
+max_health = 50.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Placeholder" type="ColorRect" parent="Sprite2D"]
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = 25.0
+color = Color(0.6, 0.4, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_collision")

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
+  <!-- Ship Tier 5: Black Ops Vessel - Sleek stealth design -->
+  <defs>
+    <linearGradient id="hull5Main" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2A2A3A"/>
+      <stop offset="50%" style="stop-color:#1A1A2A"/>
+      <stop offset="100%" style="stop-color:#0A0A1A"/>
+    </linearGradient>
+    <linearGradient id="hull5Edge" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A4A6A"/>
+      <stop offset="100%" style="stop-color:#2A2A4A"/>
+    </linearGradient>
+    <linearGradient id="techGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6A2ABA;stop-opacity:0"/>
+      <stop offset="50%" style="stop-color:#8A4ADA;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#6A2ABA;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="stealthGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Stealth hull - sharp angular design -->
+  <polygon points="60,225 150,120 480,100 560,180 560,270 480,350 150,330" fill="url(#hull5Main)"/>
+  <!-- Edge highlights -->
+  <polygon points="60,225 150,120 480,100 560,180 560,270 480,350 150,330" fill="none" stroke="url(#hull5Edge)" stroke-width="2"/>
+  <!-- Internal structure lines (barely visible) -->
+  <g stroke="#2A2A4A" stroke-width="1" opacity="0.5">
+    <line x1="150" y1="120" x2="150" y2="330"/>
+    <line x1="250" y1="110" x2="250" y2="340"/>
+    <line x1="350" y1="105" x2="350" y2="345"/>
+    <line x1="450" y1="102" x2="450" y2="348"/>
+  </g>
+  <!-- Tech glow line -->
+  <path d="M100 225 L 520 225" stroke="url(#techGlow)" stroke-width="4" filter="url(#stealthGlow)"/>
+  <!-- Cockpit - minimal, hidden -->
+  <polygon points="500,160 550,180 550,270 500,290 520,225" fill="#1A1A2A"/>
+  <polygon points="510,175 540,190 540,260 510,275" fill="#2A2A4A" opacity="0.6"/>
+  <!-- Hidden engine pods -->
+  <g fill="#1A1A2A">
+    <polygon points="40,200 70,180 80,225 70,270 40,250"/>
+    <rect x="30" y="190" width="15" height="70" rx="3"/>
+  </g>
+  <g fill="#6A4ABA" opacity="0.8" filter="url(#stealthGlow)">
+    <ellipse cx="38" cy="210" rx="4" ry="8"/>
+    <ellipse cx="38" cy="240" rx="4" ry="8"/>
+  </g>
+  <!-- Stealth panels (angular facets) -->
+  <g fill="#1A1A2A" opacity="0.6">
+    <polygon points="180,130 220,125 200,180"/>
+    <polygon points="280,115 340,112 310,160"/>
+    <polygon points="400,108 450,105 425,150"/>
+    <polygon points="180,320 220,325 200,270"/>
+    <polygon points="280,335 340,338 310,290"/>
+    <polygon points="400,342 450,345 425,300"/>
+  </g>
+  <!-- Sensor blisters (nearly invisible) -->
+  <g fill="#2A2A4A" opacity="0.7">
+    <ellipse cx="200" cy="225" rx="15" ry="8"/>
+    <ellipse cx="350" cy="225" rx="15" ry="8"/>
+  </g>
+  <!-- Active camo emitters -->
+  <g fill="#8A4ADA" opacity="0.3" filter="url(#stealthGlow)">
+    <circle cx="200" cy="140" r="4"/>
+    <circle cx="300" cy="130" r="4"/>
+    <circle cx="400" cy="125" r="4"/>
+    <circle cx="200" cy="310" r="4"/>
+    <circle cx="300" cy="320" r="4"/>
+    <circle cx="400" cy="325" r="4"/>
+  </g>
+  <!-- Minimal running lights (purple, stealth) -->
+  <circle cx="65" cy="200" r="3" fill="#6A2ABA" opacity="0.6"/>
+  <circle cx="65" cy="250" r="3" fill="#6A2ABA" opacity="0.6"/>
+  <circle cx="555" cy="225" r="3" fill="#6A2ABA" opacity="0.6"/>
+  <!-- Encrypted ID (barely visible) -->
+  <text x="420" y="370" font-size="10" fill="#3A3A5A" font-family="monospace" opacity="0.4">BO-[REDACTED]</text>
+  <!-- Classification marker -->
+  <g fill="#4A2A6A" opacity="0.5">
+    <rect x="180" y="200" width="60" height="20" rx="2"/>
+    <text x="210" y="215" font-size="10" fill="#8A6ABA" text-anchor="middle" font-family="monospace">ΩMEGA</text>
+  </g>
+</svg>

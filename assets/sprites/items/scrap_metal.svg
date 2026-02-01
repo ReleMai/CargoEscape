@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Scrap Metal - Gray metallic chunks -->
+  <defs>
+    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8a8a8a"/>
+      <stop offset="50%" style="stop-color:#6b6b6b"/>
+      <stop offset="100%" style="stop-color:#4a4a4a"/>
+    </linearGradient>
+  </defs>
+  <!-- Main metal piece -->
+  <polygon points="10,45 20,15 40,10 55,25 50,50 30,55" fill="url(#metalGrad)" stroke="#333" stroke-width="2"/>
+  <!-- Smaller piece -->
+  <polygon points="35,40 45,35 55,45 50,55 40,52" fill="#7a7a7a" stroke="#444" stroke-width="1"/>
+  <!-- Highlight -->
+  <polygon points="22,20 35,16 42,22 30,28" fill="#aaa" opacity="0.5"/>
+  <!-- Rust spots -->
+  <circle cx="25" cy="38" r="3" fill="#8b4513" opacity="0.6"/>
+  <circle cx="42" cy="28" r="2" fill="#8b4513" opacity="0.5"/>
+</svg>

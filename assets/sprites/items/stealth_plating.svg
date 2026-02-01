@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="stealth_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D3748"/>
+      <stop offset="50%" style="stop-color:#1A202C"/>
+      <stop offset="100%" style="stop-color:#0D1117"/>
+    </linearGradient>
+  </defs>
+  <!-- Main plate -->
+  <polygon points="8,16 56,16 52,48 12,48" fill="url(#stealth_grad)" stroke="#4A5568" stroke-width="2"/>
+  <!-- Hexagonal pattern -->
+  <polygon points="20,24 26,20 32,24 32,32 26,36 20,32" fill="none" stroke="#4A5568" stroke-width="1"/>
+  <polygon points="32,24 38,20 44,24 44,32 38,36 32,32" fill="none" stroke="#4A5568" stroke-width="1"/>
+  <polygon points="26,36 32,32 38,36 38,44 32,48 26,44" fill="none" stroke="#4A5568" stroke-width="1"/>
+  <!-- Radar absorbing material texture -->
+  <circle cx="26" cy="28" r="2" fill="#1A202C"/>
+  <circle cx="38" cy="28" r="2" fill="#1A202C"/>
+  <circle cx="32" cy="40" r="2" fill="#1A202C"/>
+  <!-- Edge lighting (barely visible) -->
+  <line x1="10" y1="18" x2="54" y2="18" stroke="#4A5568" stroke-width="1" opacity="0.5"/>
+  <!-- Classification marking -->
+  <rect x="14" y="40" width="12" height="4" fill="#E53E3E" opacity="0.8"/>
+  <text x="20" y="43" text-anchor="middle" fill="white" font-size="4">CLASS</text>
+</svg>

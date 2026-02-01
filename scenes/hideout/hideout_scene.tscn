@@ -1,0 +1,572 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhideoutscene"]
+
+[ext_resource type="Script" path="res://scripts/hideout/hideout_manager.gd" id="1_hideout"]
+
+[node name="HideoutScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hideout")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.08, 1)
+
+[node name="StarField" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Stars" type="CPUParticles2D" parent="StarField"]
+position = Vector2(640, 360)
+amount = 100
+lifetime = 20.0
+speed_scale = 0.3
+emission_shape = 3
+emission_rect_extents = Vector2(700, 400)
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+scale_amount_min = 0.5
+scale_amount_max = 2.0
+color = Color(1, 1, 1, 0.6)
+
+[node name="ShipLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Station" type="Control" parent="ShipLayer"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 180.0
+offset_right = 400.0
+offset_bottom = 380.0
+
+[node name="Body" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 150.0
+color = Color(0.3, 0.35, 0.4, 1)
+
+[node name="Ring" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = -30.0
+offset_top = 50.0
+offset_right = 230.0
+offset_bottom = 100.0
+color = Color(0.4, 0.45, 0.5, 1)
+
+[node name="Antenna" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = -40.0
+offset_right = 110.0
+offset_bottom = 0.0
+color = Color(0.5, 0.55, 0.6, 1)
+
+[node name="Dish" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = -50.0
+offset_right = 130.0
+offset_bottom = -35.0
+color = Color(0.4, 0.5, 0.55, 1)
+
+[node name="Docking" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 100.0
+offset_right = 220.0
+offset_bottom = 130.0
+color = Color(0.25, 0.3, 0.35, 1)
+
+[node name="Light1" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 60.0
+offset_right = 50.0
+offset_bottom = 70.0
+color = Color(0.2, 1, 0.3, 1)
+
+[node name="Light2" type="ColorRect" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 60.0
+offset_right = 160.0
+offset_bottom = 70.0
+color = Color(1, 0.3, 0.2, 1)
+
+[node name="Label" type="Label" parent="ShipLayer/Station"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 160.0
+offset_right = 180.0
+offset_bottom = 180.0
+theme_override_colors/font_color = Color(0.6, 0.7, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "HIDEOUT STATION"
+horizontal_alignment = 1
+
+[node name="PlayerShip" type="Control" parent="ShipLayer"]
+layout_mode = 0
+offset_left = 1400.0
+offset_top = 360.0
+offset_right = 1480.0
+offset_bottom = 400.0
+
+[node name="Body" type="ColorRect" parent="ShipLayer/PlayerShip"]
+layout_mode = 0
+offset_right = 60.0
+offset_bottom = 30.0
+color = Color(0.3, 0.6, 0.9, 1)
+
+[node name="Cockpit" type="ColorRect" parent="ShipLayer/PlayerShip"]
+layout_mode = 0
+offset_left = -15.0
+offset_top = 8.0
+offset_right = 5.0
+offset_bottom = 22.0
+color = Color(0.2, 0.4, 0.7, 1)
+
+[node name="Wing1" type="ColorRect" parent="ShipLayer/PlayerShip"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = -10.0
+offset_right = 50.0
+offset_bottom = 2.0
+color = Color(0.25, 0.5, 0.8, 1)
+
+[node name="Wing2" type="ColorRect" parent="ShipLayer/PlayerShip"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 28.0
+offset_right = 50.0
+offset_bottom = 40.0
+color = Color(0.25, 0.5, 0.8, 1)
+
+[node name="Engine" type="ColorRect" parent="ShipLayer/PlayerShip"]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 8.0
+offset_right = 70.0
+offset_bottom = 22.0
+color = Color(1, 0.6, 0.2, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="SkipHint" type="Label" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -50.0
+offset_right = 100.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 0.5)
+theme_override_font_sizes/font_size = 14
+text = "Press any key to skip"
+horizontal_alignment = 1
+
+[node name="MenuContainer" type="PanelContainer" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 100.0
+offset_right = 200.0
+offset_bottom = 520.0
+grow_horizontal = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/MenuContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Title" type="Label" parent="UI/MenuContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.8, 0.4, 1)
+theme_override_font_sizes/font_size = 28
+text = "THE RUSTY ANCHOR"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="UI/MenuContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.65, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Welcome back, smuggler"
+horizontal_alignment = 1
+
+[node name="Sep1" type="HSeparator" parent="UI/MenuContainer/VBox"]
+layout_mode = 2
+
+[node name="ButtonGrid" type="GridContainer" parent="UI/MenuContainer/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="StashButton" type="Button" parent="UI/MenuContainer/VBox/ButtonGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "📦 STASH
+Your stored loot"
+
+[node name="MarketButton" type="Button" parent="UI/MenuContainer/VBox/ButtonGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "💰 BLACK MARKET
+Sell your cargo"
+
+[node name="UpgradesButton" type="Button" parent="UI/MenuContainer/VBox/ButtonGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "⚙️ UPGRADES
+Improve your ship"
+
+[node name="MapButton" type="Button" parent="UI/MenuContainer/VBox/ButtonGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "🗺️ UNIVERSE MAP
+Plan your route"
+
+[node name="Sep2" type="HSeparator" parent="UI/MenuContainer/VBox"]
+layout_mode = 2
+
+[node name="CreditsLabel" type="Label" parent="UI/MenuContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 20
+text = "Credits: $12,500"
+horizontal_alignment = 1
+
+[node name="Sep3" type="HSeparator" parent="UI/MenuContainer/VBox"]
+layout_mode = 2
+
+[node name="DepartButton" type="Button" parent="UI/MenuContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "🚀 DEPART FOR NEW HEIST"
+
+[node name="ReturnButton" type="Button" parent="UI/MenuContainer/VBox"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Return to Main Menu"
+
+[node name="StashPanel" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -250.0
+offset_right = 350.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/StashPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="UI/StashPanel/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/StashPanel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "📦 STASH MANAGEMENT"
+
+[node name="CloseButton" type="Button" parent="UI/StashPanel/VBox/Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="Sep" type="HSeparator" parent="UI/StashPanel/VBox"]
+layout_mode = 2
+
+[node name="Inventories" type="HBoxContainer" parent="UI/StashPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="ShipColumn" type="VBoxContainer" parent="UI/StashPanel/VBox/Inventories"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ShipLabel" type="Label" parent="UI/StashPanel/VBox/Inventories/ShipColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+text = "SHIP INVENTORY (0/10)"
+horizontal_alignment = 1
+
+[node name="ShipScroll" type="ScrollContainer" parent="UI/StashPanel/VBox/Inventories/ShipColumn"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ShipList" type="VBoxContainer" parent="UI/StashPanel/VBox/Inventories/ShipColumn/ShipScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TransferColumn" type="VBoxContainer" parent="UI/StashPanel/VBox/Inventories"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="UI/StashPanel/VBox/Inventories/TransferColumn"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="ToStash" type="Button" parent="UI/StashPanel/VBox/Inventories/TransferColumn"]
+layout_mode = 2
+text = "→"
+tooltip_text = "Move to Stash"
+
+[node name="ToShip" type="Button" parent="UI/StashPanel/VBox/Inventories/TransferColumn"]
+layout_mode = 2
+text = "←"
+tooltip_text = "Move to Ship"
+
+[node name="StashColumn" type="VBoxContainer" parent="UI/StashPanel/VBox/Inventories"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StashLabel" type="Label" parent="UI/StashPanel/VBox/Inventories/StashColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.7, 0.3, 1)
+text = "STASH (0/20)"
+horizontal_alignment = 1
+
+[node name="StashScroll" type="ScrollContainer" parent="UI/StashPanel/VBox/Inventories/StashColumn"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StashList" type="VBoxContainer" parent="UI/StashPanel/VBox/Inventories/StashColumn/StashScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarketPanel" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -250.0
+offset_right = 350.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/MarketPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="UI/MarketPanel/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/MarketPanel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 20
+text = "💰 BLACK MARKET"
+
+[node name="CloseButton" type="Button" parent="UI/MarketPanel/VBox/Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "X"
+
+[node name="Sep" type="HSeparator" parent="UI/MarketPanel/VBox"]
+layout_mode = 2
+
+[node name="CreditsDisplay" type="Label" parent="UI/MarketPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 18
+text = "Your Credits: $0"
+horizontal_alignment = 1
+
+[node name="Sep2" type="HSeparator" parent="UI/MarketPanel/VBox"]
+layout_mode = 2
+
+[node name="Tabs" type="TabContainer" parent="UI/MarketPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Ship Cargo" type="VBoxContainer" parent="UI/MarketPanel/VBox/Tabs"]
+layout_mode = 2
+
+[node name="ShipInfo" type="Label" parent="UI/MarketPanel/VBox/Tabs/Ship Cargo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "Sell items from your ship (0 items)"
+horizontal_alignment = 1
+
+[node name="ShipScroll" type="ScrollContainer" parent="UI/MarketPanel/VBox/Tabs/Ship Cargo"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ShipMarketList" type="VBoxContainer" parent="UI/MarketPanel/VBox/Tabs/Ship Cargo/ShipScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stash Items" type="VBoxContainer" parent="UI/MarketPanel/VBox/Tabs"]
+visible = false
+layout_mode = 2
+
+[node name="StashInfo" type="Label" parent="UI/MarketPanel/VBox/Tabs/Stash Items"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "Sell items from your stash (0 items)"
+horizontal_alignment = 1
+
+[node name="StashScroll" type="ScrollContainer" parent="UI/MarketPanel/VBox/Tabs/Stash Items"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StashMarketList" type="VBoxContainer" parent="UI/MarketPanel/VBox/Tabs/Stash Items/StashScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SellAllButton" type="Button" parent="UI/MarketPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "SELL ALL VISIBLE ITEMS"
+
+[node name="UpgradesPanel" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -200.0
+offset_right = -20.0
+offset_bottom = 200.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/UpgradesPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/UpgradesPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "SHIP UPGRADES"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="UI/UpgradesPanel/VBox"]
+layout_mode = 2
+
+[node name="Info" type="Label" parent="UI/UpgradesPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+text = "Upgrade your ship systems:
+- Engine Speed
+- Laser Damage
+- Hull Armor
+- Cargo Capacity
+
+Coming soon!"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="UI/UpgradesPanel/VBox"]
+layout_mode = 2
+text = "Close"
+
+[node name="MapPanel" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -200.0
+offset_right = -20.0
+offset_bottom = 200.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/MapPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/MapPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.5, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "UNIVERSE MAP"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="UI/MapPanel/VBox"]
+layout_mode = 2
+
+[node name="Info" type="Label" parent="UI/MapPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+text = "Choose your next target:
+- Cargo Freighters (Easy)
+- Supply Convoys (Medium)  
+- Military Transports (Hard)
+- Capital Ships (Extreme)
+
+Coming soon!"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="UI/MapPanel/VBox"]
+layout_mode = 2
+text = "Close"
+
+[node name="FadeOverlay" type="ColorRect" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Secure Cache - high-tech hidden storage -->
+  <defs>
+    <linearGradient id="cacheMain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3A3A4A"/>
+      <stop offset="100%" style="stop-color:#1A1A2A"/>
+    </linearGradient>
+    <linearGradient id="cacheLid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A4A5A"/>
+      <stop offset="100%" style="stop-color:#2A2A3A"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#6AE6FF;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#2A8AB0;stop-opacity:0"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Ambient glow -->
+  <ellipse cx="32" cy="36" rx="20" ry="12" fill="url(#glowGrad)" opacity="0.3"/>
+  <!-- Shadow -->
+  <ellipse cx="32" cy="56" rx="20" ry="4" fill="#1A1A1A" opacity="0.4"/>
+  <!-- Cache base -->
+  <rect x="12" y="32" width="40" height="24" fill="url(#cacheMain)" rx="2"/>
+  <!-- Lid (angled) -->
+  <polygon points="12,32 16,20 48,20 52,32" fill="url(#cacheLid)"/>
+  <!-- Tech frame lines -->
+  <g stroke="#5A8AAA" stroke-width="1" opacity="0.7">
+    <line x1="16" y1="22" x2="48" y2="22"/>
+    <line x1="14" y1="34" x2="50" y2="34"/>
+    <line x1="14" y1="48" x2="50" y2="48"/>
+    <polyline points="14,34 14,48" fill="none"/>
+    <polyline points="50,34 50,48" fill="none"/>
+  </g>
+  <!-- Biometric scanner -->
+  <rect x="28" y="36" width="8" height="12" fill="#1A1A2A" rx="1"/>
+  <rect x="29" y="37" width="6" height="6" fill="#2A8AB0" opacity="0.6" rx="0.5"/>
+  <!-- Scanning lines -->
+  <g stroke="#4ADFFF" stroke-width="0.5" opacity="0.8" filter="url(#glow)">
+    <line x1="30" y1="38" x2="34" y2="38"/>
+    <line x1="30" y1="40" x2="34" y2="40"/>
+    <line x1="30" y1="42" x2="34" y2="42"/>
+  </g>
+  <!-- Status indicator -->
+  <circle cx="32" cy="50" r="2" fill="#6AE6FF" filter="url(#glow)"/>
+  <!-- Corner tech details -->
+  <g fill="#4A8AAA" opacity="0.6">
+    <rect x="14" y="36" width="4" height="2"/>
+    <rect x="46" y="36" width="4" height="2"/>
+    <rect x="14" y="50" width="4" height="2"/>
+    <rect x="46" y="50" width="4" height="2"/>
+  </g>
+  <!-- Encryption symbol on lid -->
+  <g stroke="#6ADFFF" stroke-width="1" fill="none" opacity="0.5">
+    <circle cx="32" cy="26" r="4"/>
+    <circle cx="32" cy="26" r="2"/>
+    <line x1="28" y1="26" x2="30" y2="26"/>
+    <line x1="34" y1="26" x2="36" y2="26"/>
+    <line x1="32" y1="22" x2="32" y2="24"/>
+    <line x1="32" y1="28" x2="32" y2="30"/>
+  </g>
+  <!-- Side vents -->
+  <g fill="#2A4A5A">
+    <rect x="16" y="38" width="6" height="1"/>
+    <rect x="16" y="40" width="6" height="1"/>
+    <rect x="16" y="42" width="6" height="1"/>
+    <rect x="42" y="38" width="6" height="1"/>
+    <rect x="42" y="40" width="6" height="1"/>
+    <rect x="42" y="42" width="6" height="1"/>
+  </g>
+</svg>

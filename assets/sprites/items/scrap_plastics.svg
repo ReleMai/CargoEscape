@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Scrap Plastics - Colorful plastic pieces -->
+  <!-- Blue piece -->
+  <polygon points="5,35 15,20 30,22 25,45 10,48" fill="#4a90d9" stroke="#2563a8" stroke-width="2" opacity="0.9"/>
+  <!-- Red piece -->
+  <polygon points="28,15 45,12 52,30 40,38 30,32" fill="#d94a4a" stroke="#a82525" stroke-width="2" opacity="0.9"/>
+  <!-- Yellow piece -->
+  <polygon points="35,38 50,35 58,50 45,55 38,48" fill="#d9c74a" stroke="#a89825" stroke-width="2" opacity="0.9"/>
+  <!-- White piece -->
+  <polygon points="18,42 28,40 32,52 22,56" fill="#e8e8e8" stroke="#aaa" stroke-width="1" opacity="0.85"/>
+  <!-- Highlights -->
+  <polygon points="8,33 14,24 22,25 18,35" fill="#6ab0f0" opacity="0.4"/>
+  <polygon points="32,18 42,16 46,25 38,28" fill="#f06a6a" opacity="0.4"/>
+</svg>

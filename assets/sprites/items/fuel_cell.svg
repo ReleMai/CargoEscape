@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Fuel Cell - Energy container -->
+  <defs>
+    <linearGradient id="fuelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00cc66"/>
+      <stop offset="100%" style="stop-color:#006633"/>
+    </linearGradient>
+    <linearGradient id="metalCase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7a7a7a"/>
+      <stop offset="100%" style="stop-color:#4a4a4a"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer casing -->
+  <rect x="12" y="10" width="40" height="44" rx="4" fill="url(#metalCase)" stroke="#333" stroke-width="2"/>
+  <!-- Inner fuel window -->
+  <rect x="18" y="18" width="28" height="28" rx="2" fill="url(#fuelGrad)" stroke="#004d26" stroke-width="2"/>
+  <!-- Energy glow -->
+  <rect x="22" y="22" width="20" height="20" rx="1" fill="#00ff88" opacity="0.3"/>
+  <!-- Level indicators -->
+  <rect x="20" y="38" width="24" height="3" fill="#00ff66" opacity="0.8"/>
+  <rect x="20" y="32" width="24" height="3" fill="#00ff66" opacity="0.6"/>
+  <rect x="20" y="26" width="24" height="3" fill="#00ff66" opacity="0.4"/>
+  <!-- Connectors -->
+  <rect x="26" y="6" width="5" height="6" fill="#888"/>
+  <rect x="33" y="6" width="5" height="6" fill="#888"/>
+  <rect x="26" y="52" width="5" height="6" fill="#888"/>
+  <rect x="33" y="52" width="5" height="6" fill="#888"/>
+  <!-- Warning label -->
+  <polygon points="30,48 32,44 34,48" fill="#ffcc00"/>
+</svg>

@@ -1,0 +1,176 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmodulespanel"]
+
+[ext_resource type="Script" path="res://scripts/ui/modules_panel.gd" id="1_panel"]
+
+[node name="ModulesPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(200, 0)
+offset_right = 200.0
+offset_bottom = 180.0
+script = ExtResource("1_panel")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "SHIP MODULES"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="SlotsContainer" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="FlightSlot" type="PanelContainer" parent="VBox/SlotsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+tooltip_text = "Flight Module Slot"
+
+[node name="HBox" type="HBoxContainer" parent="VBox/SlotsContainer/FlightSlot"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="ColorRect" parent="VBox/SlotsContainer/FlightSlot/HBox"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.3, 0.5, 0.8, 0.5)
+
+[node name="IconLabel" type="Label" parent="VBox/SlotsContainer/FlightSlot/HBox/Icon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -11.5
+offset_right = 6.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "F"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="VBox/SlotsContainer/FlightSlot/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotName" type="Label" parent="VBox/SlotsContainer/FlightSlot/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.7, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "FLIGHT"
+
+[node name="ModuleName" type="Label" parent="VBox/SlotsContainer/FlightSlot/HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Empty"
+
+[node name="CombatSlot" type="PanelContainer" parent="VBox/SlotsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+tooltip_text = "Combat Module Slot"
+
+[node name="HBox" type="HBoxContainer" parent="VBox/SlotsContainer/CombatSlot"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="ColorRect" parent="VBox/SlotsContainer/CombatSlot/HBox"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.8, 0.3, 0.3, 0.5)
+
+[node name="IconLabel" type="Label" parent="VBox/SlotsContainer/CombatSlot/HBox/Icon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -11.5
+offset_right = 6.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "C"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="VBox/SlotsContainer/CombatSlot/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotName" type="Label" parent="VBox/SlotsContainer/CombatSlot/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 12
+text = "COMBAT"
+
+[node name="ModuleName" type="Label" parent="VBox/SlotsContainer/CombatSlot/HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Empty"
+
+[node name="UtilitySlot" type="PanelContainer" parent="VBox/SlotsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+tooltip_text = "Utility Module Slot"
+
+[node name="HBox" type="HBoxContainer" parent="VBox/SlotsContainer/UtilitySlot"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="ColorRect" parent="VBox/SlotsContainer/UtilitySlot/HBox"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.3, 0.7, 0.3, 0.5)
+
+[node name="IconLabel" type="Label" parent="VBox/SlotsContainer/UtilitySlot/HBox/Icon"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -11.5
+offset_right = 6.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "U"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="VBox/SlotsContainer/UtilitySlot/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotName" type="Label" parent="VBox/SlotsContainer/UtilitySlot/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 12
+text = "UTILITY"
+
+[node name="ModuleName" type="Label" parent="VBox/SlotsContainer/UtilitySlot/HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Empty"

@@ -1,0 +1,54 @@
+[gd_scene load_steps=5 format=3 uid="uid://bk8xyz123player"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/player/ship_visual.gd" id="2_ship_visual"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_collision"]
+size = Vector2(60, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(50, 30)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("1_player")
+thrust_power = 500.0
+brake_power = 400.0
+max_speed = 400.0
+space_drag = 0.3
+collision_knockback = 300.0
+collision_speed_penalty = 0.6
+screen_margin = 20.0
+invincibility_duration = 1.5
+fire_rate = 0.2
+collision_damage = 15.0
+
+[node name="ShipVisual" type="Node2D" parent="."]
+script = ExtResource("2_ship_visual")
+ship_type = 0
+ship_scale = 1.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+
+[node name="Placeholder" type="ColorRect" parent="Sprite2D"]
+visible = false
+offset_left = -30.0
+offset_top = -20.0
+offset_right = 30.0
+offset_bottom = 20.0
+color = Color(0.2, 0.8, 1, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_collision")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Muzzle" type="Marker2D" parent="."]
+position = Vector2(35, 0)

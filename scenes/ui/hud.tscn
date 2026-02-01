@@ -1,0 +1,105 @@
+[gd_scene load_steps=3 format=3 uid="uid://dh7xyz789hud"]
+
+[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="1_hud"]
+[ext_resource type="PackedScene" uid="uid://dmodulespanel" path="res://scenes/ui/modules_panel.tscn" id="2_modules"]
+
+[node name="HUD" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_hud")
+
+[node name="DistanceBarContainer" type="MarginContainer" parent="."]
+anchors_preset = 10
+anchor_left = 0.0
+anchor_right = 1.0
+offset_left = 100.0
+offset_top = 20.0
+offset_right = -100.0
+offset_bottom = 70.0
+
+[node name="VBox" type="VBoxContainer" parent="DistanceBarContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="DistanceLabel" type="Label" parent="DistanceBarContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "DISTANCE TO HIDEOUT"
+horizontal_alignment = 1
+
+[node name="DistanceBar" type="ProgressBar" parent="DistanceBarContainer/VBox"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_styles/fill = null
+max_value = 1.0
+step = 0.01
+value = 0.0
+show_percentage = false
+
+[node name="DistanceText" type="Label" parent="DistanceBarContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "0%"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 80.0
+offset_right = -20.0
+offset_bottom = -20.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="HealthContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HealthIcon" type="Label" parent="MarginContainer/VBoxContainer/HealthContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🛡️"
+
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HealthContainer"]
+custom_minimum_size = Vector2(150, 20)
+layout_mode = 2
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/HealthContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "100%"
+
+[node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Score: 000000"
+
+[node name="SpeedLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Speed: 0"
+
+[node name="ModulesPanel" parent="." instance=ExtResource("2_modules")]
+unique_name_in_owner = true
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -200.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0

@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=3 uid="uid://gk4xyz678main"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://fj2xyz345bg" path="res://scenes/background.tscn" id="2_background"]
+[ext_resource type="PackedScene" uid="uid://bk8xyz123player" path="res://scenes/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://cm3xyz456enemy" path="res://scenes/enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://dh7xyz789hud" path="res://scenes/ui/hud.tscn" id="5_hud"]
+[ext_resource type="PackedScene" uid="uid://ei9xyz012gameover" path="res://scenes/ui/game_over_screen.tscn" id="6_gameover"]
+[ext_resource type="PackedScene" uid="uid://station123456" path="res://scenes/ui/station.tscn" id="7_station"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+enemy_scene = ExtResource("4_enemy")
+spawn_interval = 1.5
+min_spawn_interval = 0.5
+difficulty_increase_rate = 0.01
+base_scroll_speed = 200.0
+max_scroll_speed = 400.0
+destination_distance = 60000.0
+
+[node name="Background" parent="." instance=ExtResource("2_background")]
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(150, 300)
+
+[node name="EnemyContainer" type="Node2D" parent="."]
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 1.5
+autostart = false
+
+[node name="HUD" parent="." instance=ExtResource("5_hud")]
+
+[node name="GameOverScreen" parent="." instance=ExtResource("6_gameover")]
+visible = false
+
+[node name="SpaceStation" parent="." instance=ExtResource("7_station")]
+visible = false

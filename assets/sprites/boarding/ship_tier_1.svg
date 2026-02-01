@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <!-- Ship Tier 1: Cargo Shuttle - Small, simple, boxy -->
+  <defs>
+    <linearGradient id="hull1Main" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B7B8B"/>
+      <stop offset="100%" style="stop-color:#4A5A6A"/>
+    </linearGradient>
+    <linearGradient id="hull1Accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8B9BA0"/>
+      <stop offset="100%" style="stop-color:#6B7B8B"/>
+    </linearGradient>
+    <pattern id="hullPlating1" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="#5A6A7A"/>
+      <line x1="0" y1="0" x2="40" y2="0" stroke="#4A5A6A" stroke-width="1"/>
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#4A5A6A" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <!-- Main hull body -->
+  <rect x="40" y="60" width="320" height="180" fill="url(#hull1Main)" rx="10"/>
+  <!-- Hull plating overlay -->
+  <rect x="40" y="60" width="320" height="180" fill="url(#hullPlating1)" opacity="0.3" rx="10"/>
+  <!-- Cockpit window area -->
+  <rect x="300" y="100" width="50" height="60" fill="#2A4A6A" rx="5"/>
+  <rect x="305" y="105" width="40" height="50" fill="#1A3A5A" rx="3"/>
+  <!-- Engine housing (left side) -->
+  <rect x="20" y="100" width="30" height="100" fill="#3A4A5A" rx="5"/>
+  <ellipse cx="25" cy="150" rx="8" ry="30" fill="#2A3A4A"/>
+  <ellipse cx="25" cy="150" rx="4" ry="20" fill="#5A8ABA"/>
+  <!-- Cargo bay doors -->
+  <rect x="80" y="80" width="80" height="140" fill="none" stroke="#3A4A5A" stroke-width="3"/>
+  <line x1="120" y1="80" x2="120" y2="220" stroke="#3A4A5A" stroke-width="2"/>
+  <rect x="180" y="80" width="80" height="140" fill="none" stroke="#3A4A5A" stroke-width="3"/>
+  <line x1="220" y1="80" x2="220" y2="220" stroke="#3A4A5A" stroke-width="2"/>
+  <!-- Running lights -->
+  <circle cx="60" cy="70" r="4" fill="#FF4A4A"/>
+  <circle cx="340" cy="70" r="4" fill="#4AFF4A"/>
+  <circle cx="60" cy="230" r="4" fill="#FF4A4A"/>
+  <circle cx="340" cy="230" r="4" fill="#4AFF4A"/>
+  <!-- Hull number -->
+  <text x="280" y="200" font-size="24" fill="#8A9AAA" font-family="monospace" opacity="0.5">CS-01</text>
+</svg>

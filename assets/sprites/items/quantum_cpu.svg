@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="quantum_glow" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#E9D8FD"/>
+      <stop offset="50%" style="stop-color:#9F7AEA"/>
+      <stop offset="100%" style="stop-color:#553C9A"/>
+    </radialGradient>
+  </defs>
+  <!-- Chip base -->
+  <rect x="18" y="18" width="28" height="28" fill="#1A202C" stroke="#553C9A" stroke-width="2"/>
+  <!-- Quantum core -->
+  <circle cx="32" cy="32" r="10" fill="url(#quantum_glow)"/>
+  <!-- Superposition indicator (multiple states) -->
+  <circle cx="32" cy="32" r="6" fill="none" stroke="#E9D8FD" stroke-width="1" opacity="0.8"/>
+  <circle cx="30" cy="30" r="6" fill="none" stroke="#E9D8FD" stroke-width="1" opacity="0.5"/>
+  <circle cx="34" cy="34" r="6" fill="none" stroke="#E9D8FD" stroke-width="1" opacity="0.5"/>
+  <!-- Pins -->
+  <line x1="22" y1="18" x2="22" y2="10" stroke="#D4A574" stroke-width="2"/>
+  <line x1="32" y1="18" x2="32" y2="10" stroke="#D4A574" stroke-width="2"/>
+  <line x1="42" y1="18" x2="42" y2="10" stroke="#D4A574" stroke-width="2"/>
+  <line x1="22" y1="46" x2="22" y2="54" stroke="#D4A574" stroke-width="2"/>
+  <line x1="32" y1="46" x2="32" y2="54" stroke="#D4A574" stroke-width="2"/>
+  <line x1="42" y1="46" x2="42" y2="54" stroke="#D4A574" stroke-width="2"/>
+  <line x1="18" y1="26" x2="10" y2="26" stroke="#D4A574" stroke-width="2"/>
+  <line x1="18" y1="38" x2="10" y2="38" stroke="#D4A574" stroke-width="2"/>
+  <line x1="46" y1="26" x2="54" y2="26" stroke="#D4A574" stroke-width="2"/>
+  <line x1="46" y1="38" x2="54" y2="38" stroke="#D4A574" stroke-width="2"/>
+  <!-- Qbit indicator -->
+  <text x="32" y="35" text-anchor="middle" fill="white" font-size="8">Q</text>
+</svg>

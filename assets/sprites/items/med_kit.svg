@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="medkit_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F0F0F0"/>
+      <stop offset="100%" style="stop-color:#C0C0C0"/>
+    </linearGradient>
+  </defs>
+  <!-- Case body -->
+  <rect x="8" y="18" width="48" height="32" rx="4" fill="url(#medkit_grad)" stroke="#718096" stroke-width="2"/>
+  <!-- Case lid line -->
+  <line x1="8" y1="26" x2="56" y2="26" stroke="#A0AEC0" stroke-width="2"/>
+  <!-- Red cross -->
+  <rect x="26" y="28" width="12" height="18" fill="#E53E3E"/>
+  <rect x="20" y="34" width="24" height="6" fill="#E53E3E"/>
+  <!-- Handle -->
+  <rect x="26" y="12" width="12" height="8" rx="2" fill="#4A5568"/>
+  <rect x="28" y="14" width="8" height="4" fill="#718096"/>
+  <!-- Latches -->
+  <rect x="14" y="44" width="8" height="4" fill="#D69E2E" rx="1"/>
+  <rect x="42" y="44" width="8" height="4" fill="#D69E2E" rx="1"/>
+  <!-- Highlight -->
+  <line x1="12" y1="20" x2="52" y2="20" stroke="white" stroke-width="1" opacity="0.5"/>
+</svg>

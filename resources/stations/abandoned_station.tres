@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="StationData" load_steps=3 format=3 uid="uid://abandoned_station_01"]
+
+[ext_resource type="Script" path="res://scripts/data/station_data.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://asteroid789scene" path="res://scenes/enemies/asteroid.tscn" id="2_asteroid"]
+
+[resource]
+script = ExtResource("1_script")
+station_id = "abandoned_01"
+station_name = "Derelict Cargo Hub"
+station_type = 0
+description = "An abandoned cargo station drifting through a dense asteroid field. The station's systems failed long ago, but valuable salvage remains in the cargo holds. Watch out for debris and tumbling rocks."
+primary_enemy_scene = ExtResource("2_asteroid")
+secondary_enemy_scene = null
+secondary_spawn_chance = 0.0
+base_spawn_interval = 1.8
+min_spawn_interval = 0.6
+difficulty_ramp_rate = 0.008
+has_asteroid_field = true
+asteroid_density = 1.5
+asteroid_size_weights = Vector3(0.5, 0.35, 0.15)
+background_tint = Color(0.15, 0.12, 0.1, 1)
+star_density = 0.8
+nebula_color = Color(0.3, 0.2, 0.15, 0.3)
+loot_tier = 0
+loot_multiplier = 1.0
+undock_duration = 3.0
+allowed_ship_types = ["shuttle", "cargo", "fighter"]

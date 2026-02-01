@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqw8m3x6np2k4"]
+
+[ext_resource type="Script" path="res://scripts/boarding/exit_point.gd" id="1_exit"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(80, 100)
+
+[node name="ExitPoint" type="Area2D"]
+collision_layer = 12
+collision_mask = 2
+script = ExtResource("1_exit")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Frame" type="ColorRect" parent="Sprite2D"]
+offset_left = -40.0
+offset_top = -50.0
+offset_right = 40.0
+offset_bottom = 50.0
+color = Color(0.2, 0.25, 0.3, 1)
+
+[node name="Door" type="ColorRect" parent="Sprite2D"]
+offset_left = -35.0
+offset_top = -45.0
+offset_right = 35.0
+offset_bottom = 45.0
+color = Color(0.3, 0.8, 0.5, 1)
+
+[node name="Window" type="ColorRect" parent="Sprite2D"]
+offset_left = -20.0
+offset_top = -30.0
+offset_right = 20.0
+offset_bottom = 10.0
+color = Color(0.1, 0.15, 0.2, 1)
+
+[node name="Stars" type="ColorRect" parent="Sprite2D/Window"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 10.0
+offset_bottom = 10.0
+color = Color(1, 1, 1, 0.8)
+
+[node name="Stars2" type="ColorRect" parent="Sprite2D/Window"]
+offset_left = 25.0
+offset_top = 15.0
+offset_right = 28.0
+offset_bottom = 18.0
+color = Color(1, 1, 0.8, 0.6)
+
+[node name="Stars3" type="ColorRect" parent="Sprite2D/Window"]
+offset_left = 15.0
+offset_top = 28.0
+offset_right = 19.0
+offset_bottom = 32.0
+color = Color(0.8, 1, 1, 0.7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -50.0
+offset_top = 55.0
+offset_right = 50.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(0.3, 1, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 16
+text = "AIRLOCK"
+horizontal_alignment = 1
+
+[node name="Particles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 8
+lifetime = 2.0

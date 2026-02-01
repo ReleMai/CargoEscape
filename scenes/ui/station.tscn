@@ -1,0 +1,155 @@
+[gd_scene load_steps=2 format=3 uid="uid://station123456"]
+
+[ext_resource type="Script" path="res://scripts/station.gd" id="1_station"]
+
+[node name="SpaceStation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_station")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="StationPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -280.0
+offset_right = 350.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="StationPanel"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Header" type="HBoxContainer" parent="StationPanel/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="StationIcon" type="Label" parent="StationPanel/VBox/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "🏴‍☠️"
+horizontal_alignment = 1
+
+[node name="StationName" type="Label" parent="StationPanel/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 28
+text = "THE HIDEOUT"
+horizontal_alignment = 1
+
+[node name="Separator1" type="HSeparator" parent="StationPanel/VBox"]
+layout_mode = 2
+
+[node name="Stats" type="RichTextLabel" parent="StationPanel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 120)
+bbcode_enabled = true
+text = "[center][b]ESCAPE SUCCESSFUL[/b][/center]
+
+Loading stats..."
+
+[node name="Separator2" type="HSeparator" parent="StationPanel/VBox"]
+layout_mode = 2
+
+[node name="ValueContainer" type="HBoxContainer" parent="StationPanel/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="CargoIcon" type="Label" parent="StationPanel/VBox/ValueContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "📦"
+
+[node name="ValueLabel" type="Label" parent="StationPanel/VBox/ValueContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 22
+text = "Cargo Value: $0"
+
+[node name="CreditsContainer" type="HBoxContainer" parent="StationPanel/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="CreditsIcon" type="Label" parent="StationPanel/VBox/CreditsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "💰"
+
+[node name="CreditsLabel" type="Label" parent="StationPanel/VBox/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 22
+text = "Credits: $0"
+
+[node name="Separator3" type="HSeparator" parent="StationPanel/VBox"]
+layout_mode = 2
+
+[node name="MenuLabel" type="Label" parent="StationPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 16
+text = "BLACK MARKET"
+horizontal_alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="StationPanel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 15
+
+[node name="SellButton" type="Button" parent="StationPanel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(130, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "💰 Sell Cargo"
+
+[node name="UpgradesButton" type="Button" parent="StationPanel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(130, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "🔧 Upgrades"
+disabled = true
+
+[node name="ShopButton" type="Button" parent="StationPanel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(130, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "🛒 Shop"
+disabled = true
+
+[node name="Separator4" type="HSeparator" parent="StationPanel/VBox"]
+layout_mode = 2
+
+[node name="ActionContainer" type="HBoxContainer" parent="StationPanel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="MissionButton" type="Button" parent="StationPanel/VBox/ActionContainer"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "🚀 New Heist"
+
+[node name="EndButton" type="Button" parent="StationPanel/VBox/ActionContainer"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "🏠 Return to Menu"

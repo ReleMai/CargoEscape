@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 420">
+  <!-- Ship Tier 4: Military Frigate - Angular, aggressive -->
+  <defs>
+    <linearGradient id="hull4Main" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A5A4A"/>
+      <stop offset="100%" style="stop-color:#2A3A2A"/>
+    </linearGradient>
+    <linearGradient id="hull4Armor" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5A6A5A"/>
+      <stop offset="100%" style="stop-color:#3A4A3A"/>
+    </linearGradient>
+    <pattern id="camoPattern" patternUnits="userSpaceOnUse" width="60" height="60">
+      <rect width="60" height="60" fill="#3A4A3A"/>
+      <polygon points="0,0 30,0 15,30" fill="#4A5A4A" opacity="0.5"/>
+      <polygon points="30,30 60,30 45,60" fill="#2A3A2A" opacity="0.5"/>
+      <polygon points="60,0 60,30 30,15" fill="#5A6A5A" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <!-- Main hull - angular military design -->
+  <polygon points="80,210 120,100 450,80 520,160 520,260 450,340 120,320" fill="url(#hull4Main)"/>
+  <!-- Camo overlay -->
+  <polygon points="80,210 120,100 450,80 520,160 520,260 450,340 120,320" fill="url(#camoPattern)" opacity="0.4"/>
+  <!-- Armor plating lines -->
+  <g stroke="#2A3A2A" stroke-width="2" fill="none">
+    <line x1="120" y1="100" x2="120" y2="320"/>
+    <line x1="200" y1="90" x2="200" y2="330"/>
+    <line x1="300" y1="85" x2="300" y2="335"/>
+    <line x1="400" y1="82" x2="400" y2="338"/>
+  </g>
+  <!-- Bridge section (angular) -->
+  <polygon points="450,140 520,160 520,260 450,280 470,210" fill="url(#hull4Armor)"/>
+  <polygon points="470,160 510,175 510,245 470,260" fill="#1A3A2A"/>
+  <polygon points="475,170 500,180 500,240 475,250" fill="#2A5A3A" opacity="0.6"/>
+  <!-- Engine array -->
+  <rect x="40" y="150" width="50" height="120" fill="#2A3A2A" rx="5"/>
+  <g fill="#1A2A1A">
+    <rect x="30" y="160" width="20" height="30" rx="3"/>
+    <rect x="30" y="200" width="20" height="30" rx="3"/>
+    <rect x="30" y="240" width="20" height="30" rx="3"/>
+  </g>
+  <g fill="#4A8A6A">
+    <ellipse cx="35" cy="175" rx="6" ry="10"/>
+    <ellipse cx="35" cy="215" rx="6" ry="10"/>
+    <ellipse cx="35" cy="255" rx="6" ry="10"/>
+  </g>
+  <!-- Weapon hardpoints -->
+  <g fill="#3A4A3A">
+    <rect x="140" y="90" width="20" height="15" rx="2"/>
+    <rect x="240" y="82" width="25" height="18" rx="2"/>
+    <rect x="360" y="78" width="25" height="18" rx="2"/>
+    <rect x="140" y="315" width="20" height="15" rx="2"/>
+    <rect x="240" y="320" width="25" height="18" rx="2"/>
+    <rect x="360" y="324" width="25" height="18" rx="2"/>
+  </g>
+  <!-- Sensor array -->
+  <rect x="480" y="190" width="30" height="40" fill="#2A4A3A"/>
+  <circle cx="495" cy="210" r="12" fill="#1A3A2A" stroke="#4A6A5A" stroke-width="2"/>
+  <circle cx="495" cy="210" r="6" fill="#6ABA8A"/>
+  <!-- Military markings -->
+  <g fill="#5A6A5A" opacity="0.6">
+    <polygon points="160,180 200,160 200,200 160,220"/>
+    <text x="300" y="220" font-size="28" font-family="monospace" font-weight="bold">117</text>
+  </g>
+  <!-- Running lights (subdued) -->
+  <circle cx="85" cy="150" r="4" fill="#AA4A4A"/>
+  <circle cx="85" cy="270" r="4" fill="#AA4A4A"/>
+  <circle cx="515" cy="160" r="4" fill="#4AAA6A"/>
+  <circle cx="515" cy="260" r="4" fill="#4AAA6A"/>
+  <!-- Hull designation -->
+  <text x="350" y="300" font-size="12" fill="#6A7A6A" font-family="monospace">MF-VANGUARD-117</text>
+</svg>

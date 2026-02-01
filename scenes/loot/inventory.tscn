@@ -1,0 +1,55 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmn6xk2rav4qy"]
+
+[ext_resource type="Script" path="res://scripts/loot/inventory.gd" id="1_inventory"]
+
+[node name="Inventory" type="Control"]
+custom_minimum_size = Vector2(536, 408)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 536.0
+offset_bottom = 408.0
+script = ExtResource("1_inventory")
+
+[node name="GridContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemsLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HoverPreview" type="ColorRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 2
+color = Color(0.2, 0.7, 0.3, 0.5)
+
+[node name="TotalValueLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -30.0
+offset_right = 100.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.4, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Total: $0"
+horizontal_alignment = 1

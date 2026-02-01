@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="fusion_core" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#FFF"/>
+      <stop offset="30%" style="stop-color:#63B3ED"/>
+      <stop offset="70%" style="stop-color:#3182CE"/>
+      <stop offset="100%" style="stop-color:#1A365D"/>
+    </radialGradient>
+  </defs>
+  <!-- Outer shell -->
+  <rect x="20" y="8" width="24" height="48" rx="6" fill="#2D3748" stroke="#4A5568" stroke-width="2"/>
+  <!-- Fusion core -->
+  <ellipse cx="32" cy="32" rx="8" ry="16" fill="url(#fusion_core)"/>
+  <!-- Magnetic rings -->
+  <ellipse cx="32" cy="20" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="2"/>
+  <ellipse cx="32" cy="32" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="2"/>
+  <ellipse cx="32" cy="44" rx="10" ry="4" fill="none" stroke="#D4A574" stroke-width="2"/>
+  <!-- Energy glow -->
+  <circle cx="32" cy="32" r="4" fill="white" opacity="0.8"/>
+  <!-- Top/bottom caps -->
+  <rect x="24" y="6" width="16" height="4" fill="#718096" rx="1"/>
+  <rect x="24" y="54" width="16" height="4" fill="#718096" rx="1"/>
+  <!-- Warning indicators -->
+  <circle cx="18" cy="32" r="3" fill="#ECC94B"/>
+  <circle cx="46" cy="32" r="3" fill="#48BB78"/>
+</svg>

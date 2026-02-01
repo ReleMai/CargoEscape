@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Data Chip - Memory module -->
+  <defs>
+    <linearGradient id="chipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a2a2a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+  </defs>
+  <!-- Main chip body -->
+  <rect x="12" y="18" width="40" height="28" rx="2" fill="url(#chipGrad)" stroke="#444" stroke-width="2"/>
+  <!-- Gold contact pins bottom -->
+  <rect x="16" y="46" width="4" height="8" fill="#d4af37"/>
+  <rect x="24" y="46" width="4" height="8" fill="#d4af37"/>
+  <rect x="32" y="46" width="4" height="8" fill="#d4af37"/>
+  <rect x="40" y="46" width="4" height="8" fill="#d4af37"/>
+  <!-- Gold contact pins top -->
+  <rect x="16" y="10" width="4" height="8" fill="#d4af37"/>
+  <rect x="24" y="10" width="4" height="8" fill="#d4af37"/>
+  <rect x="32" y="10" width="4" height="8" fill="#d4af37"/>
+  <rect x="40" y="10" width="4" height="8" fill="#d4af37"/>
+  <!-- Chip label -->
+  <rect x="18" y="24" width="28" height="16" fill="#333" stroke="#555" stroke-width="1"/>
+  <!-- Data indicator LED -->
+  <circle cx="50" cy="22" r="2" fill="#00ff00"/>
+  <!-- Label text area -->
+  <rect x="20" y="26" width="24" height="3" fill="#666"/>
+  <rect x="20" y="32" width="18" height="2" fill="#555"/>
+</svg>
