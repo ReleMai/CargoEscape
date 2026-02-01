@@ -1,0 +1,97 @@
+[gd_scene load_steps=2 format=3 uid="uid://dh2u3f8r0kqbj"]
+
+[ext_resource type="Script" path="res://scripts/ui/accessibility_menu.gd" id="1_x3p8r"]
+
+[node name="AccessibilityMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x3p8r")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Accessibility Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ColorblindContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ColorblindLabel" type="Label" parent="Panel/VBoxContainer/ColorblindContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Colorblind Mode:"
+vertical_alignment = 1
+
+[node name="ColorblindOption" type="OptionButton" parent="Panel/VBoxContainer/ColorblindContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HighContrastCheck" type="CheckBox" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "High Contrast UI"
+
+[node name="TextSizeContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextSizeLabel" type="Label" parent="Panel/VBoxContainer/TextSizeContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Text Size:"
+vertical_alignment = 1
+
+[node name="TextSizeOption" type="OptionButton" parent="Panel/VBoxContainer/TextSizeContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReduceMotionCheck" type="CheckBox" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduce Motion (Disable Animations)"
+
+[node name="ScreenReaderCheck" type="CheckBox" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Screen Reader Mode"
+
+[node name="ControlsButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Customize Controls"
+
+[node name="Spacer" type="Control" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Back to Main Menu"

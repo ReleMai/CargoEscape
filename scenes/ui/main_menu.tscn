@@ -154,6 +154,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "START GAME"
 
+[node name="AccessibilityButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "ACCESSIBILITY"
+
 [node name="QuitButton" type="Button" parent="MenuContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24

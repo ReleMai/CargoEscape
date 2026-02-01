@@ -15,6 +15,7 @@ class_name MainMenu
 # ==============================================================================
 
 @onready var start_button: Button = $MenuContainer/StartButton
+@onready var accessibility_button: Button = $MenuContainer/AccessibilityButton
 @onready var quit_button: Button = $MenuContainer/QuitButton
 @onready var title_label: Label = $TitleContainer/TitleLabel
 @onready var subtitle_label: Label = $TitleContainer/SubtitleLabel
@@ -37,6 +38,8 @@ func _setup_ui() -> void:
 		subtitle_label.modulate.a = 0
 	if start_button:
 		start_button.modulate.a = 0
+	if accessibility_button:
+		accessibility_button.modulate.a = 0
 	if quit_button:
 		quit_button.modulate.a = 0
 
@@ -44,6 +47,8 @@ func _setup_ui() -> void:
 func _connect_signals() -> void:
 	if start_button:
 		start_button.pressed.connect(_on_start_pressed)
+	if accessibility_button:
+		accessibility_button.pressed.connect(_on_accessibility_pressed)
 	if quit_button:
 		quit_button.pressed.connect(_on_quit_pressed)
 
@@ -62,6 +67,8 @@ func _play_entrance_animation() -> void:
 	# Fade in buttons with slight delay
 	if start_button:
 		tween.tween_property(start_button, "modulate:a", 1.0, 0.3)
+	if accessibility_button:
+		tween.tween_property(accessibility_button, "modulate:a", 1.0, 0.3)
 	if quit_button:
 		tween.tween_property(quit_button, "modulate:a", 1.0, 0.3)
 	
@@ -94,6 +101,14 @@ func _on_quit_pressed() -> void:
 	get_tree().quit()
 
 
+func _on_accessibility_pressed() -> void:
+	# Load and show accessibility menu
+	var accessibility_scene = preload("res://scenes/ui/accessibility_menu.tscn")
+	var accessibility_menu = accessibility_scene.instantiate()
+	add_child(accessibility_menu)
+	AccessibilityManager.announce_for_screen_reader("Opening accessibility settings")
+
+
 # ==============================================================================
 # INPUT
 # ==============================================================================
@@ -101,5 +116,5 @@ func _on_quit_pressed() -> void:
 func _input(event: InputEvent) -> void:
 	# Allow pressing Enter/Space to start if no button is focused
 	if event.is_action_pressed("ui_accept"):
-		if not (start_button and start_button.has_focus()) and not (quit_button and quit_button.has_focus()):
+		if not (start_button and start_button.has_focus()) and not (accessibility_button and accessibility_button.has_focus()) and not (quit_button and quit_button.has_focus()):
 			_on_start_pressed()
