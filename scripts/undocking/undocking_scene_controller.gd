@@ -217,4 +217,4 @@ func _transition_to_escape() -> void:
 
 
 func _go_to_escape() -> void:
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	LoadingScreen.start_transition("res://scenes/main.tscn")

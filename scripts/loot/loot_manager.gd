@@ -146,7 +146,7 @@ func _transition_to_escape() -> void:
 	if GameManager:
 		GameManager.add_score(inventory.get_total_value() if inventory else 0)
 	
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	LoadingScreen.start_transition("res://scenes/main.tscn")
 
 
 # ==============================================================================

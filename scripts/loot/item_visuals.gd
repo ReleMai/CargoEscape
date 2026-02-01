@@ -102,6 +102,9 @@ static func create_item_visual(item_data: ItemData, cell_size: int = 64) -> Cont
 		# Create procedural icon
 		_add_procedural_icon(container, category, width, height, base_color, rarity_color, item_data.rarity)
 	
+	# Add rarity-specific visual effects
+	_add_rarity_effects(container, width, height, rarity_color, item_data.rarity)
+	
 	return container
 
 
@@ -118,10 +121,6 @@ static func _add_sprite_icon(container: Control, sprite: Texture2D, width: float
 	tex_rect.size = Vector2(width - padding * 2, height - padding * 2)
 	tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	container.add_child(tex_rect)
-	
-	# Add rarity glow for rare+ items
-	if rarity >= 2:
-		_add_rarity_glow(container, width, height, rarity_color, rarity)
 
 
 ## Create procedural icon based on category
@@ -147,21 +146,186 @@ static func _add_procedural_icon(container: Control, category: ItemCategory, wid
 			_draw_artifact_icon(container, padding, icon_w, icon_h, base_color)
 		ItemCategory.CARGO:
 			_draw_cargo_icon(container, padding, icon_w, icon_h, base_color)
+
+
+## Add rarity-specific visual effects based on tier
+## Common (0): No effect
+## Uncommon (1): Subtle glow
+## Rare (2): Blue shimmer effect
+## Epic (3): Purple pulsing glow
+## Legendary (4): Gold particle effect with shine
+static func _add_rarity_effects(container: Control, width: float, height: float, color: Color, rarity: int) -> void:
+	match rarity:
+		0:
+			# Common - no effect
+			pass
+		1:
+			# Uncommon - subtle glow shader
+			_add_uncommon_glow(container, width, height, color)
+		2:
+			# Rare - blue shimmer shader
+			_add_rare_shimmer(container, width, height, color)
+		3:
+			# Epic - purple pulsing glow with AnimationPlayer
+			_add_epic_pulse(container, width, height, color)
+		4:
+			# Legendary - gold particle effect with shine
+			_add_legendary_particles(container, width, height, color)
+
+
+## Subtle glow effect for uncommon items
+static func _add_uncommon_glow(container: Control, width: float, height: float, color: Color) -> void:
+	var glow_rect = ColorRect.new()
+	glow_rect.size = Vector2(width, height)
+	glow_rect.color = Color.WHITE
+	glow_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
-	# Add rarity glow for rare+ items
-	if rarity >= 2:
-		_add_rarity_glow(container, width, height, rarity_color, rarity)
+	# Load and apply glow shader
+	var shader = load("res://resources/shaders/glow_effect.gdshader")
+	if shader:
+		var material = ShaderMaterial.new()
+		material.shader = shader
+		material.set_shader_parameter("glow_color", color)
+		material.set_shader_parameter("glow_intensity", 0.4)
+		material.set_shader_parameter("glow_speed", 1.0)
+		glow_rect.material = material
+	
+	container.add_child(glow_rect)
+	container.move_child(glow_rect, 0)  # Move to back
 
 
-## Subtle rarity glow effect
-static func _add_rarity_glow(container: Control, width: float, height: float, color: Color, rarity: int) -> void:
-	var glow_alpha = 0.15 + (rarity - 2) * 0.1  # 0.15 for rare, 0.25 for epic, 0.35 for legendary
-	var glow = ColorRect.new()
-	glow.size = Vector2(width, height)
-	glow.color = Color(color.r, color.g, color.b, glow_alpha)
-	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	container.add_child(glow)
-	container.move_child(glow, 0)  # Move to back
+## Blue shimmer effect for rare items
+static func _add_rare_shimmer(container: Control, width: float, height: float, color: Color) -> void:
+	var shimmer_rect = ColorRect.new()
+	shimmer_rect.size = Vector2(width, height)
+	shimmer_rect.color = Color.WHITE
+	shimmer_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Load and apply shimmer shader
+	var shader = load("res://resources/shaders/shimmer_effect.gdshader")
+	if shader:
+		var material = ShaderMaterial.new()
+		material.shader = shader
+		material.set_shader_parameter("shimmer_color", color)
+		material.set_shader_parameter("shimmer_speed", 2.0)
+		material.set_shader_parameter("shimmer_width", 0.3)
+		shimmer_rect.material = material
+	
+	container.add_child(shimmer_rect)
+	container.move_child(shimmer_rect, 0)  # Move to back
+
+
+## Purple pulsing glow for epic items
+static func _add_epic_pulse(container: Control, width: float, height: float, color: Color) -> void:
+	var pulse_rect = ColorRect.new()
+	pulse_rect.size = Vector2(width, height)
+	pulse_rect.color = color
+	pulse_rect.color.a = 0.3
+	pulse_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pulse_rect.name = "PulseRect"  # Give it a specific name for animation
+	container.add_child(pulse_rect)
+	container.move_child(pulse_rect, 0)  # Move to back
+	
+	# Create AnimationPlayer for pulsing
+	var anim_player = AnimationPlayer.new()
+	container.add_child(anim_player)
+	
+	# Create pulse animation
+	var animation = Animation.new()
+	var track_idx = animation.add_track(Animation.TYPE_VALUE)
+	animation.track_set_path(track_idx, NodePath("PulseRect:color:a"))
+	animation.length = 2.0
+	animation.loop_mode = Animation.LOOP_LINEAR
+	
+	# Keyframes for pulsing effect
+	animation.track_insert_key(track_idx, 0.0, 0.2)
+	animation.track_insert_key(track_idx, 1.0, 0.5)
+	animation.track_insert_key(track_idx, 2.0, 0.2)
+	
+	# Add animation to player
+	var anim_library = AnimationLibrary.new()
+	anim_library.add_animation("pulse", animation)
+	anim_player.add_animation_library("", anim_library)
+	anim_player.play("pulse")
+
+
+## Gold particle effect for legendary items
+static func _add_legendary_particles(container: Control, width: float, height: float, color: Color) -> void:
+	# Add background glow
+	var glow_rect = ColorRect.new()
+	glow_rect.size = Vector2(width, height)
+	glow_rect.color = color
+	glow_rect.color.a = 0.4
+	glow_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow_rect.name = "GlowRect"  # Give it a specific name for animation
+	container.add_child(glow_rect)
+	container.move_child(glow_rect, 0)
+	
+	# Create particle system
+	var particles = GPUParticles2D.new()
+	particles.position = Vector2(width / 2, height / 2)
+	particles.amount = 20
+	particles.lifetime = 2.0
+	particles.preprocess = 0.5
+	particles.explosiveness = 0.0
+	particles.randomness = 0.5
+	particles.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Create process material
+	var particle_mat = ParticleProcessMaterial.new()
+	particle_mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	particle_mat.emission_box_extents = Vector3(width * 0.4, height * 0.4, 0)
+	particle_mat.direction = Vector3(0, -1, 0)
+	particle_mat.spread = 30.0
+	particle_mat.initial_velocity_min = 10.0
+	particle_mat.initial_velocity_max = 20.0
+	particle_mat.gravity = Vector3(0, -15, 0)
+	particle_mat.scale_min = 2.0
+	particle_mat.scale_max = 4.0
+	particle_mat.color = color
+	particles.process_material = particle_mat
+	
+	# Create simple square texture for particles
+	var particle_texture = _create_particle_texture()
+	particles.texture = particle_texture
+	
+	container.add_child(particles)
+	particles.emitting = true
+	
+	# Add AnimationPlayer for shine effect
+	var anim_player = AnimationPlayer.new()
+	container.add_child(anim_player)
+	
+	var animation = Animation.new()
+	var track_idx = animation.add_track(Animation.TYPE_VALUE)
+	animation.track_set_path(track_idx, NodePath("GlowRect:color:a"))
+	animation.length = 3.0
+	animation.loop_mode = Animation.LOOP_LINEAR
+	
+	animation.track_insert_key(track_idx, 0.0, 0.3)
+	animation.track_insert_key(track_idx, 1.5, 0.6)
+	animation.track_insert_key(track_idx, 3.0, 0.3)
+	
+	var anim_library = AnimationLibrary.new()
+	anim_library.add_animation("shine", animation)
+	anim_player.add_animation_library("", anim_library)
+	anim_player.play("shine")
+
+
+## Create a simple particle texture
+static func _create_particle_texture() -> Texture2D:
+	# Create a small gradient texture for particles
+	var img = Image.create(8, 8, false, Image.FORMAT_RGBA8)
+	
+	for y in range(8):
+		for x in range(8):
+			var dx = x - 4.0
+			var dy = y - 4.0
+			var dist = sqrt(dx * dx + dy * dy)
+			var alpha = clamp(1.0 - dist / 4.0, 0.0, 1.0)
+			img.set_pixel(x, y, Color(1, 1, 1, alpha))
+	
+	return ImageTexture.create_from_image(img)
 
 
 # ==============================================================================
