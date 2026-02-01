@@ -1,0 +1,292 @@
+name: PR Status Organizer
+
+on:
+  # Run every 10 minutes
+  schedule:
+    - cron: '*/10 * * * *'
+  # Run when PRs are opened, edited, or synchronized
+  pull_request:
+    types: [opened, edited, synchronize, ready_for_review]
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Organize PRs by status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            console.log('📋 Organizing Pull Requests by status...\n');
+            
+            // Get all open PRs
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100
+            });
+            
+            console.log(`Found ${prs.length} open PRs\n`);
+            
+            // Categorize PRs
+            const categories = {
+              readyToMerge: [],
+              wipActive: [],
+              wipStale: [],
+              needsReview: [],
+              hasConflicts: []
+            };
+            
+            // Labels to use
+            const LABELS = {
+              READY: 'ready-to-merge',
+              WIP: 'work-in-progress',
+              STALE: 'stale',
+              NEEDS_REVIEW: 'needs-review',
+              CONFLICTS: 'has-conflicts',
+              COPILOT: 'copilot-authored'
+            };
+            
+            // Ensure labels exist
+            const labelColors = {
+              [LABELS.READY]: '0e8a16',      // Green
+              [LABELS.WIP]: 'fbca04',         // Yellow
+              [LABELS.STALE]: 'cccccc',       // Gray
+              [LABELS.NEEDS_REVIEW]: '0052cc', // Blue
+              [LABELS.CONFLICTS]: 'd93f0b',   // Red
+              [LABELS.COPILOT]: '7057ff'      // Purple
+            };
+            
+            for (const [label, color] of Object.entries(labelColors)) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label });
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner, repo, name: label, color,
+                    description: `Auto-managed by PR organizer`
+                  });
+                  console.log(`Created label: ${label}`);
+                }
+              }
+            }
+            
+            // Process each PR
+            for (const pr of prs) {
+              const isWIP = pr.title.includes('[WIP]') || pr.draft;
+              const isCopilot = pr.user.login === 'copilot' || pr.title.toLowerCase().includes('copilot');
+              
+              // Check PR details
+              const prDetails = await github.rest.pulls.get({
+                owner, repo, pull_number: pr.number
+              });
+              
+              const hasConflicts = prDetails.data.mergeable === false;
+              const mergeable = prDetails.data.mergeable === true;
+              const updatedAt = new Date(pr.updated_at);
+              const hoursSinceUpdate = (Date.now() - updatedAt) / (1000 * 60 * 60);
+              const isStale = hoursSinceUpdate > 24; // Stale if no updates in 24 hours
+              
+              // Get current labels
+              const currentLabels = pr.labels.map(l => l.name);
+              const labelsToAdd = [];
+              const labelsToRemove = [];
+              
+              // Determine category and labels
+              if (hasConflicts) {
+                categories.hasConflicts.push(pr);
+                if (!currentLabels.includes(LABELS.CONFLICTS)) labelsToAdd.push(LABELS.CONFLICTS);
+                labelsToRemove.push(LABELS.READY);
+              } else {
+                if (currentLabels.includes(LABELS.CONFLICTS)) labelsToRemove.push(LABELS.CONFLICTS);
+              }
+              
+              if (isWIP) {
+                if (isStale) {
+                  categories.wipStale.push(pr);
+                  if (!currentLabels.includes(LABELS.STALE)) labelsToAdd.push(LABELS.STALE);
+                } else {
+                  categories.wipActive.push(pr);
+                  if (currentLabels.includes(LABELS.STALE)) labelsToRemove.push(LABELS.STALE);
+                }
+                if (!currentLabels.includes(LABELS.WIP)) labelsToAdd.push(LABELS.WIP);
+                labelsToRemove.push(LABELS.READY);
+              } else if (mergeable && !hasConflicts) {
+                categories.readyToMerge.push(pr);
+                if (!currentLabels.includes(LABELS.READY)) labelsToAdd.push(LABELS.READY);
+                labelsToRemove.push(LABELS.WIP, LABELS.STALE);
+              } else {
+                categories.needsReview.push(pr);
+                if (!currentLabels.includes(LABELS.NEEDS_REVIEW)) labelsToAdd.push(LABELS.NEEDS_REVIEW);
+              }
+              
+              if (isCopilot && !currentLabels.includes(LABELS.COPILOT)) {
+                labelsToAdd.push(LABELS.COPILOT);
+              }
+              
+              // Apply label changes
+              for (const label of labelsToAdd) {
+                try {
+                  await github.rest.issues.addLabels({
+                    owner, repo, issue_number: pr.number, labels: [label]
+                  });
+                } catch (e) { /* ignore */ }
+              }
+              
+              for (const label of labelsToRemove) {
+                if (currentLabels.includes(label)) {
+                  try {
+                    await github.rest.issues.removeLabel({
+                      owner, repo, issue_number: pr.number, name: label
+                    });
+                  } catch (e) { /* ignore */ }
+                }
+              }
+            }
+            
+            // Generate summary
+            console.log('\n' + '='.repeat(50));
+            console.log('📊 PR STATUS SUMMARY');
+            console.log('='.repeat(50) + '\n');
+            
+            console.log(`✅ Ready to Merge: ${categories.readyToMerge.length}`);
+            for (const pr of categories.readyToMerge) {
+              console.log(`   #${pr.number}: ${pr.title.substring(0, 60)}`);
+            }
+            
+            console.log(`\n🔨 WIP (Active): ${categories.wipActive.length}`);
+            for (const pr of categories.wipActive.slice(0, 10)) {
+              console.log(`   #${pr.number}: ${pr.title.substring(0, 60)}`);
+            }
+            if (categories.wipActive.length > 10) {
+              console.log(`   ... and ${categories.wipActive.length - 10} more`);
+            }
+            
+            console.log(`\n😴 WIP (Stale >24h): ${categories.wipStale.length}`);
+            for (const pr of categories.wipStale) {
+              console.log(`   #${pr.number}: ${pr.title.substring(0, 60)}`);
+            }
+            
+            console.log(`\n⚠️ Has Conflicts: ${categories.hasConflicts.length}`);
+            for (const pr of categories.hasConflicts) {
+              console.log(`   #${pr.number}: ${pr.title.substring(0, 60)}`);
+            }
+            
+            // Update or create tracking issue
+            const TRACKING_ISSUE_TITLE = '📋 PR Status Dashboard';
+            
+            // Find existing tracking issue
+            const issues = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'dashboard'
+            });
+            
+            let trackingIssue = issues.data.find(i => i.title === TRACKING_ISSUE_TITLE);
+            
+            const dashboardBody = `
+            # PR Status Dashboard
+            _Auto-updated every 10 minutes_
+            
+            **Last Updated:** ${new Date().toISOString()}
+            
+            ---
+            
+            ## ✅ Ready to Merge (${categories.readyToMerge.length})
+            ${categories.readyToMerge.length > 0 
+              ? categories.readyToMerge.map(pr => `- [ ] #${pr.number} - ${pr.title.replace('[WIP] ', '')}`).join('\n')
+              : '_No PRs ready to merge_'}
+            
+            ---
+            
+            ## 🔨 Work in Progress (${categories.wipActive.length})
+            ${categories.wipActive.length > 0 
+              ? categories.wipActive.map(pr => `- #${pr.number} - ${pr.title.replace('[WIP] ', '')}`).join('\n')
+              : '_No active WIP PRs_'}
+            
+            ---
+            
+            ## 😴 Stale PRs (${categories.wipStale.length})
+            > PRs with no updates in 24+ hours
+            
+            ${categories.wipStale.length > 0 
+              ? categories.wipStale.map(pr => `- #${pr.number} - ${pr.title.replace('[WIP] ', '')} (${Math.round((Date.now() - new Date(pr.updated_at)) / (1000 * 60 * 60))}h ago)`).join('\n')
+              : '_No stale PRs_'}
+            
+            ---
+            
+            ## ⚠️ Has Conflicts (${categories.hasConflicts.length})
+            ${categories.hasConflicts.length > 0 
+              ? categories.hasConflicts.map(pr => `- #${pr.number} - ${pr.title.replace('[WIP] ', '')}`).join('\n')
+              : '_No PRs with conflicts_'}
+            
+            ---
+            
+            ## 📈 Statistics
+            | Status | Count |
+            |--------|-------|
+            | Total Open PRs | ${prs.length} |
+            | Ready to Merge | ${categories.readyToMerge.length} |
+            | Active WIP | ${categories.wipActive.length} |
+            | Stale | ${categories.wipStale.length} |
+            | Has Conflicts | ${categories.hasConflicts.length} |
+            
+            ---
+            
+            ### Quick Links
+            - [View Ready to Merge PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Aready-to-merge)
+            - [View WIP PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Awork-in-progress)
+            - [View Stale PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Astale)
+            - [View Copilot PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Acopilot-authored)
+            `;
+            
+            // Ensure dashboard label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: 'dashboard' });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner, repo, name: 'dashboard', color: '1d76db',
+                  description: 'Dashboard tracking issue'
+                });
+              }
+            }
+            
+            if (trackingIssue) {
+              // Update existing
+              await github.rest.issues.update({
+                owner, repo, issue_number: trackingIssue.number,
+                body: dashboardBody
+              });
+              console.log(`\n📋 Updated dashboard: #${trackingIssue.number}`);
+            } else {
+              // Create new
+              const newIssue = await github.rest.issues.create({
+                owner, repo,
+                title: TRACKING_ISSUE_TITLE,
+                body: dashboardBody,
+                labels: ['dashboard']
+              });
+              console.log(`\n📋 Created dashboard: #${newIssue.data.number}`);
+            }
+            
+            // Write job summary
+            await core.summary
+              .addHeading('PR Status Summary')
+              .addTable([
+                [{data: 'Status', header: true}, {data: 'Count', header: true}],
+                ['✅ Ready to Merge', String(categories.readyToMerge.length)],
+                ['🔨 WIP (Active)', String(categories.wipActive.length)],
+                ['😴 Stale', String(categories.wipStale.length)],
+                ['⚠️ Conflicts', String(categories.hasConflicts.length)]
+              ])
+              .write();
