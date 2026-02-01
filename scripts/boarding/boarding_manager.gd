@@ -42,6 +42,7 @@ const ShipInteriorRendererClass = preload("res://scripts/boarding/ship_interior_
 const LootMenuClass = preload("res://scripts/boarding/loot_menu.gd")
 const GameOverScene = preload("res://scenes/boarding/game_over.tscn")
 const ShipContainerScene = preload("res://scenes/boarding/ship_container.tscn")
+const EscapeCutsceneScene = preload("res://scenes/boarding/escape_cutscene.tscn")
 
 # ==============================================================================
 # EXPORTS
@@ -99,6 +100,10 @@ var current_layout: ShipLayoutClass.LayoutData = null
 
 # Player's collected items
 var collected_items: Array[ItemData] = []
+
+# Container tracking
+var containers_searched: int = 0
+var total_containers: int = 0
 
 # Camera and centering
 var layout_offset: Vector2 = Vector2.ZERO  # Offset to center the ship
@@ -356,7 +361,12 @@ func _spawn_container(pos: Vector2, container_type: int) -> void:
 	if container.has_method("generate_loot"):
 		container.generate_loot(current_ship_tier, container_type, current_faction_code)
 	
+	# Connect to container signals to track search completion
+	if container.has_signal("container_opened"):
+		container.container_opened.connect(_on_container_searched)
+	
 	containers_parent.add_child(container)
+	total_containers += 1
 
 
 func _start_boarding() -> void:
@@ -364,6 +374,8 @@ func _start_boarding() -> void:
 	time_remaining = total_time
 	total_loot_value = 0
 	collected_items.clear()
+	containers_searched = 0
+	total_containers = 0
 	
 	# Position player at start (if not using procedural layout)
 	if player and not use_procedural_layout:
@@ -517,6 +529,11 @@ func _on_container_emptied() -> void:
 		AchievementManager.on_container_searched()
 
 
+func _on_container_searched() -> void:
+	# Container was opened/searched
+	containers_searched += 1
+
+
 func _on_item_transferred(item_data: ItemData) -> void:
 	# Item was successfully dragged to inventory
 	collected_items.append(item_data)
@@ -644,14 +661,8 @@ func _show_results(success: bool) -> void:
 			var station_data = preload("res://resources/stations/abandoned_station.tres")
 			gm.set_escape_station(station_data)
 		
-		# Play escape success effects
-		_play_escape_success_effects()
-		
-		# Wait a moment then transition
-		await get_tree().create_timer(0.3).timeout
-		
-		# Seamless fade transition to undocking
-		await _fade_to_undocking()
+		# Start escape cutscene instead of direct transition
+		_start_escape_cutscene()
 	else:
 		# Big shake when time runs out
 		shake_camera(15.0)
@@ -661,6 +672,24 @@ func _show_results(success: bool) -> void:
 		var game_over = GameOverScene.instantiate()
 		add_child(game_over)
 		game_over.set_lost_loot(total_loot_value)
+
+
+## Start the escape cutscene with current game data
+func _start_escape_cutscene() -> void:
+	var cutscene = EscapeCutsceneScene.instantiate()
+	add_child(cutscene)
+	
+	# Prepare cutscene data
+	var cutscene_data = {
+		"time_remaining": time_remaining,
+		"total_loot_value": total_loot_value,
+		"collected_items": collected_items,
+		"containers_searched": containers_searched,
+		"total_containers": total_containers
+	}
+	
+	# Start the cutscene
+	cutscene.start_cutscene(cutscene_data)
 
 
 func _play_escape_success_effects() -> void:
