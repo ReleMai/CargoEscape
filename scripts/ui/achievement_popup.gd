@@ -73,7 +73,8 @@ func show_achievement(achievement: AchievementData) -> void:
 				stylebox.border_color = tier_color
 				background.add_theme_stylebox_override("panel", stylebox)
 	
-	# Animate in
+	# Wait for next frame to ensure size is calculated, then animate in
+	await get_tree().process_frame
 	_animate_show()
 
 

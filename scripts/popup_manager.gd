@@ -53,16 +53,16 @@ func show_achievement_popup(achievement: AchievementData) -> void:
 	# Create popup instance
 	var popup = AchievementPopupScene.instantiate()
 	
-	# Position at top-right
+	# Add to scene first so it calculates its size
+	add_child(popup)
+	
+	# Position at top-right (will be animated from off-screen)
 	popup.position = Vector2(
-		get_viewport().get_visible_rect().size.x - popup.size.x - 20,
+		get_viewport().get_visible_rect().size.x,
 		20
 	)
 	
-	# Add to scene
-	add_child(popup)
-	
-	# Show achievement
+	# Show achievement (this triggers the slide-in animation)
 	popup.show_achievement(achievement)
 	
 	print("[PopupManager] Showing achievement: %s" % achievement.title)
