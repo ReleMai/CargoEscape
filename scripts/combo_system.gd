@@ -177,9 +177,12 @@ func _check_threshold() -> void:
 			# Award bonus credits if applicable
 			if threshold in COMBO_BONUS_CREDITS:
 				var bonus = COMBO_BONUS_CREDITS[threshold]
-				if GameManager:
-					GameManager.add_credits(bonus)
-				print("[ComboSystem] Threshold bonus! +%d credits" % bonus)
+				if has_node("/root/GameManager"):
+					var game_manager = get_node("/root/GameManager")
+					game_manager.add_credits(bonus)
+					print("[ComboSystem] Threshold bonus! +%d credits" % bonus)
+				else:
+					push_warning("[ComboSystem] GameManager not found, cannot award credits")
 
 # ==============================================================================
 # GETTERS

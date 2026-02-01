@@ -504,8 +504,8 @@ func _on_item_revealed(item_data: ItemData) -> void:
 
 ## Called when search is cancelled (player moved away)
 func _on_search_cancelled() -> void:
-	# Don't break combo on search cancellation - only on damage or timer expiry
-	# This allows player to move between containers without losing combo
+	# Intentionally does not break combo - allows player to move between containers
+	# Combo only breaks on damage or timer expiry to encourage fast looting
 	pass
 
 
