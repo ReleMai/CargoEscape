@@ -834,7 +834,7 @@ func _update_minimap_containers() -> void:
 
 
 ## Get the minimap renderer node
-func _get_minimap_renderer():
+func _get_minimap_renderer() -> Node:
 	if not minimap:
 		return null
 	

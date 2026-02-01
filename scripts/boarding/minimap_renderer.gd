@@ -51,8 +51,8 @@ class_name MinimapRenderer
 @export_range(8, 64) var circle_segments: int = 16
 ## Border width for containers
 @export var container_border_width: float = 1.0
-## Exit point pulse animation frequency
-@export var exit_pulse_frequency: float = 0.005
+## Exit point pulse animation speed (radians per millisecond)
+@export var exit_pulse_speed: float = 0.005
 ## Exit point pulse animation amplitude
 @export var exit_pulse_amplitude: float = 0.2
 
@@ -220,7 +220,9 @@ func _draw_exit() -> void:
 	var size = 6.0
 	
 	# Draw as a pulsing diamond/square
-	var pulse = 1.0 + sin(Time.get_ticks_msec() * exit_pulse_frequency) * exit_pulse_amplitude
+	# Convert to seconds for consistent animation regardless of frame rate
+	var time_seconds = Time.get_ticks_msec() * 0.001
+	var pulse = 1.0 + sin(time_seconds * exit_pulse_speed * 1000.0) * exit_pulse_amplitude
 	var current_size = size * pulse
 	
 	# Draw diamond shape
