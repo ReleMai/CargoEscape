@@ -112,11 +112,20 @@ var screen_center: Vector2 = Vector2.ZERO
 # Entrance animation
 var entrance_active: bool = false
 var entrance_timer: float = 0.0
-var entrance_duration: float = 1.2
+var entrance_duration: float = 2.0  # Extended for more cinematic feel
+var entrance_phase: int = 0  # Track animation phases
 
 # Camera effects
 var camera_shake: float = 0.0
 var camera_shake_decay: float = 8.0
+
+# Animation constants
+const ENTRANCE_INITIAL_ZOOM: float = 0.4
+const ENTRANCE_FINAL_ZOOM: float = 0.8
+const EXIT_ZOOM: float = 0.5
+
+# Animation layer tracking for cleanup
+var active_animation_layers: Array[CanvasLayer] = []
 
 # ==============================================================================
 # LIFECYCLE
@@ -139,6 +148,11 @@ func _ready() -> void:
 	
 	# Start tutorial if needed
 	_check_and_start_tutorial()
+
+
+func _exit_tree() -> void:
+	# Clean up any active animation layers to prevent memory leaks
+	_cleanup_animation_layers()
 
 
 func _process(delta: float) -> void:
@@ -480,6 +494,9 @@ func _interact_with_container(container: Node2D) -> void:
 			container.set_state(ShipContainer.ContainerState.OPEN)
 			container.emit_signal("container_opened")
 			
+			# Add subtle container open effect
+			_create_container_open_effect(container)
+			
 			# Mark as searched on minimap
 			_mark_container_searched(container)
 		
@@ -601,7 +618,21 @@ func _toggle_inventory() -> void:
 
 func _on_player_reached_exit(_exit: Node2D) -> void:
 	if escape_prompt:
+		# Animate the prompt appearing
 		escape_prompt.visible = true
+		escape_prompt.modulate.a = 0.0
+		escape_prompt.scale = Vector2(0.8, 0.8)
+		
+		var tween = create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(escape_prompt, "modulate:a", 1.0, 0.2)
+		tween.tween_property(escape_prompt, "scale", Vector2.ONE, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		
+		# Subtle pulse to draw attention
+		tween.set_parallel(false)
+		var pulse_tween = create_tween().set_loops()
+		pulse_tween.tween_property(escape_prompt, "scale", Vector2(1.05, 1.05), 0.5).set_ease(Tween.EASE_IN_OUT)
+		pulse_tween.tween_property(escape_prompt, "scale", Vector2.ONE, 0.5).set_ease(Tween.EASE_IN_OUT)
 
 
 func _trigger_escape() -> void:
@@ -628,6 +659,12 @@ func _end_boarding(success: bool) -> void:
 	
 	if player:
 		player.set_movement_enabled(false)
+	
+	# Hide escape prompt with animation if visible
+	if escape_prompt and escape_prompt.visible:
+		var hide_tween = create_tween()
+		hide_tween.tween_property(escape_prompt, "modulate:a", 0.0, 0.2)
+		hide_tween.tween_callback(func(): escape_prompt.visible = false)
 	
 	emit_signal("boarding_ended", success, total_loot_value)
 	
@@ -707,45 +744,97 @@ func _start_escape_cutscene() -> void:
 
 
 func _play_escape_success_effects() -> void:
-	# Camera shake as you board
+	# Initial camera shake as you reach exit
 	shake_camera(8.0)
 	
-	# Flash of green/success
-	var flash_layer = CanvasLayer.new()
-	flash_layer.layer = 90
-	add_child(flash_layer)
+	# Bright flash of success with cyan/green
+	var flash_layer = _create_tracked_canvas_layer("SuccessFlash", 90)
 	
 	var flash = ColorRect.new()
-	flash.color = Color(0.2, 0.8, 0.4, 0.4)
+	flash.color = Color(0.2, 0.9, 0.6, 0.5)  # Brighter success flash
 	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	flash_layer.add_child(flash)
 	
 	var tween = create_tween()
-	tween.tween_property(flash, "color:a", 0.0, 0.4)
-	tween.tween_callback(flash_layer.queue_free)
+	tween.tween_property(flash, "color:a", 0.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_callback(func(): _remove_tracked_layer(flash_layer))
+	
+	# Success text overlay
+	_create_escape_text_overlay()
+	
+	# Player fade out effect
+	if player:
+		var player_tween = create_tween()
+		player_tween.set_delay(0.2)
+		player_tween.tween_property(player, "modulate:a", 0.0, 0.3)
+
+
+## Creates "ESCAPE SUCCESSFUL" text overlay
+func _create_escape_text_overlay() -> void:
+	var text_layer = _create_tracked_canvas_layer("EscapeText", 91)
+	
+	var label = Label.new()
+	label.name = "EscapeLabel"
+	label.text = "ESCAPE SUCCESSFUL"
+	label.add_theme_font_size_override("font_size", 32)
+	label.add_theme_color_override("font_color", Color(0.2, 0.9, 0.6, 0.0))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.set_anchors_preset(Control.PRESET_CENTER)
+	text_layer.add_child(label)
+	
+	# Fade in quickly
+	var tween = create_tween()
+	tween.tween_property(label, "theme_override_colors/font_color:a", 1.0, 0.2)
+	# Stay visible briefly
+	tween.tween_interval(0.2)
+	# Fade out
+	tween.tween_property(label, "theme_override_colors/font_color:a", 0.0, 0.3)
+	tween.tween_callback(func(): _remove_tracked_layer(text_layer))
+
+
+## Creates a subtle visual effect when a container is opened
+func _create_container_open_effect(container: Node2D) -> void:
+	if not container:
+		return
+	
+	# Small camera shake
+	shake_camera(1.5)
+	
+	# Brief highlight flash on container
+	var original_modulate = container.modulate
+	container.modulate = Color(1.2, 1.2, 1.0, 1.0)  # Slight yellow tint
+	
+	var tween = create_tween()
+	tween.tween_property(container, "modulate", original_modulate, 0.2).set_ease(Tween.EASE_OUT)
 
 
 ## Creates a smooth fade transition to the undocking scene
 func _fade_to_undocking() -> void:
 	# Create a fade overlay
-	var fade_layer = CanvasLayer.new()
-	fade_layer.layer = 100  # On top of everything
-	add_child(fade_layer)
+	var fade_layer = _create_tracked_canvas_layer("UndockingFade", 100)
 	
 	var fade_rect = ColorRect.new()
 	fade_rect.color = Color(0.008, 0.012, 0.025, 0.0)  # Match undocking background
 	fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fade_layer.add_child(fade_rect)
 	
-	# Quick zoom out effect on camera
+	# Add scan line effect during transition
+	_create_exit_scan_effect(fade_layer)
+	
+	# Smooth zoom out effect on camera for cinematic transition
 	if camera:
 		var zoom_tween = create_tween()
-		zoom_tween.tween_property(camera, "zoom", Vector2(0.7, 0.7), 0.5).set_ease(Tween.EASE_IN)
+		zoom_tween.tween_property(camera, "zoom", Vector2(EXIT_ZOOM, EXIT_ZOOM), 0.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	
-	# Create fade tween
+	# Fade UI elements out
+	_fade_ui_elements()
+	
+	# Create fade tween with improved easing
 	var tween = create_tween()
-	tween.tween_property(fade_rect, "color:a", 1.0, 0.5).set_ease(Tween.EASE_IN)
+	tween.set_delay(0.1)  # Small delay for better flow
+	tween.tween_property(fade_rect, "color:a", 1.0, 0.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	
 	await tween.finished
 	
@@ -756,6 +845,34 @@ func _fade_to_undocking() -> void:
 	
 	# Change scene - the undocking scene will fade in
 	LoadingScreen.start_transition("res://scenes/undocking/undocking_scene.tscn")
+
+
+## Creates exit scan line effect
+func _create_exit_scan_effect(parent_layer: CanvasLayer) -> void:
+	var scan_line = ColorRect.new()
+	scan_line.name = "ExitScan"
+	scan_line.color = Color(0.2, 0.9, 0.6, 0.5)  # Green scan matching success
+	scan_line.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	scan_line.size.y = 4
+	scan_line.position.y = 0
+	parent_layer.add_child(scan_line)
+	
+	var screen_height = get_viewport_rect().size.y
+	
+	# Sweep down faster for snappy exit
+	var tween = create_tween()
+	tween.tween_property(scan_line, "position:y", screen_height, 0.5).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(scan_line, "color:a", 0.0, 0.5).set_ease(Tween.EASE_IN)
+
+
+## Fades out UI elements smoothly
+func _fade_ui_elements() -> void:
+	var ui_elements = [timer_label, loot_value_label, ship_tier_label, inventory_panel]
+	
+	for element in ui_elements:
+		if element and element.visible:
+			var tween = create_tween()
+			tween.tween_property(element, "modulate:a", 0.0, 0.3)
 
 
 # ==============================================================================
@@ -785,6 +902,31 @@ func shake_camera(intensity: float = 5.0) -> void:
 	camera_shake = intensity
 
 
+## Clean up all active animation layers
+func _cleanup_animation_layers() -> void:
+	for layer in active_animation_layers:
+		if is_instance_valid(layer):
+			layer.queue_free()
+	active_animation_layers.clear()
+
+
+## Helper to create and track a canvas layer for animations
+func _create_tracked_canvas_layer(layer_name: String, layer_level: int) -> CanvasLayer:
+	var canvas_layer = CanvasLayer.new()
+	canvas_layer.name = layer_name
+	canvas_layer.layer = layer_level
+	add_child(canvas_layer)
+	active_animation_layers.append(canvas_layer)
+	return canvas_layer
+
+
+## Helper to remove a tracked layer
+func _remove_tracked_layer(layer: CanvasLayer) -> void:
+	active_animation_layers.erase(layer)
+	if is_instance_valid(layer):
+		layer.queue_free()
+
+
 # ==============================================================================
 # ENTRANCE ANIMATION
 # ==============================================================================
@@ -792,44 +934,81 @@ func shake_camera(intensity: float = 5.0) -> void:
 func _start_entrance_animation() -> void:
 	entrance_active = true
 	entrance_timer = 0.0
+	entrance_phase = 0
 	
-	# Start with zoom and fade
+	# Start with tighter zoom for dramatic reveal
 	if camera:
-		camera.zoom = Vector2(0.6, 0.6)
+		camera.zoom = Vector2(ENTRANCE_INITIAL_ZOOM, ENTRANCE_INITIAL_ZOOM)
 	
 	# Disable player movement during entrance
 	if player:
 		player.set_movement_enabled(false)
+		# Start player invisible for spawn effect
+		player.modulate.a = 0.0
 	
-	# Create fade overlay
+	# Create enhanced entrance effects
 	_create_entrance_fade()
+	_create_scan_line_effect()
+	_create_boarding_text_overlay()
 
 
 func _process_entrance(delta: float) -> void:
 	entrance_timer += delta
 	var t = minf(entrance_timer / entrance_duration, 1.0)
-	var eased = ease(t, 0.3)
 	
-	# Zoom camera in
+	# Phase 0: Initial zoom and fade (0.0 - 0.4s)
+	if entrance_phase == 0 and entrance_timer > 0.4:
+		entrance_phase = 1
+		_trigger_player_spawn_effect()
+	
+	# Phase 1: Player materialization (0.4 - 1.2s)
+	if entrance_phase == 1 and entrance_timer > 1.2:
+		entrance_phase = 2
+		_trigger_ui_slide_in()
+	
+	# Phase 2: Final settle and UI (1.2 - 2.0s)
+	
+	# Smooth camera zoom in with easing
 	if camera:
+		var zoom_progress = minf(entrance_timer / 1.5, 1.0)
+		var eased_zoom = ease(zoom_progress, -0.4)  # Ease out for smooth deceleration
 		camera.zoom = Vector2(
-			lerpf(0.6, 0.8, eased),
-			lerpf(0.6, 0.8, eased)
+			lerpf(ENTRANCE_INITIAL_ZOOM, ENTRANCE_FINAL_ZOOM, eased_zoom),
+			lerpf(ENTRANCE_INITIAL_ZOOM, ENTRANCE_FINAL_ZOOM, eased_zoom)
 		)
+	
+	# Fade in player with glow effect
+	if player and entrance_timer > 0.3 and entrance_timer < 1.4:
+		var player_t = clampf((entrance_timer - 0.3) / 1.1, 0.0, 1.0)
+		var player_eased = ease(player_t, 0.4)
+		player.modulate.a = player_eased
+		
+		# Add slight glow during materialization
+		if player_t < 0.95:
+			var glow_intensity = sin(player_t * PI) * 0.3
+			player.modulate = Color(
+				1.0 + glow_intensity,
+				1.0 + glow_intensity,
+				1.0 + glow_intensity,
+				player_eased
+			)
+		else:
+			player.modulate = Color(1.0, 1.0, 1.0, player_eased)
 	
 	# End entrance
 	if entrance_timer >= entrance_duration:
 		entrance_active = false
 		if player:
 			player.set_movement_enabled(true)
+			player.modulate = Color.WHITE
+		
+		# Small shake to signal control handoff
+		shake_camera(2.0)
 
 
 func _create_entrance_fade() -> void:
 	# Create fade layer
-	var fade_layer = CanvasLayer.new()
-	fade_layer.name = "EntranceFade"
-	fade_layer.layer = 100
-	add_child(fade_layer)
+	var fade_layer = _create_tracked_canvas_layer("EntranceFade", 100)
 	
 	var fade_rect = ColorRect.new()
 	fade_rect.name = "FadeRect"
@@ -837,10 +1016,110 @@ func _create_entrance_fade() -> void:
 	fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fade_layer.add_child(fade_rect)
 	
-	# Fade in tween
+	# Fade in tween - slightly faster for snappier feel
 	var tween = create_tween()
-	tween.tween_property(fade_rect, "color:a", 0.0, 0.8).set_ease(Tween.EASE_OUT)
-	tween.tween_callback(fade_layer.queue_free)
+	tween.tween_property(fade_rect, "color:a", 0.0, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_callback(func(): _remove_tracked_layer(fade_layer))
+
+
+## Creates scan line effect during boarding entrance
+func _create_scan_line_effect() -> void:
+	var scan_layer = _create_tracked_canvas_layer("ScanEffect", 99)
+	
+	var scan_line = ColorRect.new()
+	scan_line.name = "ScanLine"
+	scan_line.color = Color(0.3, 0.8, 1.0, 0.6)  # Cyan scan beam
+	scan_line.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	scan_line.size.y = 3
+	scan_line.position.y = 0
+	scan_layer.add_child(scan_line)
+	
+	var screen_height = get_viewport_rect().size.y
+	
+	# Sweep down the screen
+	var tween = create_tween()
+	tween.tween_property(scan_line, "position:y", screen_height, 0.8).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(scan_line, "color:a", 0.0, 0.8).set_ease(Tween.EASE_IN)
+	tween.tween_callback(func(): _remove_tracked_layer(scan_layer))
+
+
+## Creates "BOARDING..." text overlay
+func _create_boarding_text_overlay() -> void:
+	var text_layer = _create_tracked_canvas_layer("BoardingText", 98)
+	
+	var label = Label.new()
+	label.name = "BoardingLabel"
+	# Safe ship name handling with simplified fallback
+	var ship_name = current_ship_data.get("display_name", "UNKNOWN").to_upper() if current_ship_data else "UNKNOWN"
+	label.text = "BOARDING %s..." % ship_name
+	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_color_override("font_color", Color(0.3, 0.8, 1.0, 0.0))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.set_anchors_preset(Control.PRESET_CENTER)
+	text_layer.add_child(label)
+	
+	# Fade in then out
+	var tween = create_tween()
+	tween.tween_property(label, "theme_override_colors/font_color:a", 1.0, 0.3).set_delay(0.2)
+	tween.tween_property(label, "theme_override_colors/font_color:a", 0.0, 0.4).set_delay(0.6)
+	tween.tween_callback(func(): _remove_tracked_layer(text_layer))
+
+
+## Triggers player spawn/materialization particle effect
+func _trigger_player_spawn_effect() -> void:
+	if not player:
+		return
+	
+	# Create spawn flash
+	var flash_layer = _create_tracked_canvas_layer("SpawnFlash", 95)
+	
+	var flash = ColorRect.new()
+	flash.color = Color(0.3, 0.8, 1.0, 0.6)  # Cyan flash
+	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash_layer.add_child(flash)
+	
+	var tween = create_tween()
+	tween.tween_property(flash, "color:a", 0.0, 0.2)
+	tween.tween_callback(func(): _remove_tracked_layer(flash_layer))
+	
+	# Small camera shake
+	shake_camera(3.0)
+
+
+## Triggers UI elements to slide in
+func _trigger_ui_slide_in() -> void:
+	# Animate timer label slide from top
+	if timer_label:
+		var original_pos = timer_label.position
+		timer_label.position.y -= 50
+		timer_label.modulate.a = 0.0
+		
+		var tween1 = create_tween()
+		tween1.tween_property(timer_label, "position:y", original_pos.y, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		tween1.parallel().tween_property(timer_label, "modulate:a", 1.0, 0.3)
+	
+	# Animate loot value label slide from bottom
+	if loot_value_label:
+		var original_pos = loot_value_label.position
+		loot_value_label.position.y += 50
+		loot_value_label.modulate.a = 0.0
+		
+		var tween2 = create_tween()
+		tween2.tween_property(loot_value_label, "position:y", original_pos.y, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		tween2.parallel().tween_property(loot_value_label, "modulate:a", 1.0, 0.3)
+	
+	# Animate ship tier label
+	if ship_tier_label:
+		var original_pos = ship_tier_label.position
+		ship_tier_label.position.x -= 50
+		ship_tier_label.modulate.a = 0.0
+		
+		var tween3 = create_tween()
+		tween3.set_delay(0.1)  # Slight delay for stagger effect
+		tween3.tween_property(ship_tier_label, "position:x", original_pos.x, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		tween3.parallel().tween_property(ship_tier_label, "modulate:a", 1.0, 0.3)
 
 
 # ==============================================================================
