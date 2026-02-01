@@ -54,6 +54,9 @@ signal hit
 ## Emitted when player collides with something (for effects)
 signal collision_occurred(impact_strength: float)
 
+## Emitted when player fires weapon (for effects like screen shake)
+signal weapon_fired
+
 ## Emitted when player state changes
 signal state_changed(old_state: State, new_state: State)
 
@@ -458,6 +461,9 @@ func _fire_laser() -> void:
 	
 	# Add to scene tree
 	get_tree().current_scene.add_child(laser)
+	
+	# Emit weapon fired signal for effects
+	weapon_fired.emit()
 
 
 ## Get aim direction toward mouse, clamped within forward cone
