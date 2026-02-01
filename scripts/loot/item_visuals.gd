@@ -222,6 +222,7 @@ static func _add_epic_pulse(container: Control, width: float, height: float, col
 	pulse_rect.color = color
 	pulse_rect.color.a = 0.3
 	pulse_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pulse_rect.name = "PulseRect"  # Give it a specific name for animation
 	container.add_child(pulse_rect)
 	container.move_child(pulse_rect, 0)  # Move to back
 	
@@ -232,7 +233,7 @@ static func _add_epic_pulse(container: Control, width: float, height: float, col
 	# Create pulse animation
 	var animation = Animation.new()
 	var track_idx = animation.add_track(Animation.TYPE_VALUE)
-	animation.track_set_path(track_idx, NodePath(str(pulse_rect.get_path().get_name(container)) + ":color:a"))
+	animation.track_set_path(track_idx, NodePath("PulseRect:color:a"))
 	animation.length = 2.0
 	animation.loop_mode = Animation.LOOP_LINEAR
 	
@@ -256,6 +257,7 @@ static func _add_legendary_particles(container: Control, width: float, height: f
 	glow_rect.color = color
 	glow_rect.color.a = 0.4
 	glow_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow_rect.name = "GlowRect"  # Give it a specific name for animation
 	container.add_child(glow_rect)
 	container.move_child(glow_rect, 0)
 	
@@ -296,7 +298,7 @@ static func _add_legendary_particles(container: Control, width: float, height: f
 	
 	var animation = Animation.new()
 	var track_idx = animation.add_track(Animation.TYPE_VALUE)
-	animation.track_set_path(track_idx, NodePath(str(glow_rect.get_path().get_name(container)) + ":color:a"))
+	animation.track_set_path(track_idx, NodePath("GlowRect:color:a"))
 	animation.length = 3.0
 	animation.loop_mode = Animation.LOOP_LINEAR
 	
