@@ -12,10 +12,20 @@
 # - Lighting (lamps, emergency lights, screens)
 # - Warning (signs, floor markings, hazard stripes)
 #
+# NOTE: This class works with both legacy DecorationType system and
+# the new DecorationData system for enhanced decorations.
+#
 # ==============================================================================
 
 class_name ShipDecorations
 extends Node2D
+
+
+# ==============================================================================
+# PRELOADS
+# ==============================================================================
+
+const DecorationDataClass = preload("res://resources/decorations/decoration_data.gd")
 
 
 # ==============================================================================
@@ -84,11 +94,13 @@ class DecorationData:
 # STATE
 # ==============================================================================
 
-var _decorations: Array = []  # Array of DecorationData
+var _decorations: Array = []  # Array of DecorationData or legacy decorations
+var _enhanced_decorations: Array = []  # Array of DecorationDataClass.DecorationPlacement
 var _floor_color: Color = Color(0.15, 0.18, 0.2)
 var _wall_color: Color = Color(0.25, 0.28, 0.32)
 var _accent_color: Color = Color(0.6, 0.5, 0.3)
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _animation_time: float = 0.0
 
 
 # ==============================================================================
@@ -133,16 +145,26 @@ const DECORATION_SIZES = {
 # ==============================================================================
 
 func _ready() -> void:
-	pass
+	set_process(true)
+
+
+func _process(delta: float) -> void:
+	_animation_time += delta
+	# Only redraw if we have animated decorations
+	if not _enhanced_decorations.is_empty():
+		queue_redraw()
 
 
 func _draw() -> void:
-	# Sort by layer
+	# Draw legacy decorations first
 	var sorted_decorations = _decorations.duplicate()
 	sorted_decorations.sort_custom(func(a, b): return a.layer < b.layer)
 	
 	for deco in sorted_decorations:
 		_draw_decoration(deco)
+	
+	# Draw enhanced decorations
+	_draw_enhanced_decorations()
 
 
 # ==============================================================================
@@ -157,6 +179,19 @@ func set_colors(floor_col: Color, wall_col: Color, accent_col: Color) -> void:
 
 func clear_decorations() -> void:
 	_decorations.clear()
+	_enhanced_decorations.clear()
+	queue_redraw()
+
+
+func add_enhanced_decorations(placements: Array) -> void:
+	"""Add decorations from new DecorationPlacement system"""
+	_enhanced_decorations.append_array(placements)
+	queue_redraw()
+
+
+func set_enhanced_decorations(placements: Array) -> void:
+	"""Replace all enhanced decorations"""
+	_enhanced_decorations = placements.duplicate()
 	queue_redraw()
 
 
@@ -574,6 +609,224 @@ func _get_layer_for_type(type: DecorationType) -> int:
 
 # ==============================================================================
 # DRAWING
+# ==============================================================================
+
+func _draw_enhanced_decorations() -> void:
+	"""Draw decorations from the new system"""
+	if _enhanced_decorations.is_empty():
+		return
+	
+	# Sort by decoration layer
+	var sorted = _enhanced_decorations.duplicate()
+	sorted.sort_custom(func(a, b):
+		var deco_a = DecorationDataClass.get_decoration(a.decoration_type)
+		var deco_b = DecorationDataClass.get_decoration(b.decoration_type)
+		if deco_a and deco_b:
+			return deco_a.layer < deco_b.layer
+		return false
+	)
+	
+	for placement in sorted:
+		_draw_enhanced_decoration(placement)
+
+
+func _draw_enhanced_decoration(placement: DecorationDataClass.DecorationPlacement) -> void:
+	var deco_data = DecorationDataClass.get_decoration(placement.decoration_type)
+	if not deco_data:
+		return
+	
+	var pos = placement.position
+	var size = deco_data.size * placement.scale
+	var color = placement.color_tint
+	var rotation = placement.rotation
+	
+	# Apply flicker effect for animated decorations
+	var alpha_mod = 1.0
+	if placement.flicker_enabled and deco_data.has_animation:
+		var flicker_speed = 3.0 + placement.animation_offset
+		alpha_mod = 0.7 + 0.3 * sin(_animation_time * flicker_speed + placement.animation_offset)
+	
+	# Apply rotation transform if needed
+	if rotation != 0:
+		draw_set_transform(pos, rotation, Vector2.ONE)
+		pos = Vector2.ZERO
+	
+	# Draw based on decoration type/category
+	match deco_data.category:
+		DecorationDataClass.Category.FUNCTIONAL:
+			_draw_functional_decoration(deco_data, pos, size, color, alpha_mod)
+		DecorationDataClass.Category.ATMOSPHERIC:
+			_draw_atmospheric_decoration(deco_data, pos, size, color, alpha_mod)
+		DecorationDataClass.Category.DAMAGE_WEAR:
+			_draw_damage_decoration(deco_data, pos, size, color, alpha_mod)
+	
+	# Draw glow if present
+	if deco_data.glow_color.a > 0:
+		var glow_col = deco_data.glow_color
+		glow_col.a *= alpha_mod
+		draw_circle(pos, size.x * 0.8, glow_col)
+	
+	# Reset transform
+	if rotation != 0:
+		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+
+func _draw_functional_decoration(deco_data: DecorationDataClass.Decoration, pos: Vector2, size: Vector2, color: Color, alpha: float) -> void:
+	var mod_color = Color(color.r, color.g, color.b, color.a * alpha)
+	
+	match deco_data.type:
+		DecorationDataClass.Type.COMPUTER_SCREEN, DecorationDataClass.Type.COMPUTER_SCREEN_ANIMATED:
+			_draw_screen(pos, size, mod_color)
+		DecorationDataClass.Type.CONTROL_PANEL, DecorationDataClass.Type.CONTROL_PANEL_LARGE:
+			_draw_console(pos, size, mod_color)
+		DecorationDataClass.Type.PIPE_HORIZONTAL, DecorationDataClass.Type.PIPE_VERTICAL:
+			_draw_pipe(pos, size, mod_color)
+		DecorationDataClass.Type.VENTILATION_SHAFT, DecorationDataClass.Type.VENTILATION_VENT:
+			_draw_vent(pos, size, mod_color)
+		DecorationDataClass.Type.LIGHT_CEILING:
+			_draw_ceiling_light(pos, size, mod_color)
+		DecorationDataClass.Type.LIGHT_WALL:
+			_draw_emergency_light(pos, size, mod_color)
+		DecorationDataClass.Type.CONDUIT:
+			_draw_conduit(pos, size, mod_color)
+		_:
+			# Generic functional decoration
+			draw_rect(Rect2(pos - size / 2, size), Color(0.4, 0.4, 0.45) * alpha)
+
+
+func _draw_atmospheric_decoration(deco_data: DecorationDataClass.Decoration, pos: Vector2, size: Vector2, color: Color, alpha: float) -> void:
+	var mod_color = Color(color.r, color.g, color.b, color.a * alpha)
+	
+	match deco_data.type:
+		DecorationDataClass.Type.POSTER_GENERIC, \
+		DecorationDataClass.Type.POSTER_WARNING, \
+		DecorationDataClass.Type.POSTER_MOTIVATIONAL, \
+		DecorationDataClass.Type.POSTER_FACTION_CCG, \
+		DecorationDataClass.Type.POSTER_FACTION_NEX, \
+		DecorationDataClass.Type.POSTER_FACTION_GDF, \
+		DecorationDataClass.Type.POSTER_FACTION_SYN, \
+		DecorationDataClass.Type.POSTER_FACTION_IND:
+			_draw_poster(pos, size, mod_color)
+		DecorationDataClass.Type.SIGN_EXIT:
+			_draw_sign(pos, size, mod_color, "EXIT")
+		DecorationDataClass.Type.SIGN_CAUTION:
+			_draw_danger_sign(pos, size, mod_color)
+		DecorationDataClass.Type.PLANT_SMALL, DecorationDataClass.Type.PLANT_LARGE:
+			_draw_plant(pos, size, mod_color)
+		DecorationDataClass.Type.PLANT_DEAD:
+			_draw_plant(pos, size, Color(0.4, 0.35, 0.3) * alpha)
+		DecorationDataClass.Type.CARGO_CRATE_STACK:
+			_draw_crate(pos, size, mod_color)
+		DecorationDataClass.Type.CARGO_BARREL_GROUP:
+			_draw_barrel(pos, size, mod_color)
+		DecorationDataClass.Type.TOOL_RACK:
+			_draw_tool_rack(pos, size, mod_color)
+		DecorationDataClass.Type.FIRE_EXTINGUISHER:
+			_draw_fire_extinguisher(pos, size, mod_color)
+		_:
+			# Generic atmospheric decoration
+			draw_rect(Rect2(pos - size / 2, size), Color(0.5, 0.5, 0.5) * alpha)
+
+
+func _draw_damage_decoration(deco_data: DecorationDataClass.Decoration, pos: Vector2, size: Vector2, color: Color, alpha: float) -> void:
+	var mod_color = Color(color.r, color.g, color.b, color.a * alpha)
+	
+	match deco_data.type:
+		DecorationDataClass.Type.SCORCH_MARK_SMALL, DecorationDataClass.Type.SCORCH_MARK_LARGE:
+			_draw_scorch_mark(pos, size, mod_color)
+		DecorationDataClass.Type.CRACK_WALL, DecorationDataClass.Type.CRACK_FLOOR, DecorationDataClass.Type.CRACK_CEILING:
+			_draw_crack(pos, size, mod_color)
+		DecorationDataClass.Type.LIGHT_FLICKERING:
+			_draw_ceiling_light(pos, size, mod_color)
+		DecorationDataClass.Type.SPARKING_ELECTRONICS, DecorationDataClass.Type.SPARKING_WIRE:
+			_draw_sparks(pos, size, alpha)
+		DecorationDataClass.Type.BLOOD_STAIN_SMALL, DecorationDataClass.Type.BLOOD_STAIN_LARGE, DecorationDataClass.Type.BLOOD_SPLATTER:
+			_draw_blood_stain(pos, size, mod_color)
+		DecorationDataClass.Type.RUST_PATCH:
+			_draw_rust(pos, size, mod_color)
+		DecorationDataClass.Type.DENT_WALL:
+			_draw_dent(pos, size, mod_color)
+		_:
+			# Generic damage decoration
+			draw_circle(pos, size.x / 2, mod_color)
+
+
+# New helper drawing methods for enhanced decorations
+func _draw_poster(pos: Vector2, size: Vector2, color: Color) -> void:
+	var frame = Color(0.2, 0.2, 0.22)
+	draw_rect(Rect2(pos - size / 2, size), frame)
+	draw_rect(Rect2(pos - size / 2 + Vector2(2, 2), size - Vector2(4, 4)), color)
+
+
+func _draw_plant(pos: Vector2, size: Vector2, color: Color) -> void:
+	# Pot
+	draw_rect(Rect2(pos.x - size.x / 3, pos.y, size.x * 0.66, size.y / 3), Color(0.3, 0.25, 0.2))
+	# Leaves
+	draw_circle(pos - Vector2(0, size.y / 3), size.x / 2, color)
+
+
+func _draw_tool_rack(pos: Vector2, size: Vector2, color: Color) -> void:
+	draw_rect(Rect2(pos - size / 2, size), color)
+	# Tools
+	for i in range(3):
+		var x = pos.x - size.x / 3 + i * size.x / 3
+		draw_line(Vector2(x, pos.y - size.y / 4), Vector2(x, pos.y + size.y / 4), Color(0.5, 0.5, 0.55), 2)
+
+
+func _draw_fire_extinguisher(pos: Vector2, size: Vector2, _color: Color) -> void:
+	draw_rect(Rect2(pos - size / 2, size), Color(0.8, 0.1, 0.1))
+	draw_circle(pos, 3, Color(0.2, 0.2, 0.2))
+
+
+func _draw_scorch_mark(pos: Vector2, size: Vector2, color: Color) -> void:
+	# Irregular scorch pattern
+	draw_circle(pos, size.x / 2, color)
+	draw_circle(pos + Vector2(size.x / 4, 0), size.x / 3, Color(color.r, color.g, color.b, color.a * 0.6))
+
+
+func _draw_crack(pos: Vector2, size: Vector2, color: Color) -> void:
+	# Jagged crack line
+	var points = PackedVector2Array([
+		pos - Vector2(size.x / 2, 0),
+		pos - Vector2(size.x / 4, size.y / 6),
+		pos,
+		pos + Vector2(size.x / 4, -size.y / 6),
+		pos + Vector2(size.x / 2, 0)
+	])
+	draw_polyline(points, color, 1.5)
+
+
+func _draw_sparks(pos: Vector2, size: Vector2, alpha: float) -> void:
+	# Animated sparks
+	for i in range(3):
+		var angle = _animation_time * 5 + i * TAU / 3
+		var offset = Vector2(cos(angle), sin(angle)) * size.x / 2
+		draw_circle(pos + offset, 2, Color(1.0, 0.9, 0.3, alpha))
+
+
+func _draw_blood_stain(pos: Vector2, size: Vector2, color: Color) -> void:
+	# Splatter effect
+	draw_circle(pos, size.x / 2, color)
+	for i in range(4):
+		var angle = i * TAU / 4 + 0.3
+		var offset = Vector2(cos(angle), sin(angle)) * size.x * 0.4
+		draw_circle(pos + offset, size.x / 4, Color(color.r, color.g, color.b, color.a * 0.7))
+
+
+func _draw_rust(pos: Vector2, size: Vector2, color: Color) -> void:
+	# Irregular rust patch
+	draw_circle(pos, size.x / 2, color)
+	draw_circle(pos + Vector2(size.x / 3, size.y / 3), size.x / 3, Color(color.r * 0.8, color.g * 0.8, color.b * 0.8, color.a))
+
+
+func _draw_dent(pos: Vector2, size: Vector2, color: Color) -> void:
+	# Concave dent effect
+	draw_circle(pos, size.x / 2, color)
+	draw_circle(pos, size.x / 3, Color(color.r * 1.2, color.g * 1.2, color.b * 1.2, color.a))
+
+
+# ==============================================================================
+# LEGACY DRAWING
 # ==============================================================================
 
 func _draw_decoration(deco: DecorationData) -> void:

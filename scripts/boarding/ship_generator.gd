@@ -47,6 +47,8 @@ const FactionsClass = preload("res://scripts/data/factions.gd")
 const RoomTypesClass = preload("res://scripts/data/room_types.gd")
 const ShipTypesClass = preload("res://scripts/data/ship_types.gd")
 const ContainerTypesClass = preload("res://scripts/data/container_types.gd")
+const ShipDecoratorClass = preload("res://scripts/boarding/ship_decorator.gd")
+const DecorationDataClass = preload("res://resources/decorations/decoration_data.gd")
 
 
 # ==============================================================================
@@ -58,6 +60,7 @@ class RoomInstance:
 	var rect: Rect2
 	var display_name: String
 	var container_placements: Array = []  # [{position: Vector2, type: int}]
+	var decoration_placements: Array = []  # Array of DecorationPlacement
 	var connected_to: Array = []  # Other room indices
 	var center: Vector2:
 		get: return rect.position + rect.size / 2.0
@@ -80,6 +83,7 @@ class GeneratedLayout:
 	var entry_position: Vector2 = Vector2.ZERO
 	var exit_position: Vector2 = Vector2.ZERO
 	var container_positions: Array = []  # Combined from all rooms
+	var decoration_placements: Dictionary = {}  # Room index -> Array of DecorationPlacement
 	var time_limit: float = 90.0
 	var generation_seed: int = 0
 	
@@ -195,18 +199,21 @@ func generate_layout(
 	# 5. Place containers within rooms
 	_place_containers()
 	
-	# 6. Copy rooms to layout
+	# 6. Generate decorations for all rooms
+	_place_decorations(layout)
+	
+	# 7. Copy rooms to layout
 	layout.rooms = _placed_rooms.duplicate()
 	
-	# 7. Compile container positions
+	# 8. Compile container positions
 	for room in _placed_rooms:
 		layout.container_positions.append_array(room.container_placements)
 	
-	# 8. Get corridor rects and walkable grid for rendering/collision
+	# 9. Get corridor rects and walkable grid for rendering/collision
 	layout.corridor_rects = get_corridor_rects()
 	layout.walkable_grid = get_walkable_grid()
 	
-	# 9. Validate path exists
+	# 10. Validate path exists
 	if not _validate_path(layout):
 		print("[ShipGenerator] Warning: Generated layout may have unreachable areas")
 	
@@ -693,6 +700,36 @@ func _place_containers() -> void:
 						"type": container_type
 					})
 					break
+
+
+# ==============================================================================
+# DECORATION PLACEMENT
+# ==============================================================================
+
+func _place_decorations(layout: GeneratedLayout) -> void:
+	var decorator = ShipDecoratorClass.new()
+	
+	for i in range(_placed_rooms.size()):
+		var room = _placed_rooms[i]
+		var room_data = RoomTypesClass.get_room(room.type)
+		if not room_data:
+			continue
+		
+		# Generate decoration seed based on ship seed and room index
+		var room_seed = layout.generation_seed + i * 7919
+		
+		# Generate decorations for this room
+		var decorations = decorator.generate_room_decorations(
+			room.rect,
+			room.display_name,
+			_current_faction.type,
+			_current_tier,
+			room_seed
+		)
+		
+		# Store in room and layout
+		room.decoration_placements = decorations
+		layout.decoration_placements[i] = decorations
 
 
 # ==============================================================================
