@@ -109,9 +109,6 @@ func _process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	"""Handle keyboard shortcuts for inventory management"""
-	if not event is InputEventKey:
-		return
-	
 	# Handle number keys 1-9 for slot selection
 	for i in range(9):
 		var action_name = "inventory_slot_%d" % (i + 1)
@@ -611,10 +608,19 @@ func _update_slot_items() -> void:
 	# Cache grid positions to avoid redundant lookups during sorting
 	var item_positions: Dictionary = {}
 	for item in items:
-		item_positions[item] = get_item_grid_position(item)
+		var pos = get_item_grid_position(item)
+		# Only include items with valid positions
+		if pos.x >= 0 and pos.y >= 0:
+			item_positions[item] = pos
+	
+	# Filter out items without valid positions
+	var valid_items: Array[LootItem] = []
+	for item in items:
+		if item in item_positions:
+			valid_items.append(item)
 	
 	# Sort items by their grid position (top-left to bottom-right)
-	items.sort_custom(func(a: LootItem, b: LootItem) -> bool:
+	valid_items.sort_custom(func(a: LootItem, b: LootItem) -> bool:
 		var pos_a = item_positions[a]
 		var pos_b = item_positions[b]
 		if pos_a.y != pos_b.y:
@@ -623,8 +629,8 @@ func _update_slot_items() -> void:
 	)
 	
 	# Take first 9 items
-	for i in range(min(9, items.size())):
-		slot_items.append(items[i])
+	for i in range(min(9, valid_items.size())):
+		slot_items.append(valid_items[i])
 
 
 func get_selected_item() -> LootItem:

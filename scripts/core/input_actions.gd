@@ -66,10 +66,6 @@ const INVENTORY_SLOT_9: StringName = &"inventory_slot_9"
 const DROP_ITEM: StringName = &"drop_item"
 const USE_ITEM: StringName = &"use_item"
 
-# Menu controls
-const TOGGLE_INVENTORY: StringName = &"toggle_inventory"
-const CLOSE_MENU: StringName = &"close_menu"
-
 
 # ==============================================================================
 # UI ACTIONS
