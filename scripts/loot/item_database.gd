@@ -448,7 +448,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 20,
 		"weight": 0.1,
 		"rarity": 1,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/stim_packs.svg"
 	},
 	"neural_boosters": {
@@ -458,7 +458,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 50,
 		"weight": 0.2,
 		"rarity": 2,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/neural_boosters.svg"
 	},
 	"toxic_waste": {
@@ -478,7 +478,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 80,
 		"weight": 0.3,
 		"rarity": 2,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/synth_narcotics.svg"
 	},
 	"combat_serum": {
@@ -488,7 +488,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 120,
 		"weight": 0.5,
 		"rarity": 3,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/combat_serum.svg"
 	},
 	
@@ -562,7 +562,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 50,
 		"weight": 0.5,
 		"rarity": 2,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/slave_collar.svg"
 	},
 	"pirate_beacon": {
@@ -572,7 +572,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 150,
 		"weight": 2.0,
 		"rarity": 2,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/pirate_beacon.svg"
 	},
 	"cloning_sample": {
@@ -592,7 +592,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 100,
 		"weight": 0.2,
 		"rarity": 3,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/bioweapon_vial.svg"
 	},
 	"quantum_jammer": {
@@ -602,7 +602,7 @@ const CONTRABAND_ITEMS = {
 		"base_value": 400,
 		"weight": 3.0,
 		"rarity": 3,
-		"category": ItemCategory.COMPONENT,
+		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/quantum_jammer.svg"
 	},
 	"black_market_pass": {
