@@ -266,6 +266,11 @@ func _process_moving_state(delta: float) -> void:
 		_transition_to_state(State.IDLE)
 		return
 	
+	# Notify tutorial on first movement (one-shot)
+	if not get_meta("tutorial_moved", false):
+		set_meta("tutorial_moved", true)
+		_notify_tutorial_movement()
+	
 	# Apply movement physics
 	_apply_movement(delta)
 
@@ -571,3 +576,15 @@ func teleport_to(pos: Vector2) -> void:
 	global_position = pos
 	velocity = Vector2.ZERO
 	smoothed_direction = Vector2.ZERO
+
+
+# ==============================================================================
+# TUTORIAL INTEGRATION
+# ==============================================================================
+
+## Signal for tutorial system
+signal tutorial_movement_detected
+
+func _notify_tutorial_movement() -> void:
+	tutorial_movement_detected.emit()
+
