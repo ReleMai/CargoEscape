@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://PLACEHOLDER"
-path="res://.godot/imported/${file}-HASH.sample"
+uid="uid://722a7c9790cc2dc8"
+path="res://.godot/imported/footstep.wav-722a7c9790cc2dc83fea8c5facfdef13.sample"
 
 [deps]
 
-source_file="res://assets/audio/sfx/boarding/${file}"
-dest_files=["res://.godot/imported/${file}-HASH.sample"]
+source_file="res://assets/audio/sfx/boarding/footstep.wav"
+dest_files=["res://.godot/imported/footstep.wav-722a7c9790cc2dc83fea8c5facfdef13.sample"]
 
 [params]
 

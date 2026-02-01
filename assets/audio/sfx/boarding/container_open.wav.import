@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://PLACEHOLDER"
-path="res://.godot/imported/${file}-HASH.sample"
+uid="uid://f2dfa0944dc77d80"
+path="res://.godot/imported/container_open.wav-f2dfa0944dc77d800148bc1f0153b050.sample"
 
 [deps]
 
-source_file="res://assets/audio/sfx/boarding/${file}"
-dest_files=["res://.godot/imported/${file}-HASH.sample"]
+source_file="res://assets/audio/sfx/boarding/container_open.wav"
+dest_files=["res://.godot/imported/container_open.wav-f2dfa0944dc77d800148bc1f0153b050.sample"]
 
 [params]
 
