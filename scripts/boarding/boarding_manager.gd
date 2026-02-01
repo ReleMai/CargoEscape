@@ -665,7 +665,7 @@ func _fade_to_undocking() -> void:
 	await tween.finished
 	
 	# Change scene - the undocking scene will fade in
-	get_tree().change_scene_to_file("res://scenes/undocking/undocking_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/undocking/undocking_scene.tscn")
 
 
 # ==============================================================================

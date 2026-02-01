@@ -389,7 +389,7 @@ func _on_depart_pressed() -> void:
 
 func _go_to_boarding() -> void:
 	new_mission_requested.emit()
-	get_tree().change_scene_to_file("res://scenes/boarding/boarding_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/boarding/boarding_scene.tscn")
 
 
 # ==============================================================================
@@ -448,7 +448,7 @@ func _on_return_pressed() -> void:
 
 func _go_to_menu() -> void:
 	returned_to_menu.emit()
-	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/intro/intro_scene.tscn")
 
 
 # ==============================================================================

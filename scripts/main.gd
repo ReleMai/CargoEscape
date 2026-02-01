@@ -416,7 +416,7 @@ func _transition_to_hideout() -> void:
 
 
 func _go_to_hideout() -> void:
-	get_tree().change_scene_to_file("res://scenes/hideout/hideout_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/hideout/hideout_scene.tscn")
 
 
 func _on_new_mission() -> void:
