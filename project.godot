@@ -12,19 +12,15 @@ config_version=5
 
 config/name="Cargo Escape"
 config/description="A two-phase space heist game - loot cargo containers then escape through asteroid fields!"
-run/main_scene="res://scenes/intro/intro_scene.tscn"
+run/main_scene="res://scenes/intro/intro_sequence.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*res://scripts/game_manager.gd"
-SaveManager="*res://scripts/save_manager.gd"
-LoadingScreen="*res://scenes/ui/loading_screen.tscn"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+AchievementManager="*res://scripts/achievement_manager.gd"
+PopupManager="*res://scripts/popup_manager.gd"
 
 [display]
 

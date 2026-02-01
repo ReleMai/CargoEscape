@@ -372,6 +372,14 @@ func _start_boarding() -> void:
 	# Update UI
 	_update_ui()
 	
+	# Achievement tracking - start boarding
+	boarding_start_time = Time.get_ticks_msec() / 1000.0
+	containers_searched = 0
+	total_containers = current_layout.container_positions.size() if current_layout else 0
+	
+	if AchievementManager:
+		AchievementManager.on_boarding_started(total_containers)
+	
 	emit_signal("boarding_started")
 
 
@@ -503,8 +511,10 @@ func _on_loot_menu_closed() -> void:
 
 
 func _on_container_emptied() -> void:
-	# Container was fully looted
-	pass
+	# Container was fully looted - count as searched
+	containers_searched += 1
+	if AchievementManager:
+		AchievementManager.on_container_searched()
 
 
 func _on_item_transferred(item_data: ItemData) -> void:
@@ -512,6 +522,10 @@ func _on_item_transferred(item_data: ItemData) -> void:
 	collected_items.append(item_data)
 	total_loot_value += item_data.value
 	_update_ui()
+	
+	# Check for legendary item (rarity 4)
+	if item_data.rarity == 4 and AchievementManager:
+		AchievementManager.on_legendary_item_found()
 
 
 func _on_item_destroyed(item: LootItem) -> void:
@@ -593,6 +607,11 @@ func _end_boarding(success: bool) -> void:
 	# Add to global score
 	if success and GameManager:
 		GameManager.add_score(total_loot_value)
+	
+	# Achievement tracking - boarding completed
+	if success and AchievementManager:
+		var boarding_time = (Time.get_ticks_msec() / 1000.0) - boarding_start_time
+		AchievementManager.on_boarding_completed(boarding_time, current_faction_code)
 	
 	# Transition to results or next scene
 	await get_tree().create_timer(1.0).timeout
