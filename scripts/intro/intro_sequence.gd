@@ -70,6 +70,9 @@ enum Phase {
 
 @onready var skip_hint: Label = $SkipHint
 
+# Particle system
+var logo_particles: Array = []
+
 
 # ==============================================================================
 # STATE
@@ -98,6 +101,12 @@ var crawl_position: float = 0.0
 # Title card
 var title_alpha: float = 0.0
 var title_scale: float = 0.8
+
+# Transition animation (ship flies in)
+var ship_x: float = 0.0
+var ship_y: float = 0.0
+var ship_scale: float = 0.3
+var camera_follow: Vector2 = Vector2.ZERO
 
 # Skip functionality
 var has_been_viewed: bool = false
@@ -159,11 +168,26 @@ func _input(event: InputEvent) -> void:
 
 
 func _draw() -> void:
+	# Apply camera follow offset during transition
+	if current_phase == Phase.TRANSITION:
+		draw_set_transform(camera_follow, 0, Vector2.ONE)
+	
 	# Draw space background
 	draw_rect(Rect2(0, 0, screen_w, screen_h), Color(0.01, 0.015, 0.03))
 	
 	# Draw stars with pan offset for scene setting phase
 	_draw_stars()
+	
+	# Draw logo particles
+	if current_phase == Phase.LOGO:
+		_draw_logo_particles()
+	
+	# Draw ship during transition
+	if current_phase == Phase.TRANSITION:
+		_draw_transition_ship()
+	
+	# Reset transform
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
 
 # ==============================================================================
@@ -201,6 +225,12 @@ func _start_phase(phase: Phase) -> void:
 			# Fade out title card
 			var tween = create_tween()
 			tween.tween_property(title_container, "modulate:a", 0.0, 0.5)
+			
+			# Initialize ship position
+			ship_x = -200
+			ship_y = screen_h * 0.3
+			ship_scale = 0.3
+			camera_follow = Vector2.ZERO
 		
 		Phase.COMPLETE:
 			_complete_sequence()
@@ -232,6 +262,13 @@ func _update_logo_phase(delta: float) -> void:
 		logo_glow.modulate.a = glow_intensity * pulse * 0.6
 		var glow_scale = 1.0 + sin(glow_pulse_time * 0.5) * 0.1
 		logo_glow.scale = Vector2(glow_scale, glow_scale)
+	
+	# Spawn particles around logo
+	if randf() < 0.3 and glow_intensity > 0.3:
+		_spawn_logo_particle()
+	
+	# Update particles
+	_update_logo_particles(delta)
 	
 	# Transition to next phase
 	if phase_timer >= LOGO_DURATION:
@@ -307,6 +344,21 @@ func _update_title_card_phase(delta: float) -> void:
 # ==============================================================================
 
 func _update_transition_phase(delta: float) -> void:
+	# Ship flies in from left
+	var t = minf(phase_timer / TRANSITION_DURATION, 1.0)
+	var eased = ease(t, 0.4)
+	
+	# Ship movement
+	ship_x = lerpf(-200, screen_w * 0.5, eased)
+	ship_y = lerpf(screen_h * 0.3, screen_h * 0.5, eased * 0.5)
+	ship_scale = lerpf(0.3, 0.6, eased)
+	
+	# Camera follows ship slightly
+	camera_follow = Vector2(
+		(ship_x - screen_w * 0.5) * 0.1,
+		(ship_y - screen_h * 0.5) * 0.1
+	)
+	
 	# Simple fade to black then to menu
 	if phase_timer >= TRANSITION_DURATION:
 		_start_phase(Phase.COMPLETE)
@@ -414,3 +466,102 @@ func _skip_to_menu() -> void:
 		ProjectSettings.save()
 	
 	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
+
+
+# ==============================================================================
+# PARTICLE SYSTEM (for logo phase)
+# ==============================================================================
+
+func _spawn_logo_particle() -> void:
+	var center = Vector2(screen_w * 0.5, screen_h * 0.5)
+	var angle = randf() * TAU
+	var distance = randf_range(200, 400)
+	var offset = Vector2(cos(angle), sin(angle)) * distance
+	
+	logo_particles.append({
+		"pos": center + offset,
+		"vel": Vector2(cos(angle), sin(angle)) * randf_range(-20, -50),
+		"life": randf_range(0.8, 1.5),
+		"max_life": randf_range(0.8, 1.5),
+		"size": randf_range(2, 5),
+		"color": Color(1.0, randf_range(0.7, 0.95), randf_range(0.3, 0.6))
+	})
+
+
+func _update_logo_particles(delta: float) -> void:
+	for i in range(logo_particles.size() - 1, -1, -1):
+		var p = logo_particles[i]
+		p.pos += p.vel * delta
+		p.life -= delta
+		
+		# Add slight drift
+		p.vel.y += delta * 10
+		
+		if p.life <= 0:
+			logo_particles.remove_at(i)
+
+
+func _draw_logo_particles() -> void:
+	for p in logo_particles:
+		var alpha = p.life / p.max_life
+		var col = p.color
+		col.a = alpha * 0.7
+		draw_circle(p.pos, p.size, col)
+
+
+func _draw_transition_ship() -> void:
+	var center = Vector2(ship_x, ship_y)
+	var s = ship_scale
+	
+	draw_set_transform(center, 0, Vector2(s, s))
+	
+	# Engine glow
+	var engine_flicker = 0.8 + sin(total_time * 15.0) * 0.15
+	var glow_col = Color(1.0, 0.5, 0.2, 0.5 * engine_flicker)
+	draw_circle(Vector2(-70, 0), 20, glow_col)
+	draw_circle(Vector2(-65, -12), 12, glow_col)
+	draw_circle(Vector2(-65, 12), 12, glow_col)
+	
+	# Main hull
+	var hull_col = Color(0.25, 0.55, 0.35)
+	var hull = PackedVector2Array([
+		Vector2(70, 0),
+		Vector2(35, -22),
+		Vector2(-55, -25),
+		Vector2(-65, -18),
+		Vector2(-65, 18),
+		Vector2(-55, 25),
+		Vector2(35, 22),
+	])
+	draw_colored_polygon(hull, hull_col)
+	
+	# Cockpit
+	var cockpit_col = Color(0.3, 0.7, 0.9, 0.9)
+	var cockpit = PackedVector2Array([
+		Vector2(65, 0),
+		Vector2(45, -10),
+		Vector2(28, -8),
+		Vector2(28, 8),
+		Vector2(45, 10),
+	])
+	draw_colored_polygon(cockpit, cockpit_col)
+	
+	# Wings
+	var wing_col = Color(0.2, 0.45, 0.3)
+	var top_wing = PackedVector2Array([
+		Vector2(15, -22),
+		Vector2(30, -40),
+		Vector2(-15, -48),
+		Vector2(-35, -25),
+	])
+	draw_colored_polygon(top_wing, wing_col)
+	
+	var bot_wing = PackedVector2Array([
+		Vector2(15, 22),
+		Vector2(30, 40),
+		Vector2(-15, 48),
+		Vector2(-35, 25),
+	])
+	draw_colored_polygon(bot_wing, wing_col)
+	
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
