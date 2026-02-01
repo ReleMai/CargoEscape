@@ -89,9 +89,20 @@ func _ready() -> void:
 	_generate_stars()
 	_setup_ui()
 	_connect_signals()
+	
+	# Register skip hint (will be shown when transition starts)
+	if skip_hint:
+		skip_hint.visible = false
 
 
 func _process(delta: float) -> void:
+	# Apply speed multiplier from CutsceneManager for transitions
+	var speed_mult = 1.0
+	if is_transitioning:
+		speed_mult = CutsceneManager.get_speed_multiplier()
+	
+	var modified_delta = delta * speed_mult
+	
 	ship_bob_time += delta
 	engine_flicker += delta * 15.0
 	
@@ -100,9 +111,13 @@ func _process(delta: float) -> void:
 	
 	# Handle transition
 	if is_transitioning:
-		_process_transition(delta)
-		_update_camera_shake(delta)
-		_update_speed_lines(delta)
+		_process_transition(modified_delta)
+		_update_camera_shake(modified_delta)
+		_update_speed_lines(modified_delta)
+		
+		# Update skip hint visibility
+		if skip_hint:
+			skip_hint.modulate.a = CutsceneManager.get_skip_hint_alpha()
 	
 	# Decay flash
 	if flash_alpha > 0:
@@ -566,6 +581,16 @@ func _start_transition() -> void:
 	zoom_factor = 1.0
 	speed_lines.clear()
 	
+	# Register with CutsceneManager
+	CutsceneManager.register_cutscene("Intro Transition", true)
+	CutsceneManager.skip_requested.connect(_on_cutscene_skip_requested)
+	CutsceneManager.skip_to_gameplay_requested.connect(_on_cutscene_skip_to_gameplay)
+	
+	# Show skip hint
+	if skip_hint:
+		skip_hint.visible = true
+		skip_hint.modulate.a = 1.0
+	
 	# Fade out UI
 	var tween = create_tween()
 	tween.set_parallel(true)
@@ -650,7 +675,41 @@ func _on_quit_pressed() -> void:
 
 
 func _go_to_boarding() -> void:
+	# Unregister cutscene before changing scene
+	if CutsceneManager.skip_requested.is_connected(_on_cutscene_skip_requested):
+		CutsceneManager.skip_requested.disconnect(_on_cutscene_skip_requested)
+	if CutsceneManager.skip_to_gameplay_requested.is_connected(_on_cutscene_skip_to_gameplay):
+		CutsceneManager.skip_to_gameplay_requested.disconnect(_on_cutscene_skip_to_gameplay)
+	CutsceneManager.unregister_cutscene()
+	
 	LoadingScreen.start_transition("res://scenes/boarding/boarding_scene.tscn")
+
+
+# ==============================================================================
+# CUTSCENE SKIP HANDLERS
+# ==============================================================================
+
+func _on_cutscene_skip_requested() -> void:
+	# Skip directly to end of transition
+	_go_to_boarding()
+
+
+func _on_cutscene_skip_to_gameplay() -> void:
+	# Skip to main escape scene
+	if CutsceneManager.skip_requested.is_connected(_on_cutscene_skip_requested):
+		CutsceneManager.skip_requested.disconnect(_on_cutscene_skip_requested)
+	if CutsceneManager.skip_to_gameplay_requested.is_connected(_on_cutscene_skip_to_gameplay):
+		CutsceneManager.skip_to_gameplay_requested.disconnect(_on_cutscene_skip_to_gameplay)
+	CutsceneManager.unregister_cutscene()
+	
+	# Setup game state
+	if GameManager:
+		GameManager.reset_game()
+		GameManager.initialize_starting_equipment()
+		var station_data = preload("res://resources/stations/abandoned_station.tres")
+		GameManager.set_current_station(station_data)
+	
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 
 # ==============================================================================

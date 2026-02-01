@@ -66,19 +66,24 @@ func _ready() -> void:
 	undocking_manager.undocking_progress.connect(_on_progress_update)
 	undocking_manager.status_changed.connect(_on_status_changed)
 	
+	# Register with CutsceneManager
+	CutsceneManager.register_cutscene("Undocking Sequence", true)
+	CutsceneManager.skip_requested.connect(_on_cutscene_skip_requested)
+	CutsceneManager.skip_to_gameplay_requested.connect(_on_cutscene_skip_to_gameplay)
+	
 	# Start the sequence
 	undocking_manager.start_undocking(current_ship_type, current_station_data)
 
 
 func _process(delta: float) -> void:
-	# Skip input
-	if can_skip:
-		if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_cancel"):
-			_skip()
+	# Update skip hint visibility based on CutsceneManager
+	if skip_hint:
+		skip_hint.modulate.a = CutsceneManager.get_skip_hint_alpha()
 	
 	# Animate status text (typewriter effect)
 	if displayed_status != target_status:
-		char_timer += delta * chars_per_second
+		var speed_mult = CutsceneManager.get_speed_multiplier()
+		char_timer += delta * chars_per_second * speed_mult
 		var chars_to_show = int(char_timer)
 		if chars_to_show >= target_status.length():
 			displayed_status = target_status
@@ -88,9 +93,8 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_SPACE or event.keycode == KEY_ESCAPE:
-			_skip()
+	# CutsceneManager handles skip inputs globally
+	pass
 
 
 # ==============================================================================
@@ -170,6 +174,7 @@ func _on_status_changed(text: String) -> void:
 
 func _on_progress_update(progress: float) -> void:
 	progress_bar.value = progress * 100
+	CutsceneManager.update_progress(progress)
 
 
 func _on_undocking_complete() -> void:
@@ -196,6 +201,20 @@ func _skip() -> void:
 	undocking_manager.skip_animation()
 
 
+# ==============================================================================
+# CUTSCENE SKIP HANDLERS
+# ==============================================================================
+
+func _on_cutscene_skip_requested() -> void:
+	_skip()
+
+
+func _on_cutscene_skip_to_gameplay() -> void:
+	# Skip directly to escape scene
+	can_skip = false
+	_go_to_escape()
+
+
 func _transition_to_escape() -> void:
 	# Quick fade (the undocking already faded partially)
 	var fade = ColorRect.new()
@@ -217,4 +236,11 @@ func _transition_to_escape() -> void:
 
 
 func _go_to_escape() -> void:
+	# Unregister cutscene before changing scene
+	if CutsceneManager.skip_requested.is_connected(_on_cutscene_skip_requested):
+		CutsceneManager.skip_requested.disconnect(_on_cutscene_skip_requested)
+	if CutsceneManager.skip_to_gameplay_requested.is_connected(_on_cutscene_skip_to_gameplay):
+		CutsceneManager.skip_to_gameplay_requested.disconnect(_on_cutscene_skip_to_gameplay)
+	CutsceneManager.unregister_cutscene()
+	
 	LoadingScreen.start_transition("res://scenes/main.tscn")
