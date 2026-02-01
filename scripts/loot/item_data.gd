@@ -64,6 +64,10 @@ class_name ItemData
 ## 0=Scrap, 1=Component, 2=Valuable, 3=Module, 4=Artifact
 @export_range(0, 4) var category: int = 0
 
+## Faction-specific item (null = can appear on any faction)
+## "CCG", "NEX", "GDF", "SYN", "IND", or "" for non-faction-specific
+@export var faction_exclusive: String = ""
+
 @export_group("Search Time")
 ## Base time to search/identify this item (seconds)
 ## Larger/rarer items take longer to search

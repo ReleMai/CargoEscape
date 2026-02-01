@@ -1,0 +1,413 @@
+name: Priority Merge Queue
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  pull_request_target:
+    types: [labeled, unlabeled, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      force_next:
+        description: 'Force process next PR in queue'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  manage-queue:
+    runs-on: ubuntu-latest
+    outputs:
+      next_pr: ${{ steps.queue.outputs.next_pr }}
+      queue_locked: ${{ steps.queue.outputs.queue_locked }}
+    
+    steps:
+      - name: Manage Priority Queue
+        id: queue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            console.log('Priority Merge Queue Manager');
+            console.log('============================');
+            
+            const PRIORITIES = {
+              'priority-critical': 3,
+              'priority-high': 2,
+              'priority-medium': 1,
+              'priority-low': 0
+            };
+            
+            const LABELS = {
+              READY: 'ready-to-merge',
+              QUEUED: 'queued-for-merge',
+              IN_PROGRESS: 'merge-in-progress',
+              MERGED: 'merged',
+              BLOCKED: 'merge-blocked',
+              NEEDS_REBASE: 'needs-rebase'
+            };
+            
+            // Ensure labels exist
+            const labelConfigs = [
+              { name: 'priority-critical', color: 'd73a4a' },
+              { name: 'priority-high', color: 'ff7b00' },
+              { name: 'priority-medium', color: 'fbca04' },
+              { name: 'priority-low', color: '0e8a16' },
+              { name: 'ready-to-merge', color: '0e8a16' },
+              { name: 'queued-for-merge', color: '1d76db' },
+              { name: 'merge-in-progress', color: 'ff6b00' },
+              { name: 'merged', color: '6f42c1' },
+              { name: 'merge-blocked', color: 'd93f0b' },
+              { name: 'needs-rebase', color: 'e99695' }
+            ];
+            
+            for (const lbl of labelConfigs) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: lbl.name });
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({ owner, repo, name: lbl.name, color: lbl.color });
+                  console.log('Created label: ' + lbl.name);
+                }
+              }
+            }
+            
+            // Get all open PRs
+            const openPRs = await github.paginate(github.rest.pulls.list, {
+              owner, repo, state: 'open', per_page: 100
+            });
+            
+            console.log('Found ' + openPRs.length + ' open PRs');
+            
+            // Check if queue is locked
+            const inProgressPR = openPRs.find(pr => 
+              pr.labels.some(l => l.name === LABELS.IN_PROGRESS)
+            );
+            
+            if (inProgressPR) {
+              console.log('Queue locked - PR #' + inProgressPR.number + ' is being merged');
+              
+              const prDetails = await github.rest.pulls.get({
+                owner, repo, pull_number: inProgressPR.number
+              });
+              
+              if (prDetails.data.merged) {
+                console.log('PR #' + inProgressPR.number + ' was merged - unlocking queue');
+                try {
+                  await github.rest.issues.removeLabel({
+                    owner, repo, issue_number: inProgressPR.number, name: LABELS.IN_PROGRESS
+                  });
+                } catch (e) { }
+              } else {
+                core.setOutput('queue_locked', 'true');
+                core.setOutput('next_pr', String(inProgressPR.number));
+                return;
+              }
+            }
+            
+            // Filter PRs ready to merge
+            const readyPRs = openPRs.filter(pr => {
+              const isWIP = pr.title.includes('[WIP]') || pr.draft;
+              const hasReadyLabel = pr.labels.some(l => 
+                l.name === LABELS.READY || l.name === LABELS.QUEUED
+              );
+              const isBlocked = pr.labels.some(l => l.name === LABELS.BLOCKED);
+              return !isWIP && hasReadyLabel && !isBlocked;
+            });
+            
+            console.log('Found ' + readyPRs.length + ' PRs ready for queue');
+            
+            const queuedPRs = [];
+            
+            for (const pr of readyPRs) {
+              const prDetails = await github.rest.pulls.get({
+                owner, repo, pull_number: pr.number
+              });
+              
+              if (prDetails.data.mergeable === false) {
+                console.log('PR #' + pr.number + ' has conflicts');
+                const currentLabels = pr.labels.map(l => l.name);
+                if (!currentLabels.includes(LABELS.NEEDS_REBASE)) {
+                  await github.rest.issues.addLabels({
+                    owner, repo, issue_number: pr.number, labels: [LABELS.NEEDS_REBASE]
+                  });
+                }
+                continue;
+              } else {
+                const currentLabels = pr.labels.map(l => l.name);
+                if (currentLabels.includes(LABELS.NEEDS_REBASE)) {
+                  try {
+                    await github.rest.issues.removeLabel({
+                      owner, repo, issue_number: pr.number, name: LABELS.NEEDS_REBASE
+                    });
+                  } catch (e) { }
+                }
+              }
+              
+              // Determine priority
+              let priority = -1;
+              let priorityLabel = null;
+              
+              for (const label of pr.labels) {
+                if (PRIORITIES[label.name] !== undefined) {
+                  priority = PRIORITIES[label.name];
+                  priorityLabel = label.name;
+                  break;
+                }
+              }
+              
+              // Auto-assign priority
+              if (priority === -1) {
+                const title = pr.title.toLowerCase();
+                
+                if (title.includes('fix') && (title.includes('critical') || title.includes('crash') || title.includes('break'))) {
+                  priority = 3;
+                  priorityLabel = 'priority-critical';
+                } else if (title.includes('fix') || title.includes('bug')) {
+                  priority = 2;
+                  priorityLabel = 'priority-high';
+                } else if (title.includes('add') || title.includes('implement') || title.includes('feature')) {
+                  priority = 1;
+                  priorityLabel = 'priority-medium';
+                } else if (title.includes('doc') || title.includes('readme') || title.includes('comment') || title.includes('type hint')) {
+                  priority = 0;
+                  priorityLabel = 'priority-low';
+                } else {
+                  priority = 1;
+                  priorityLabel = 'priority-medium';
+                }
+                
+                console.log('Auto-assigning ' + priorityLabel + ' to PR #' + pr.number);
+                await github.rest.issues.addLabels({
+                  owner, repo, issue_number: pr.number, labels: [priorityLabel]
+                });
+              }
+              
+              // Add queued label
+              const currentLabels = pr.labels.map(l => l.name);
+              if (!currentLabels.includes(LABELS.QUEUED)) {
+                await github.rest.issues.addLabels({
+                  owner, repo, issue_number: pr.number, labels: [LABELS.QUEUED]
+                });
+              }
+              
+              queuedPRs.push({
+                number: pr.number,
+                title: pr.title,
+                priority: priority,
+                createdAt: new Date(pr.created_at)
+              });
+            }
+            
+            // Sort by priority then age
+            queuedPRs.sort((a, b) => {
+              if (b.priority !== a.priority) {
+                return b.priority - a.priority;
+              }
+              return a.createdAt - b.createdAt;
+            });
+            
+            console.log('\nMERGE QUEUE:');
+            for (let i = 0; i < queuedPRs.length; i++) {
+              const pr = queuedPRs[i];
+              console.log((i + 1) + '. PR #' + pr.number + ' (priority ' + pr.priority + ')');
+            }
+            
+            const nextPR = queuedPRs[0];
+            
+            if (nextPR) {
+              console.log('\nNext PR to merge: #' + nextPR.number);
+              core.setOutput('next_pr', String(nextPR.number));
+              core.setOutput('queue_locked', 'false');
+            } else {
+              console.log('\nQueue is empty');
+              core.setOutput('next_pr', '');
+              core.setOutput('queue_locked', 'false');
+            }
+
+  validate-and-merge:
+    needs: manage-queue
+    runs-on: ubuntu-latest
+    if: needs.manage-queue.outputs.next_pr != '' && needs.manage-queue.outputs.queue_locked != 'true'
+    
+    steps:
+      - name: Lock Queue
+        id: lock
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = parseInt('${{ needs.manage-queue.outputs.next_pr }}', 10);
+            
+            console.log('Locking queue for PR #' + prNumber);
+            
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber,
+              labels: ['merge-in-progress']
+            });
+            
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: prNumber,
+              body: '**Merge Queue**: Processing this PR. Running validation...'
+            });
+      
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ needs.manage-queue.outputs.next_pr }}/head
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install gdtoolkit
+        run: pip install gdtoolkit
+      
+      - name: Validate Godot Project
+        id: validate
+        run: |
+          echo "Validating Godot project..."
+          ERRORS=0
+          
+          if [ -f "project.godot" ]; then
+            echo "project.godot found"
+          else
+            echo "ERROR: project.godot not found!"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          echo "Checking GDScript syntax..."
+          SCRIPT_ERRORS=0
+          for file in $(find . -name "*.gd" -type f 2>/dev/null | head -100); do
+            if ! gdparse "$file" > /dev/null 2>&1; then
+              echo "Syntax error: $file"
+              SCRIPT_ERRORS=$((SCRIPT_ERRORS + 1))
+            fi
+          done
+          ERRORS=$((ERRORS + SCRIPT_ERRORS))
+          
+          echo "Checking scene files..."
+          SCENE_ERRORS=0
+          for file in $(find . -name "*.tscn" -type f 2>/dev/null); do
+            if ! grep -q "\[gd_scene" "$file" 2>/dev/null; then
+              echo "Invalid scene: $file"
+              SCENE_ERRORS=$((SCENE_ERRORS + 1))
+            fi
+          done
+          ERRORS=$((ERRORS + SCENE_ERRORS))
+          
+          echo "Checking for conflict markers..."
+          if grep -rl "^<<<<<<< " --include="*.gd" --include="*.tscn" --include="*.tres" . 2>/dev/null; then
+            echo "Merge conflict markers found!"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          echo "Total errors: $ERRORS"
+          
+          if [ $ERRORS -eq 0 ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+      
+      - name: Merge PR
+        if: steps.validate.outputs.passed == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = parseInt('${{ needs.manage-queue.outputs.next_pr }}', 10);
+            
+            console.log('Validation passed - merging PR #' + prNumber);
+            
+            try {
+              const { data: pr } = await github.rest.pulls.get({
+                owner, repo, pull_number: prNumber
+              });
+              
+              await github.rest.pulls.merge({
+                owner, repo, pull_number: prNumber,
+                commit_title: pr.title + ' (#' + prNumber + ')',
+                commit_message: 'Merged via Priority Queue',
+                merge_method: 'squash'
+              });
+              
+              console.log('Merged PR #' + prNumber);
+              
+              const labelsToRemove = ['merge-in-progress', 'queued-for-merge', 'ready-to-merge'];
+              for (const label of labelsToRemove) {
+                try {
+                  await github.rest.issues.removeLabel({
+                    owner, repo, issue_number: prNumber, name: label
+                  });
+                } catch (e) { }
+              }
+              
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: prNumber,
+                labels: ['merged', 'auto-merged']
+              });
+              
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: prNumber,
+                body: '**Merged successfully!** This PR passed validation and was merged via the priority queue.'
+              });
+              
+            } catch (error) {
+              console.log('Merge failed: ' + error.message);
+              
+              try {
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: 'merge-in-progress'
+                });
+              } catch (e) { }
+              
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: prNumber, labels: ['merge-blocked']
+              });
+              
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: prNumber,
+                body: '**Merge failed**: ' + error.message + '\n\nRemove the merge-blocked label to retry.'
+              });
+            }
+      
+      - name: Handle Validation Failure
+        if: steps.validate.outputs.passed != 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = parseInt('${{ needs.manage-queue.outputs.next_pr }}', 10);
+            
+            console.log('Validation failed for PR #' + prNumber);
+            
+            try {
+              await github.rest.issues.removeLabel({
+                owner, repo, issue_number: prNumber, name: 'merge-in-progress'
+              });
+            } catch (e) { }
+            
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber, labels: ['merge-blocked']
+            });
+            
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: prNumber,
+              body: '**Validation Failed**: This PR did not pass checks. Fix the issues and remove the merge-blocked label to retry.'
+            });
