@@ -727,7 +727,8 @@ func _on_asteroid_destroyed(asteroid: Asteroid) -> void:
 		AsteroidClass.AsteroidSize.LARGE:
 			shake_intensity = 10.5  # Large explosion
 		_:
-			shake_intensity = 4.5   # Fallback for unknown sizes
+			# Unknown size - default to medium intensity
+			shake_intensity = 6.0
 	
 	# Trigger shake for explosion
 	shake_camera(shake_intensity)
