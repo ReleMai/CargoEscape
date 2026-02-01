@@ -80,7 +80,7 @@ enum EscapeVariation {
 # Undocking elements
 @onready var airlock_panel: Panel = %AirlockPanel
 @onready var airlock_door: ColorRect = %AirlockDoor
-@ontml:parameter name="clamp_left: ColorRect = %ClampLeft
+@onready var clamp_left: ColorRect = %ClampLeft
 @onready var clamp_right: ColorRect = %ClampRight
 @onready var undocking_status: Label = %UndockingStatus
 
