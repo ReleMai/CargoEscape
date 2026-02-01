@@ -104,20 +104,29 @@ func _save_settings() -> void:
 
 func _apply_audio_settings() -> void:
 	# Set audio bus volumes (Godot uses decibels)
-	var master_db = linear_to_db(master_volume)
-	var sfx_db = linear_to_db(sfx_volume)
-	var music_db = linear_to_db(music_volume)
+	# Clamp minimum volume to avoid -inf from linear_to_db(0.0)
+	var master_vol = maxf(master_volume, 0.0001)
+	var sfx_vol = maxf(sfx_volume, 0.0001)
+	var music_vol = maxf(music_volume, 0.0001)
+	
+	var master_db = linear_to_db(master_vol)
+	var sfx_db = linear_to_db(sfx_vol)
+	var music_db = linear_to_db(music_vol)
 	
 	# Apply to audio buses if they exist
 	if AudioServer.get_bus_index("Master") >= 0:
 		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), master_db)
+		# Mute the bus if volume is essentially zero
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), master_volume < 0.01)
 	
 	# You can add SFX and Music buses in the Audio settings
 	if AudioServer.get_bus_index("SFX") >= 0:
 		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), sfx_db)
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("SFX"), sfx_volume < 0.01)
 	
 	if AudioServer.get_bus_index("Music") >= 0:
 		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), music_db)
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), music_volume < 0.01)
 
 
 func _apply_display_settings() -> void:

@@ -34,6 +34,22 @@ func _ready() -> void:
 		settings_menu.hide()
 
 
+func _input(event: InputEvent) -> void:
+	# Handle pause toggle
+	if event.is_action_pressed("pause"):
+		# If settings menu is visible, go back to pause menu
+		if settings_menu and settings_menu.visible:
+			_on_settings_back()
+		# If pause menu is visible, resume game
+		elif pause_menu and pause_menu.visible:
+			pause_menu.hide_pause_menu()
+		# Otherwise, show pause menu
+		else:
+			if pause_menu:
+				pause_menu.show_pause_menu()
+		get_viewport().set_input_as_handled()
+
+
 func _connect_signals() -> void:
 	if pause_menu:
 		pause_menu.settings_requested.connect(_on_settings_requested)

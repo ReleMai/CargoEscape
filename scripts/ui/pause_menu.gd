@@ -53,15 +53,6 @@ func _connect_signals() -> void:
 		quit_button.pressed.connect(_on_quit_pressed)
 
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		if visible:
-			_on_resume_pressed()
-		else:
-			show_pause_menu()
-		get_viewport().set_input_as_handled()
-
-
 # ==============================================================================
 # PUBLIC METHODS
 # ==============================================================================
@@ -92,12 +83,12 @@ func _on_settings_pressed() -> void:
 
 
 func _on_main_menu_pressed() -> void:
+	main_menu_requested.emit()
 	hide_pause_menu()
 	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
-	main_menu_requested.emit()
 
 
 func _on_quit_pressed() -> void:
+	quit_requested.emit()
 	hide_pause_menu()
 	get_tree().quit()
-	quit_requested.emit()
