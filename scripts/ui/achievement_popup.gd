@@ -86,11 +86,12 @@ func _animate_show() -> void:
 	show_timer = SHOW_DURATION
 	
 	# Start off-screen to the right
-	position.x = get_viewport_rect().size.x
+	var viewport_size = get_viewport().get_visible_rect().size
+	position.x = viewport_size.x
 	visible = true
 	
 	# Slide in from right
-	var target_x = get_viewport_rect().size.x - size.x - 20
+	var target_x = viewport_size.x - size.x - 20
 	
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_OUT)
@@ -99,7 +100,8 @@ func _animate_show() -> void:
 
 
 func _animate_hide() -> void:
-	var target_x = get_viewport_rect().size.x
+	var viewport_size = get_viewport().get_visible_rect().size
+	var target_x = viewport_size.x
 	
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_IN)

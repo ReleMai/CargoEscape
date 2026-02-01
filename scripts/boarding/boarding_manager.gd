@@ -513,7 +513,6 @@ func _on_item_transferred(item_data: ItemData) -> void:
 	# Check for legendary item (rarity 4)
 	if item_data.rarity == 4 and AchievementManager:
 		AchievementManager.on_legendary_item_found()
-	_update_ui()
 
 
 func _on_item_destroyed(item: LootItem) -> void:
