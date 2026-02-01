@@ -675,6 +675,11 @@ func _fade_to_undocking() -> void:
 	
 	await tween.finished
 	
+	# Auto-save progress after successful boarding
+	if has_node("/root/SaveManager"):
+		var save_manager = get_node("/root/SaveManager")
+		save_manager.auto_save()
+	
 	# Change scene - the undocking scene will fade in
 	LoadingScreen.start_transition("res://scenes/undocking/undocking_scene.tscn")
 
