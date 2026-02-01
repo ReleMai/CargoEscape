@@ -1103,8 +1103,10 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	
 	# Set weight, black market value, and tags
 	item.weight = weight
-	item.black_market_value = def.get("black_market_value", item.value)
-	item.tags = def.get("tags", [])
+	var black_market_value = def.get("black_market_value", item.value)
+	item.black_market_value = black_market_value
+	var tags = def.get("tags", [])
+	item.tags = tags
 	
 	# Search time based on size and rarity
 	var size = item.grid_width * item.grid_height
