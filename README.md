@@ -11,12 +11,22 @@ A side-scrolling space escape game built in Godot 4.5
 
 ## Controls
 
+### Movement
 | Key | Action |
 |-----|--------|
 | W / ↑ | Move Up |
 | S / ↓ | Move Down |
 | A / ← | Move Left |
 | D / → | Move Right |
+
+### Inventory (Loot Phase)
+| Key | Action |
+|-----|--------|
+| 1-9 | Quick select inventory slot |
+| Q | Drop selected item |
+| E | Use/equip selected item |
+| Tab | Toggle inventory view |
+| Escape | Close menus |
 
 ## Game Rules
 
