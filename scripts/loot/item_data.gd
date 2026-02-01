@@ -45,6 +45,9 @@ class_name ItemData
 ## Description shown in tooltips
 @export_multiline var description: String = "A mysterious item."
 
+## Item tags for classification (e.g., ["weapon", "illegal", "tech"])
+@export var tags: Array[String] = []
+
 @export_group("Grid Size")
 ## Width in inventory grid cells (1-4 typical)
 @export_range(1, 6) var grid_width: int = 1
@@ -52,9 +55,28 @@ class_name ItemData
 ## Height in inventory grid cells (1-4 typical)
 @export_range(1, 6) var grid_height: int = 2
 
+@export_group("Physical Properties")
+## Weight in kilograms - affects inventory capacity
+@export var weight: float = 1.0
+
+## Maximum stack size for this item type
+@export_range(1, 9999) var stack_size: int = 1
+
 @export_group("Value & Rarity")
-## How much this item is worth (credits/gold)
-@export var value: int = 100
+## Base value at regular stations (credits)
+@export var base_value: int = 100
+
+## Value at black market (higher for illegal items)
+@export var black_market_value: int = 100
+
+## Black market value (usually different from regular value)
+@export var black_market_value: int = 100
+
+## Physical weight in kg (affects cargo capacity)
+@export var weight: float = 1.0
+
+## Item tags for categorization and trading
+@export var tags: Array[String] = []
 
 ## Rarity tier affects spawn rates and visual effects
 ## 0=Common, 1=Uncommon, 2=Rare, 3=Epic, 4=Legendary
@@ -64,9 +86,22 @@ class_name ItemData
 ## 0=Scrap, 1=Component, 2=Valuable, 3=Module, 4=Artifact
 @export_range(0, 4) var category: int = 0
 
-## Faction-specific item (null = can appear on any faction)
+@export_group("Faction System")
+## Which faction commonly has this item (use Factions.Type enum values)
+## -1 = no affinity (universal item)
+@export_range(-1, 4) var faction_affinity: int = -1
+
+## Array of faction types that WON'T have this item (use Factions.Type enum values)
+@export var faction_restricted: Array[int] = []
+
+## Faction-specific item - string representation for simpler lookups
 ## "CCG", "NEX", "GDF", "SYN", "IND", or "" for non-faction-specific
 @export var faction_exclusive: String = ""
+
+@export_group("Spawn Settings")
+## Probability weight in loot tables (higher = more common)
+## 1.0 = normal, 2.0 = twice as likely, 0.5 = half as likely
+@export_range(0.0, 10.0) var spawn_weight: float = 1.0
 
 @export_group("Search Time")
 ## Base time to search/identify this item (seconds)
@@ -85,6 +120,13 @@ class_name ItemData
 
 ## Color tint for rarity glow
 @export var rarity_color: Color = Color.WHITE
+
+## Path to sprite asset
+@export var icon_path: String = ""
+
+# Deprecated: Superseded by base_value. Use get_station_value() instead for new code.
+# Kept for backward compatibility with existing systems.
+@export var value: int = 100
 
 
 # ==============================================================================
@@ -134,6 +176,60 @@ func get_rarity_color() -> Color:
 		3: return Color(0.7, 0.3, 0.9)      # Purple - Epic
 		4: return Color(1.0, 0.8, 0.2)      # Gold - Legendary
 		_: return Color.WHITE
+
+
+## Get effective value at station (uses base_value, falls back to value for compatibility)
+func get_station_value() -> int:
+	return base_value if base_value > 0 else value
+
+
+## Get black market value (uses black_market_value if set, otherwise base_value * 1.5 for illegal items)
+func get_black_market_value() -> int:
+	if black_market_value > 0:
+		return black_market_value
+	
+	# Auto-calculate for illegal items
+	if has_tag("illegal"):
+		return int(get_station_value() * 1.5)
+	
+	return get_station_value()
+
+
+## Check if item has a specific tag
+func has_tag(tag: String) -> bool:
+	return tag in tags
+
+
+## Check if item is illegal (convenience method)
+func is_illegal() -> bool:
+	return has_tag("illegal")
+
+
+## Get faction affinity name
+func get_faction_affinity_name() -> String:
+	if faction_affinity < 0:
+		return "Universal"
+	
+	var FactionClass = load("res://scripts/data/factions.gd")
+	if FactionClass:
+		match faction_affinity:
+			0: return "CCG"
+			1: return "NEX"
+			2: return "GDF"
+			3: return "SYN"
+			4: return "IND"
+	
+	return "Unknown"
+
+
+## Check if item is restricted for a faction
+func is_restricted_for_faction(faction_type: int) -> bool:
+	return faction_type in faction_restricted
+
+
+## Get weight per inventory cell (efficiency metric)
+func get_weight_density() -> float:
+	return weight / float(get_cell_count())
 
 
 # ==============================================================================
