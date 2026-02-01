@@ -1693,11 +1693,6 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	# Value bonus for weight: +2% per kg
 	item.value = int(item.base_value * (1.0 + item.weight * 0.02))
 	
-	# Set weight, black market value, and tags
-	item.weight = weight
-	item.black_market_value = def.get("black_market_value", item.value)
-	item.tags = def.get("tags", [])
-	
 	# Search time based on size and rarity
 	var size = item.grid_width * item.grid_height
 	item.base_search_time = 1.0 + size * 0.3 + item.rarity * 0.5
@@ -1726,6 +1721,9 @@ static func _create_module(item_id: String, def: Dictionary) -> ModuleData:
 	module.rarity = def.get("rarity", 1)
 	module.value = def.get("base_value", 500)
 	module.module_tier = def.get("tier", 1)
+	
+	# Set weight from definition
+	module.weight = def.get("weight", 5.0)
 	
 	# Set module type
 	var type_str = def.get("module_type", "FLIGHT")

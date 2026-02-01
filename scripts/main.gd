@@ -147,6 +147,9 @@ func _ready() -> void:
 	else:
 		push_warning("GameManager autoload not found!")
 	
+	# Initialize object pools
+	_initialize_pools()
+	
 	# Connect player signals
 	setup_player_connections()
 	
@@ -158,6 +161,17 @@ func _ready() -> void:
 	
 	# Start the game!
 	start_game()
+
+
+func _initialize_pools() -> void:
+	# Create pool for asteroids
+	ObjectPool.create_pool(AsteroidScene, 30)
+	
+	# Create pool for enemies if available
+	if enemy_scene:
+		ObjectPool.create_pool(enemy_scene, 20)
+	
+	print("[Main] Object pools initialized")
 
 
 func _process(delta: float) -> void:
@@ -496,7 +510,7 @@ func _spawn_station_enemy() -> void:
 
 
 func _spawn_asteroid() -> void:
-	var asteroid = AsteroidScene.instantiate()
+	var asteroid = ObjectPool.acquire(AsteroidScene)
 	
 	# Set size based on station weights
 	var size_index: int = current_station_data.get_random_asteroid_size()
@@ -509,9 +523,11 @@ func _spawn_asteroid() -> void:
 	
 	# Connect destroyed signal with asteroid size for shake intensity
 	if asteroid.has_signal("destroyed"):
-		asteroid.destroyed.connect(func(): _on_asteroid_destroyed(asteroid))
+		if not asteroid.destroyed.is_connected(_on_enemy_destroyed):
+			asteroid.destroyed.connect(_on_enemy_destroyed)
 	
-	enemy_container.add_child(asteroid)
+	# Reparent to container
+	ObjectPool.reparent_pooled_object(asteroid, enemy_container)
 
 
 func spawn_enemy() -> void:
@@ -519,8 +535,8 @@ func spawn_enemy() -> void:
 		push_error("Enemy scene not set!")
 		return
 	
-	# Create enemy instance
-	var enemy = enemy_scene.instantiate()
+	# Acquire enemy from pool
+	var enemy = ObjectPool.acquire(enemy_scene)
 	
 	# Position on right side of screen, random height
 	var spawn_x = screen_size.x + 50
@@ -534,12 +550,12 @@ func spawn_enemy() -> void:
 	# Assign movement pattern based on difficulty/time (for vertical movement only)
 	assign_enemy_pattern(enemy)
 	
-	# Connect to destroyed signal
-	if enemy.has_signal("destroyed"):
+	# Connect destroyed signal (only if not already connected)
+	if enemy.has_signal("destroyed") and not enemy.destroyed.is_connected(_on_enemy_destroyed):
 		enemy.destroyed.connect(_on_enemy_destroyed)
 	
-	# Add to scene
-	enemy_container.add_child(enemy)
+	# Reparent to container
+	ObjectPool.reparent_pooled_object(enemy, enemy_container)
 
 
 func spawn_enemy_wave() -> void:
@@ -564,7 +580,7 @@ func spawn_enemy_wave() -> void:
 		if enemy_scene == null:
 			return
 		
-		var enemy = enemy_scene.instantiate()
+		var enemy = ObjectPool.acquire(enemy_scene)
 		
 		# Position based on formation
 		match formation:
@@ -584,11 +600,12 @@ func spawn_enemy_wave() -> void:
 		if enemy.has_method("set_pattern"):
 			enemy.set_pattern(wave_pattern)
 		
-		# Connect signal
-		if enemy.has_signal("destroyed"):
+		# Connect destroyed signal (only if not already connected)
+		if enemy.has_signal("destroyed") and not enemy.destroyed.is_connected(_on_enemy_destroyed):
 			enemy.destroyed.connect(_on_enemy_destroyed)
 		
-		enemy_container.add_child(enemy)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(enemy, enemy_container)
 
 
 func assign_enemy_pattern(enemy: Node) -> void:

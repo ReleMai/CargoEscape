@@ -207,6 +207,10 @@ func _ready() -> void:
 	# Load laser scene if not set
 	if laser_scene == null:
 		laser_scene = preload("res://scenes/laser.tscn")
+	
+	# Initialize laser pool
+	if laser_scene:
+		ObjectPool.create_pool(laser_scene, 50)
 
 
 func _setup_ship_visual() -> void:
@@ -436,8 +440,8 @@ func _fire_laser() -> void:
 	if laser_scene == null:
 		return
 	
-	# Create laser instance
-	var laser = laser_scene.instantiate()
+	# Acquire laser from pool
+	var laser = ObjectPool.acquire(laser_scene)
 	
 	# Position at muzzle or front of ship
 	if muzzle:
@@ -458,9 +462,9 @@ func _fire_laser() -> void:
 		damage = game_manager.get_laser_damage()
 	if damage > 0:
 		laser.set_damage(damage)
-	
-	# Add to scene tree
-	get_tree().current_scene.add_child(laser)
+
+	# Reparent to scene tree (using pool)
+	ObjectPool.reparent_pooled_object(laser, get_tree().current_scene)
 	
 	# Emit weapon fired signal for effects
 	weapon_fired.emit()

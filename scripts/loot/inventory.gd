@@ -5,6 +5,12 @@
 # FILE: scripts/loot/inventory.gd
 # PURPOSE: Grid-based inventory for placing items of various sizes
 #
+# FEATURES:
+# - Grid-based placement with collision detection
+# - Weight-based capacity system (default 50kg)
+# - Keyboard shortcuts for inventory management
+# - Visual feedback with color-coded cells
+#
 # ARCHITECTURE:
 # -------------
 # The inventory doesn't handle drag events directly. Instead, the LootManager
@@ -39,6 +45,10 @@ signal selected_slot_changed(slot_index: int)
 @export var cell_size: int = 64
 @export var cell_gap: int = 2
 
+@export_group("Capacity")
+## Maximum weight capacity in kilograms
+@export var max_capacity: float = 50.0
+
 @export_group("Colors")
 @export var empty_color: Color = Color(0.12, 0.12, 0.18, 0.9)
 @export var occupied_color: Color = Color(0.2, 0.2, 0.28, 0.9)
@@ -68,6 +78,13 @@ var drag_original_pos: Vector2i = Vector2i(-1, -1)
 # Total value
 var total_value: int = 0
 
+# Total weight
+var current_weight: float = 0.0
+
+# Cached style for weight bar (to avoid recreating every update)
+var _weight_bar_style: StyleBoxFlat = null
+var _last_weight_color: Color = Color.BLACK
+
 # Keyboard shortcut support
 var selected_slot: int = -1  # -1 means no selection, 0-8 for slots 1-9
 var slot_items: Array[LootItem] = []  # Quick access slots (max 9 items)
@@ -80,6 +97,8 @@ var grid_container: Control
 var items_layer: Control
 var hover_preview: ColorRect
 var value_label: Label
+var weight_label: Label
+var weight_bar: ProgressBar
 
 # Cell visuals (2D array of ColorRects)
 var cells: Array = []
@@ -93,10 +112,13 @@ func _ready() -> void:
 	items_layer = get_node_or_null("ItemsLayer")
 	hover_preview = get_node_or_null("HoverPreview")
 	value_label = get_node_or_null("TotalValueLabel")
+	weight_label = get_node_or_null("WeightLabel")
+	weight_bar = get_node_or_null("WeightBar")
 	
 	_init_grid()
 	_create_cell_visuals()
 	_update_value_display()
+	_update_weight_display()
 	
 	if hover_preview:
 		hover_preview.visible = false
@@ -148,6 +170,7 @@ func _init_grid() -> void:
 		grid.append(col)
 	
 	total_value = 0
+	current_weight = 0.0
 
 
 func _create_cell_visuals() -> void:
@@ -272,9 +295,11 @@ func place_item(item: LootItem, pos: Vector2i) -> bool:
 	
 	item.set_in_inventory()
 	
-	# Update value
+	# Update value and weight
 	total_value += item.item_data.value
+	current_weight += item.item_data.weight
 	_update_value_display()
+	_update_weight_display()
 	_update_cell_colors()
 	_update_slot_items()
 	
@@ -302,8 +327,10 @@ func remove_item(item: LootItem) -> bool:
 	
 	if item.item_data:
 		total_value -= item.item_data.value
+		current_weight -= item.item_data.weight
 	
 	_update_value_display()
+	_update_weight_display()
 	_update_cell_colors()
 	_update_slot_items()
 	
@@ -406,8 +433,64 @@ func _update_value_display() -> void:
 		value_label.text = "Total: $%d" % total_value
 
 
+func _update_weight_display() -> void:
+	"""Update weight label and bar with color coding"""
+	# Update label
+	if weight_label:
+		weight_label.text = "Weight: %.1f / %.1f kg" % [current_weight, max_capacity]
+	
+	# Update progress bar
+	if weight_bar:
+		weight_bar.max_value = max_capacity
+		weight_bar.value = current_weight
+		
+		# Color coding based on capacity percentage
+		var weight_ratio = current_weight / max_capacity if max_capacity > 0 else 0.0
+		var bar_color: Color
+		
+		if weight_ratio < 0.75:
+			bar_color = Color(0.2, 0.8, 0.2)  # Green
+		elif weight_ratio < 1.0:
+			bar_color = Color(0.9, 0.8, 0.2)  # Yellow
+		else:
+			bar_color = Color(0.9, 0.2, 0.2)  # Red
+		
+		# Only update style if color changed (optimization)
+		if bar_color != _last_weight_color:
+			_last_weight_color = bar_color
+			if not _weight_bar_style:
+				_weight_bar_style = StyleBoxFlat.new()
+			_weight_bar_style.bg_color = bar_color
+			weight_bar.add_theme_stylebox_override("fill", _weight_bar_style)
+
+
 func get_total_value() -> int:
 	return total_value
+
+
+func get_current_weight() -> float:
+	"""Get current inventory weight"""
+	return current_weight
+
+
+func get_max_capacity() -> float:
+	"""Get maximum weight capacity"""
+	return max_capacity
+
+
+func get_weight_ratio() -> float:
+	"""Get current weight as ratio of max capacity (0.0 to 1.0+)"""
+	return current_weight / max_capacity if max_capacity > 0 else 0.0
+
+
+func is_over_encumbered() -> bool:
+	"""Check if inventory is over weight capacity"""
+	return current_weight > max_capacity
+
+
+func can_carry_weight(additional_weight: float) -> bool:
+	"""Check if additional weight can be carried"""
+	return (current_weight + additional_weight) <= max_capacity
 
 
 func get_item_count() -> int:
