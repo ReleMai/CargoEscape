@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nt4zvo2j1x71c"
-path="res://.godot/imported/stealth_plating.png-44fe3e9e33d2789d01ad02c5724c2355.ctex"
+uid="uid://b8we4jbsddlq1"
+path="res://.godot/imported/stealth_plating.png-f6f5721df55d400ea627368f0d0d9a27.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/faction/stealth_plating.png"
-dest_files=["res://.godot/imported/stealth_plating.png-44fe3e9e33d2789d01ad02c5724c2355.ctex"]
+dest_files=["res://.godot/imported/stealth_plating.png-f6f5721df55d400ea627368f0d0d9a27.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

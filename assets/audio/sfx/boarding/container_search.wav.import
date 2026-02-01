@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://a61b0863b1c24397"
-path="res://.godot/imported/container_search.wav-a61b0863b1c243974ed7fe8754aef09d.sample"
+uid="uid://8ckh0xy6wkkq"
+path="res://.godot/imported/container_search.wav-e80c12eb552bcd30549d6728069b0d1c.sample"
 
 [deps]
 
 source_file="res://assets/audio/sfx/boarding/container_search.wav"
-dest_files=["res://.godot/imported/container_search.wav-a61b0863b1c243974ed7fe8754aef09d.sample"]
+dest_files=["res://.godot/imported/container_search.wav-e80c12eb552bcd30549d6728069b0d1c.sample"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://x5t9napa41pfy"
-path="res://.godot/imported/broken_lens.png-f488d5ec3b155d5d30f142a4ed71bb29.ctex"
+uid="uid://ye13w6rqtgve"
+path="res://.godot/imported/broken_lens.png-8d75242487aacc85927711966428787f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/cargo/broken_lens.png"
-dest_files=["res://.godot/imported/broken_lens.png-f488d5ec3b155d5d30f142a4ed71bb29.ctex"]
+dest_files=["res://.godot/imported/broken_lens.png-8d75242487aacc85927711966428787f.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

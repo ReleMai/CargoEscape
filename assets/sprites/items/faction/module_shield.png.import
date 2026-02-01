@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v8vg0qbdoyxo8"
-path="res://.godot/imported/module_shield.png-3d41d90d56016e358becbd068e5e8456.ctex"
+uid="uid://cwt32go3uykwf"
+path="res://.godot/imported/module_shield.png-8716b39abcf6b2ef537959bba866af0d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/faction/module_shield.png"
-dest_files=["res://.godot/imported/module_shield.png-3d41d90d56016e358becbd068e5e8456.ctex"]
+dest_files=["res://.godot/imported/module_shield.png-8716b39abcf6b2ef537959bba866af0d.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

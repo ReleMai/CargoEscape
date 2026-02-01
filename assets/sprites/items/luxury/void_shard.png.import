@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dk3n1hd1zbsmg"
-path="res://.godot/imported/void_shard.png-30f11cbca50ca033909e519cc3123f06.ctex"
+uid="uid://dk3n1hd10bsmg"
+path="res://.godot/imported/void_shard.png-1c98ee5f1fc4c0c20a1d18eae5d278ee.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/luxury/void_shard.png"
-dest_files=["res://.godot/imported/void_shard.png-30f11cbca50ca033909e519cc3123f06.ctex"]
+dest_files=["res://.godot/imported/void_shard.png-1c98ee5f1fc4c0c20a1d18eae5d278ee.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

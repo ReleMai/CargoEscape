@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://n389ar589ab8h"
-path="res://.godot/imported/plasma_pistol.png-dd9c67e68737e1944bcd5e57fa09f611.ctex"
+uid="uid://ci1nimfiknox6"
+path="res://.godot/imported/plasma_pistol.png-4dcabd8f6bd632a21fbdc6429a71cc3e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/weapons/plasma_pistol.png"
-dest_files=["res://.godot/imported/plasma_pistol.png-dd9c67e68737e1944bcd5e57fa09f611.ctex"]
+dest_files=["res://.godot/imported/plasma_pistol.png-4dcabd8f6bd632a21fbdc6429a71cc3e.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

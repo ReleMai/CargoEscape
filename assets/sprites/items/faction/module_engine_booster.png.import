@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ftt15beimd1xm"
-path="res://.godot/imported/module_engine_booster.png-a4a19f01f593b39f90e4cb3be48d8000.ctex"
+uid="uid://byf6j8g81556u"
+path="res://.godot/imported/module_engine_booster.png-193be25e181387345563615157a51c76.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/faction/module_engine_booster.png"
-dest_files=["res://.godot/imported/module_engine_booster.png-a4a19f01f593b39f90e4cb3be48d8000.ctex"]
+dest_files=["res://.godot/imported/module_engine_booster.png-193be25e181387345563615157a51c76.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

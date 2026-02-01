@@ -26,6 +26,7 @@ SaveManager="*res://scripts/core/save_manager.gd"
 TutorialManager="*res://scripts/core/tutorial_manager.gd"
 AchievementManager="*res://scripts/achievement_manager.gd"
 PopupManager="*res://scripts/popup_manager.gd"
+AccessibilityManager="*res://scripts/core/accessibility_manager.gd"
 
 [display]
 

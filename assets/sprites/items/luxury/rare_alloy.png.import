@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rlppdraaodhed"
-path="res://.godot/imported/rare_alloy.png-2e66c6fde2c6bca0f0b80a4a323602f3.ctex"
+uid="uid://b4270jlafjydb"
+path="res://.godot/imported/rare_alloy.png-343df35fdb2a252d45342b8cfc1356e5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/luxury/rare_alloy.png"
-dest_files=["res://.godot/imported/rare_alloy.png-2e66c6fde2c6bca0f0b80a4a323602f3.ctex"]
+dest_files=["res://.godot/imported/rare_alloy.png-343df35fdb2a252d45342b8cfc1356e5.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

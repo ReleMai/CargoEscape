@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6vl5t8ie0gii5"
-path="res://.godot/imported/shipping_container.png-d0ce5b96ddc267e7d5ceaa6b9dba6e70.ctex"
+uid="uid://yc64r5ehtig1"
+path="res://.godot/imported/shipping_container.png-b46b786b7eb60c3e36082828ff3c5ac2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/cargo/shipping_container.png"
-dest_files=["res://.godot/imported/shipping_container.png-d0ce5b96ddc267e7d5ceaa6b9dba6e70.ctex"]
+dest_files=["res://.godot/imported/shipping_container.png-b46b786b7eb60c3e36082828ff3c5ac2.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

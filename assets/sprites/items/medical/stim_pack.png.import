@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vo44ypim6k4ah"
-path="res://.godot/imported/stim_pack.png-03b3a80ed6bae49bcddb913510acea13.ctex"
+uid="uid://cd3r1fwedkqhn"
+path="res://.godot/imported/stim_pack.png-2eb5db16992553a6371e411367bbe924.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/medical/stim_pack.png"
-dest_files=["res://.godot/imported/stim_pack.png-03b3a80ed6bae49bcddb913510acea13.ctex"]
+dest_files=["res://.godot/imported/stim_pack.png-2eb5db16992553a6371e411367bbe924.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

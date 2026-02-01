@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v42n705almc78"
-path="res://.godot/imported/copper_wire.png-6c574f5648098cfbb98ad148517800b6.ctex"
+uid="uid://cs1caqj0rlygf"
+path="res://.godot/imported/copper_wire.png-211c5ab1a8f2e597854f0fc4eff916de.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/cargo/copper_wire.png"
-dest_files=["res://.godot/imported/copper_wire.png-6c574f5648098cfbb98ad148517800b6.ctex"]
+dest_files=["res://.godot/imported/copper_wire.png-211c5ab1a8f2e597854f0fc4eff916de.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

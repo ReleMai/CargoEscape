@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://9ihyitv133fys"
-path="res://.godot/imported/scrap_mechanical.png-656c059052b15a3d3817070ab4a5119a.ctex"
+uid="uid://dk70sej1lhfwo"
+path="res://.godot/imported/scrap_mechanical.png-f8686232b6b52290bd5f029d756b020d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/cargo/scrap_mechanical.png"
-dest_files=["res://.godot/imported/scrap_mechanical.png-656c059052b15a3d3817070ab4a5119a.ctex"]
+dest_files=["res://.godot/imported/scrap_mechanical.png-f8686232b6b52290bd5f029d756b020d.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

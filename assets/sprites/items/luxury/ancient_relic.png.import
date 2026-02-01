@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6zf9fle57nb4p"
-path="res://.godot/imported/ancient_relic.png-278d96ba11c7c27de2b231fc9fd09959.ctex"
+uid="uid://26bo415o1b2l"
+path="res://.godot/imported/ancient_relic.png-f2f009066f2b25231f257feb9dd1e74a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/luxury/ancient_relic.png"
-dest_files=["res://.godot/imported/ancient_relic.png-278d96ba11c7c27de2b231fc9fd09959.ctex"]
+dest_files=["res://.godot/imported/ancient_relic.png-f2f009066f2b25231f257feb9dd1e74a.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

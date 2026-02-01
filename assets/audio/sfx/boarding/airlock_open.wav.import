@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://2c01e34f7aa23dcd"
-path="res://.godot/imported/airlock_open.wav-2c01e34f7aa23dcdd7998dbe2f02abbd.sample"
+uid="uid://dlyky2leucwhn"
+path="res://.godot/imported/airlock_open.wav-91e0898885d0149f4a1dc2600c97da5e.sample"
 
 [deps]
 
 source_file="res://assets/audio/sfx/boarding/airlock_open.wav"
-dest_files=["res://.godot/imported/airlock_open.wav-2c01e34f7aa23dcdd7998dbe2f02abbd.sample"]
+dest_files=["res://.godot/imported/airlock_open.wav-91e0898885d0149f4a1dc2600c97da5e.sample"]
 
 [params]
 

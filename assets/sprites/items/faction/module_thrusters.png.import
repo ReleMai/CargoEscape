@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://h0x4m6ompigc2"
-path="res://.godot/imported/module_thrusters.png-f7e84aa0aaf5ec0f546eb34eaebbe5b1.ctex"
+uid="uid://5eg2t4k3otj"
+path="res://.godot/imported/module_thrusters.png-0ea74a0d30ad7fea359d852d4b087cc3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/faction/module_thrusters.png"
-dest_files=["res://.godot/imported/module_thrusters.png-f7e84aa0aaf5ec0f546eb34eaebbe5b1.ctex"]
+dest_files=["res://.godot/imported/module_thrusters.png-0ea74a0d30ad7fea359d852d4b087cc3.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

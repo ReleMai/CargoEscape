@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://7150ed3a45db1e16"
-path="res://.godot/imported/escape.wav-7150ed3a45db1e16aef0b1a10f695c87.sample"
+uid="uid://de0l67yle0bdr"
+path="res://.godot/imported/escape.wav-51cab36e39abef02439b16a53fc60f5e.sample"
 
 [deps]
 
 source_file="res://assets/audio/sfx/boarding/escape.wav"
-dest_files=["res://.godot/imported/escape.wav-7150ed3a45db1e16aef0b1a10f695c87.sample"]
+dest_files=["res://.godot/imported/escape.wav-51cab36e39abef02439b16a53fc60f5e.sample"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t6apn6ub489az"
-path="res://.godot/imported/nav_computer.png-7709155df72dc9d53b3f9cbe40fdcaa1.ctex"
+uid="uid://t8dpv82b8vh6"
+path="res://.godot/imported/nav_computer.png-f14755d7a68cb31f9500f7879f85432c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/tech/nav_computer.png"
-dest_files=["res://.godot/imported/nav_computer.png-7709155df72dc9d53b3f9cbe40fdcaa1.ctex"]
+dest_files=["res://.godot/imported/nav_computer.png-f14755d7a68cb31f9500f7879f85432c.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

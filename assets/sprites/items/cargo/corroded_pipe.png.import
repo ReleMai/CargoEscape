@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6w3vt6e68simn"
-path="res://.godot/imported/corroded_pipe.png-afc80165d60dfb126c4a3b30701fc345.ctex"
+uid="uid://0tw4p16p6ikj"
+path="res://.godot/imported/corroded_pipe.png-88ffd60c1304e0d722d4a2b65861df90.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/cargo/corroded_pipe.png"
-dest_files=["res://.godot/imported/corroded_pipe.png-afc80165d60dfb126c4a3b30701fc345.ctex"]
+dest_files=["res://.godot/imported/corroded_pipe.png-88ffd60c1304e0d722d4a2b65861df90.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

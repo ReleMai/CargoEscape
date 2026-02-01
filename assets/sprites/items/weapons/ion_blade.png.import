@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nkoxs4ug3981b"
-path="res://.godot/imported/ion_blade.png-65472ed668c6a8d66df526b7e21dcb5f.ctex"
+uid="uid://byhc1x3pfomq0"
+path="res://.godot/imported/ion_blade.png-ae092e28a0bbf749153e196ac0f18d30.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/weapons/ion_blade.png"
-dest_files=["res://.godot/imported/ion_blade.png-65472ed668c6a8d66df526b7e21dcb5f.ctex"]
+dest_files=["res://.godot/imported/ion_blade.png-ae092e28a0bbf749153e196ac0f18d30.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

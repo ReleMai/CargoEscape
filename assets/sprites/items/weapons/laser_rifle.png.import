@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://i9uwjbchteti7"
-path="res://.godot/imported/laser_rifle.png-078dbab82e3e4f75270d880760b5c93f.ctex"
+uid="uid://bj16c6hyoy20o"
+path="res://.godot/imported/laser_rifle.png-06d04bd589631b420698edd33c3fa054.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/weapons/laser_rifle.png"
-dest_files=["res://.godot/imported/laser_rifle.png-078dbab82e3e4f75270d880760b5c93f.ctex"]
+dest_files=["res://.godot/imported/laser_rifle.png-06d04bd589631b420698edd33c3fa054.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

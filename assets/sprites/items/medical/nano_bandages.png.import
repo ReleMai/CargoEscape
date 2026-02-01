@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6ygqua8gvh7wn"
-path="res://.godot/imported/nano_bandages.png-a2839726ba72c51cb881e6063b047e70.ctex"
+uid="uid://16r4tvgdu7uj"
+path="res://.godot/imported/nano_bandages.png-81c3acf3d3b0a39ff299d12155264c88.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/medical/nano_bandages.png"
-dest_files=["res://.godot/imported/nano_bandages.png-a2839726ba72c51cb881e6063b047e70.ctex"]
+dest_files=["res://.godot/imported/nano_bandages.png-81c3acf3d3b0a39ff299d12155264c88.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

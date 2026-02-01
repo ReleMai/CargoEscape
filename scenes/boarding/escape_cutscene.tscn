@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8k3n9x7mp2rt"]
+[gd_scene load_steps=2 format=3 uid="uid://c8k3oax7mp2rt"]
 
 [ext_resource type="Script" path="res://scripts/boarding/escape_cutscene.gd" id="1_escape"]
 

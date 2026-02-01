@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dppy1is491tkt"
-path="res://.godot/imported/black_market_chip.png-c97477df5a34aaea8e616dd222964eca.ctex"
+uid="uid://dppy1is5a1tkt"
+path="res://.godot/imported/black_market_chip.png-5a201704057afc44192e7c56d8eb9f03.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/contraband/black_market_chip.png"
-dest_files=["res://.godot/imported/black_market_chip.png-c97477df5a34aaea8e616dd222964eca.ctex"]
+dest_files=["res://.godot/imported/black_market_chip.png-5a201704057afc44192e7c56d8eb9f03.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

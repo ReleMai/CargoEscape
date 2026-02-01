@@ -69,18 +69,6 @@ class_name ItemData
 ## Value at black market (higher for illegal items)
 @export var black_market_value: int = 100
 
-## Black market value (usually different from regular value)
-@export var black_market_value: int = 100
-
-## Physical weight in kg (affects cargo capacity)
-@export var weight: float = 1.0
-
-## Item tags for categorization and trading
-@export var tags: Array[String] = []
-
-## Weight in kilograms (affects inventory capacity)
-@export var weight: float = 1.0
-
 ## Rarity tier affects spawn rates and visual effects
 ## 0=Common, 1=Uncommon, 2=Rare, 3=Epic, 4=Legendary
 @export_range(0, 4) var rarity: int = 0

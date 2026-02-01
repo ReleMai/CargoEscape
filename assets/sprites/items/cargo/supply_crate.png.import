@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rkoh71eqgo3vv"
-path="res://.godot/imported/supply_crate.png-9c5ec628b542048f5282728239feedea.ctex"
+uid="uid://b310uspp6vlut"
+path="res://.godot/imported/supply_crate.png-cba40da8311423b099f0401e0aab9e6f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/cargo/supply_crate.png"
-dest_files=["res://.godot/imported/supply_crate.png-9c5ec628b542048f5282728239feedea.ctex"]
+dest_files=["res://.godot/imported/supply_crate.png-cba40da8311423b099f0401e0aab9e6f.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

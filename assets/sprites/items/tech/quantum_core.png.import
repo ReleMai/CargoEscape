@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://czeehtt7pyboc"
-path="res://.godot/imported/quantum_core.png-925f0f2c044ada268ecd2e9062fd1b9e.ctex"
+uid="uid://c0eehtt7pyboc"
+path="res://.godot/imported/quantum_core.png-e72a3e4d8ef1ffd04d67cfd1b89c65aa.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/tech/quantum_core.png"
-dest_files=["res://.godot/imported/quantum_core.png-925f0f2c044ada268ecd2e9062fd1b9e.ctex"]
+dest_files=["res://.godot/imported/quantum_core.png-e72a3e4d8ef1ffd04d67cfd1b89c65aa.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false

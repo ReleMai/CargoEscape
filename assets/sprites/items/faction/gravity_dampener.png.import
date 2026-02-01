@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pbnyu9x08co1p"
-path="res://.godot/imported/gravity_dampener.png-e191a60f3c70a7fb60d58c374e7cb25b.ctex"
+uid="uid://dpgd337ajp2rf"
+path="res://.godot/imported/gravity_dampener.png-b22190604285b863a52a2259e13e5072.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/items/faction/gravity_dampener.png"
-dest_files=["res://.godot/imported/gravity_dampener.png-e191a60f3c70a7fb60d58c374e7cb25b.ctex"]
+dest_files=["res://.godot/imported/gravity_dampener.png-b22190604285b863a52a2259e13e5072.ctex"]
 
 [params]
 
@@ -38,4 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=0
-filter=false
