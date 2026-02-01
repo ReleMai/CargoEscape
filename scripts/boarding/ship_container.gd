@@ -117,7 +117,7 @@ var is_searching: bool = false
 var ship_tier: int = 1
 
 ## Container data from ContainerTypes
-var container_data = null
+var container_data: ContainerTypesClass.ContainerData = null
 
 # ==============================================================================
 # LIFECYCLE

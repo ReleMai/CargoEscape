@@ -167,5 +167,5 @@ func _transition_out(scene_path: String) -> void:
 	tween.tween_callback(func():
 		get_tree().paused = false
 		Engine.time_scale = 1.0
-		get_tree().change_scene_to_file(scene_path)
+		LoadingScreen.start_transition(scene_path)
 	)
