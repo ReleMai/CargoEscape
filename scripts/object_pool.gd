@@ -151,9 +151,9 @@ func reparent_pooled_object(obj: Node, new_parent: Node) -> void:
 	if obj.get_parent() != null and obj.get_parent() != new_parent:
 		obj.get_parent().remove_child(obj)
 	
-	# Add to new parent
+	# Add to new parent (deferred to avoid same-frame issues)
 	if obj.get_parent() == null:
-		new_parent.add_child(obj)
+		new_parent.call_deferred("add_child", obj)
 
 
 ## Clear a specific pool

@@ -505,10 +505,9 @@ func _spawn_asteroid() -> void:
 	var spawn_y := randf_range(spawn_margin, screen_size.y - spawn_margin)
 	asteroid.position = Vector2(spawn_x, spawn_y)
 	
-	# Connect destroyed signal
-	if asteroid.has_signal("destroyed"):
-		if not asteroid.destroyed.is_connected(_on_enemy_destroyed):
-			asteroid.destroyed.connect(_on_enemy_destroyed)
+	# Connect destroyed signal (reset() ensures it's connected)
+	if asteroid.has_signal("destroyed") and not asteroid.destroyed.is_connected(_on_enemy_destroyed):
+		asteroid.destroyed.connect(_on_enemy_destroyed)
 	
 	# Reparent to container
 	ObjectPool.reparent_pooled_object(asteroid, enemy_container)
@@ -534,10 +533,9 @@ func spawn_enemy() -> void:
 	# Assign movement pattern based on difficulty/time (for vertical movement only)
 	assign_enemy_pattern(enemy)
 	
-	# Connect to destroyed signal
-	if enemy.has_signal("destroyed"):
-		if not enemy.destroyed.is_connected(_on_enemy_destroyed):
-			enemy.destroyed.connect(_on_enemy_destroyed)
+	# Connect destroyed signal (only if not already connected)
+	if enemy.has_signal("destroyed") and not enemy.destroyed.is_connected(_on_enemy_destroyed):
+		enemy.destroyed.connect(_on_enemy_destroyed)
 	
 	# Reparent to container
 	ObjectPool.reparent_pooled_object(enemy, enemy_container)
@@ -585,10 +583,9 @@ func spawn_enemy_wave() -> void:
 		if enemy.has_method("set_pattern"):
 			enemy.set_pattern(wave_pattern)
 		
-		# Connect signal
-		if enemy.has_signal("destroyed"):
-			if not enemy.destroyed.is_connected(_on_enemy_destroyed):
-				enemy.destroyed.connect(_on_enemy_destroyed)
+		# Connect destroyed signal (only if not already connected)
+		if enemy.has_signal("destroyed") and not enemy.destroyed.is_connected(_on_enemy_destroyed):
+			enemy.destroyed.connect(_on_enemy_destroyed)
 		
 		# Reparent to container
 		ObjectPool.reparent_pooled_object(enemy, enemy_container)

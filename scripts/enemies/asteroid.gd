@@ -92,7 +92,9 @@ var shadow_color: Color
 ## Random seed for consistent shape
 var shape_seed: int
 
-## Counter for generating unique seeds
+## Counter for generating unique seeds (incremented atomically)
+## Note: This is currently single-threaded safe. If multi-threading is needed,
+## wrap access with a mutex lock.
 static var _seed_counter: int = 0
 
 
@@ -351,7 +353,7 @@ func reset() -> void:
 	# Recalculate speed
 	actual_speed = base_speed + randf_range(-speed_variation, speed_variation)
 	
-	# Reconnect signal if needed
+	# Ensure signal is connected
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
 	
