@@ -75,6 +75,7 @@ const ShipContainerScene = preload("res://scenes/boarding/ship_container.tscn")
 @onready var loot_menu: Control = %LootMenu
 @onready var escape_prompt: Control = %EscapePrompt
 @onready var ship_tier_label: Label = %ShipTierLabel  # Shows current ship tier
+@onready var minimap: Control = %Minimap  # Minimap UI element
 
 # ==============================================================================
 # STATE
@@ -138,6 +139,7 @@ func _process(delta: float) -> void:
 	
 	_update_timer(delta)
 	_update_camera(delta)
+	_update_minimap()
 	
 	# Decay camera shake
 	if camera_shake > 0:
@@ -302,6 +304,9 @@ func _apply_layout() -> void:
 	# Spawn containers at validated positions (already offset since containers_parent is offset)
 	for container_data in current_layout.container_positions:
 		_spawn_container(container_data.position, container_data.type)
+	
+	# Initialize minimap with layout
+	_setup_minimap()
 
 
 ## Render the ship interior based on layout
@@ -435,6 +440,9 @@ func _interact_with_container(container: Node2D) -> void:
 		if container.current_state == ShipContainer.ContainerState.CLOSED:
 			container.set_state(ShipContainer.ContainerState.OPEN)
 			container.emit_signal("container_opened")
+			
+			# Mark as searched on minimap
+			_mark_container_searched(container)
 		
 		# Open loot menu if container has items
 		if not container.item_data_list.is_empty():
@@ -444,6 +452,9 @@ func _interact_with_container(container: Node2D) -> void:
 	# Generic container with open_container method
 	if container.has_method("open_container"):
 		container.open_container()
+		
+		# Mark as searched on minimap
+		_mark_container_searched(container)
 		
 		# Try to get items from container
 		if container.has_method("get") and container.get("item_data_list"):
@@ -665,7 +676,7 @@ func _fade_to_undocking() -> void:
 	await tween.finished
 	
 	# Change scene - the undocking scene will fade in
-	get_tree().change_scene_to_file("res://scenes/undocking/undocking_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/undocking/undocking_scene.tscn")
 
 
 # ==============================================================================
@@ -760,3 +771,101 @@ func _create_entrance_fade() -> void:
 func _update_ui() -> void:
 	if loot_value_label:
 		loot_value_label.text = "$%d" % total_loot_value
+
+
+# ==============================================================================
+# MINIMAP
+# ==============================================================================
+
+## Setup the minimap with current layout data
+func _setup_minimap() -> void:
+	if not minimap or not current_layout:
+		return
+	
+	# Get the minimap renderer from the scene
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	# Set the layout data
+	renderer.set_layout(current_layout)
+	
+	# Set exit position
+	if exit_point:
+		renderer.set_exit_position(current_layout.exit_position)
+	
+	# Build container list with positions and searched states
+	_update_minimap_containers()
+
+
+## Update minimap every frame
+func _update_minimap() -> void:
+	if not minimap or not player:
+		return
+	
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	# Update player position (account for layout offset)
+	var player_position_relative_to_layout = player.position - layout_offset
+	renderer.update_player_position(player_position_relative_to_layout)
+
+
+## Update minimap container states
+func _update_minimap_containers() -> void:
+	if not minimap or not containers_parent:
+		return
+	
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	var container_list = []
+	for container_node in containers_parent.get_children():
+		if container_node is ShipContainer:
+			var container_data = {
+				"position": container_node.position,
+				"searched": container_node.current_state != ShipContainer.ContainerState.CLOSED
+			}
+			container_list.append(container_data)
+	
+	renderer.set_containers(container_list)
+
+
+## Get the minimap renderer node
+func _get_minimap_renderer() -> Node:
+	if not minimap:
+		return null
+	
+	# Navigate to the renderer: Minimap/MarginContainer/SubViewportContainer/SubViewport/MinimapRenderer
+	var container = minimap.get_node_or_null("MarginContainer/SubViewportContainer")
+	if not container:
+		return null
+	
+	var viewport = container.get_node_or_null("SubViewport")
+	if not viewport:
+		return null
+	
+	return viewport.get_node_or_null("MinimapRenderer")
+
+
+## Mark a container as searched on the minimap
+func _mark_container_searched(container: Node2D) -> void:
+	if not minimap or not container:
+		return
+	
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	var container_pos = container.position
+	renderer.mark_container_searched(container_pos)
+	
+	# Also refresh the full container list
+	_update_minimap_containers()
+
+
+# ==============================================================================
+# UPDATED INTERACTION HANDLERS
+# ==============================================================================
