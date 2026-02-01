@@ -31,7 +31,7 @@ const SOUNDS := {
 	"airlock_open": "airlock_open.wav",
 	"airlock_close": "airlock_close.wav",
 	"door_open": "airlock_open.wav",  # Reuse for regular doors
-	"door_close": "airlock_close.wav",
+	"door_close": "airlock_close.wav",  # Reuse for regular doors
 	"footstep": "footstep.wav",
 	"container_open": "container_open.wav",
 	"container_search": "container_search.wav",

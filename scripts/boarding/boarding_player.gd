@@ -405,9 +405,9 @@ func _update_sprite_tilt(delta: float) -> void:
 ## Play footstep sound with variation
 func _play_footstep() -> void:
 	# Vary pitch and volume slightly for more natural sound
-	var pitch_var = randf_range(0.9, 1.1)
-	var volume_var = randf_range(-8.0, -6.0)
-	AudioManager.play_sfx("footstep", volume_var, pitch_var)
+	var pitch_variation = randf_range(0.9, 1.1)
+	var volume_db = randf_range(-8.0, -6.0)
+	AudioManager.play_sfx("footstep", volume_db, pitch_variation)
 
 
 ## Set up the interaction prompt label
