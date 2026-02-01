@@ -18,6 +18,7 @@ extends GdUnitTestSuite
 
 # Preload dependencies
 const ItemData = preload("res://scripts/loot/item_data.gd")
+const CargoContainer = preload("res://scripts/loot/container.gd")
 
 
 # ==============================================================================

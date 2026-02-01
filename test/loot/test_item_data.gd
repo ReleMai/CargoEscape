@@ -37,15 +37,15 @@ func after():
 
 func test_create_item_with_defaults():
 	"""Test creating an ItemData with default values"""
-	var item = ItemData.new()
+	var default_item = ItemData.new()
 	
-	assert_str(item.id).is_equal("item_unknown")
-	assert_str(item.name).is_equal("Unknown Item")
-	assert_int(item.grid_width).is_equal(1)
-	assert_int(item.grid_height).is_equal(2)
-	assert_int(item.value).is_equal(100)
-	assert_int(item.rarity).is_equal(0)
-	assert_int(item.category).is_equal(0)
+	assert_str(default_item.id).is_equal("item_unknown")
+	assert_str(default_item.name).is_equal("Unknown Item")
+	assert_int(default_item.grid_width).is_equal(1)
+	assert_int(default_item.grid_height).is_equal(2)
+	assert_int(default_item.value).is_equal(100)
+	assert_int(default_item.rarity).is_equal(0)
+	assert_int(default_item.category).is_equal(0)
 
 
 func test_create_item_with_static_helper():

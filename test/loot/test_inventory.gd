@@ -20,6 +20,7 @@ extends GdUnitTestSuite
 
 # Preload dependencies
 const ItemData = preload("res://scripts/loot/item_data.gd")
+const GridInventory = preload("res://scripts/loot/inventory.gd")
 const LootItem = preload("res://scenes/loot/loot_item.tscn")
 
 
