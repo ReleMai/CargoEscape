@@ -432,6 +432,306 @@ const LEGENDARY_ITEMS = {
 
 
 # ==============================================================================
+# FACTION-SPECIFIC UNIQUE ITEMS
+# ==============================================================================
+
+# CCG (Colonial Cargo Guild) - Trade Focus
+const CCG_UNIQUE_ITEMS = {
+	"guild_trade_license": {
+		"name": "Guild Trade License",
+		"description": "Rare authenticated trade documentation. Highly valuable to merchants.",
+		"width": 1, "height": 1,
+		"base_value": 450,
+		"weight": 0.1,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/guild_trade_license.svg",
+		"faction_exclusive": "CCG"
+	},
+	"bulk_cargo_manifest": {
+		"name": "Bulk Cargo Manifest",
+		"description": "Detailed cargo route logs. Reveals locations of nearby shipments.",
+		"width": 1, "height": 2,
+		"base_value": 320,
+		"weight": 0.2,
+		"rarity": 1,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/bulk_cargo_manifest.svg",
+		"faction_exclusive": "CCG"
+	},
+	"premium_fuel_reserves": {
+		"name": "Premium Fuel Reserves",
+		"description": "High-grade refined ship fuel. Burns cleaner and lasts longer.",
+		"width": 2, "height": 1,
+		"base_value": 280,
+		"weight": 8.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/premium_fuel_reserves.svg",
+		"faction_exclusive": "CCG"
+	},
+	"trade_route_data": {
+		"name": "Trade Route Data",
+		"description": "Encrypted navigation data containing profitable trade routes.",
+		"width": 1, "height": 1,
+		"base_value": 380,
+		"weight": 0.1,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/trade_route_data.svg",
+		"faction_exclusive": "CCG"
+	},
+	"guild_masters_seal": {
+		"name": "Guild Master's Seal",
+		"description": "Legendary symbol of authority within the CCG. Priceless to collectors.",
+		"width": 1, "height": 1,
+		"base_value": 2500,
+		"weight": 0.5,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/guild_masters_seal.svg",
+		"faction_exclusive": "CCG"
+	}
+}
+
+# NEX (Nexus Syndicate) - Criminal Focus
+const NEX_UNIQUE_ITEMS = {
+	"syndicate_cipher": {
+		"name": "Syndicate Cipher",
+		"description": "Encrypted key that unlocks black market location data.",
+		"width": 1, "height": 1,
+		"base_value": 420,
+		"weight": 0.1,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/syndicate_cipher.svg",
+		"faction_exclusive": "NEX"
+	},
+	"assassination_contract": {
+		"name": "Assassination Contract",
+		"description": "Illegal hit contract. Extremely valuable on the black market.",
+		"width": 1, "height": 2,
+		"base_value": 650,
+		"weight": 0.1,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/assassination_contract.svg",
+		"faction_exclusive": "NEX"
+	},
+	"forged_id_chips": {
+		"name": "Forged ID Chips",
+		"description": "Professional identity forgery kit. Complete with biometric spoofing.",
+		"width": 2, "height": 1,
+		"base_value": 380,
+		"weight": 0.3,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/forged_id_chips.svg",
+		"faction_exclusive": "NEX"
+	},
+	"syndicate_tribute": {
+		"name": "Syndicate Tribute",
+		"description": "Cache of protection money collected from various sectors.",
+		"width": 2, "height": 2,
+		"base_value": 550,
+		"weight": 5.0,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/syndicate_tribute.svg",
+		"faction_exclusive": "NEX"
+	},
+	"crime_lords_ledger": {
+		"name": "Crime Lord's Ledger",
+		"description": "Legendary blackmail material containing secrets of the powerful.",
+		"width": 2, "height": 1,
+		"base_value": 3200,
+		"weight": 0.8,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/crime_lords_ledger.svg",
+		"faction_exclusive": "NEX"
+	}
+}
+
+# GDF (Galactic Defense Force) - Military Focus
+const GDF_UNIQUE_ITEMS = {
+	"military_rations_premium": {
+		"name": "Military Rations (Premium)",
+		"description": "High-quality military food supplies. Nutritious and long-lasting.",
+		"width": 2, "height": 1,
+		"base_value": 180,
+		"weight": 3.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/military_rations_premium.svg",
+		"faction_exclusive": "GDF"
+	},
+	"tactical_armor_plating": {
+		"name": "Tactical Armor Plating",
+		"description": "Advanced composite armor material. Essential for ship upgrades.",
+		"width": 3, "height": 2,
+		"base_value": 480,
+		"weight": 15.0,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tactical_armor_plating.svg",
+		"faction_exclusive": "GDF"
+	},
+	"encrypted_orders": {
+		"name": "Encrypted Orders",
+		"description": "Classified military operation data. Intel agencies pay top credit.",
+		"width": 1, "height": 1,
+		"base_value": 520,
+		"weight": 0.1,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/encrypted_orders.svg",
+		"faction_exclusive": "GDF"
+	},
+	"officers_sidearm": {
+		"name": "Officer's Sidearm",
+		"description": "Rare military-grade personal weapon. Highly regulated.",
+		"width": 2, "height": 1,
+		"base_value": 720,
+		"weight": 2.0,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/officers_sidearm.svg",
+		"faction_exclusive": "GDF"
+	},
+	"admirals_medal": {
+		"name": "Admiral's Medal",
+		"description": "Legendary military honor. Priceless collectible for military historians.",
+		"width": 1, "height": 1,
+		"base_value": 2800,
+		"weight": 0.3,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/admirals_medal.svg",
+		"faction_exclusive": "GDF"
+	}
+}
+
+# SYN (Synthetix Corp) - Tech Focus
+const SYN_UNIQUE_ITEMS = {
+	"prototype_chip": {
+		"name": "Prototype Chip",
+		"description": "Experimental processor technology. Cutting-edge and unstable.",
+		"width": 1, "height": 1,
+		"base_value": 580,
+		"weight": 0.1,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/prototype_chip.svg",
+		"faction_exclusive": "SYN"
+	},
+	"ai_core_fragment": {
+		"name": "AI Core Fragment",
+		"description": "Piece of advanced AI neural network. Rare computing component.",
+		"width": 1, "height": 2,
+		"base_value": 620,
+		"weight": 1.0,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/ai_core_fragment.svg",
+		"faction_exclusive": "SYN"
+	},
+	"nanobot_swarm": {
+		"name": "Nanobot Swarm",
+		"description": "Medical and repair nanobots in containment. Highly advanced technology.",
+		"width": 1, "height": 1,
+		"base_value": 680,
+		"weight": 0.5,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/nanobot_swarm.svg",
+		"faction_exclusive": "SYN"
+	},
+	"holographic_projector": {
+		"name": "Holographic Projector",
+		"description": "Advanced entertainment and presentation technology.",
+		"width": 2, "height": 1,
+		"base_value": 450,
+		"weight": 2.0,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/holographic_projector.svg",
+		"faction_exclusive": "SYN"
+	},
+	"quantum_processor": {
+		"name": "Quantum Processor",
+		"description": "Legendary quantum computing core. One of the most advanced chips ever made.",
+		"width": 1, "height": 1,
+		"base_value": 4200,
+		"weight": 0.2,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/quantum_processor.svg",
+		"faction_exclusive": "SYN"
+	}
+}
+
+# IND (Independent) - Mixed/Salvage Focus
+const IND_UNIQUE_ITEMS = {
+	"salvage_rights_claim": {
+		"name": "Salvage Rights Claim",
+		"description": "Legal documentation for salvage operations. Valuable to independent operators.",
+		"width": 1, "height": 1,
+		"base_value": 280,
+		"weight": 0.1,
+		"rarity": 1,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/salvage_rights_claim.svg",
+		"faction_exclusive": "IND"
+	},
+	"homemade_repairs": {
+		"name": "Homemade Repairs",
+		"description": "Jury-rigged ship parts. Not pretty, but they work surprisingly well.",
+		"width": 2, "height": 2,
+		"base_value": 220,
+		"weight": 6.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/homemade_repairs.svg",
+		"faction_exclusive": "IND"
+	},
+	"family_heirloom": {
+		"name": "Family Heirloom",
+		"description": "Personal item with sentimental value. Worth varies wildly by buyer.",
+		"width": 1, "height": 1,
+		"base_value": 350,
+		"weight": 0.5,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/family_heirloom.svg",
+		"faction_exclusive": "IND"
+	},
+	"prospectors_map": {
+		"name": "Prospector's Map",
+		"description": "Hand-drawn map pointing to valuable wreck locations.",
+		"width": 1, "height": 2,
+		"base_value": 420,
+		"weight": 0.1,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/prospectors_map.svg",
+		"faction_exclusive": "IND"
+	},
+	"lucky_charm": {
+		"name": "Lucky Charm",
+		"description": "Legendary talisman rumored to bring fortune to its owner.",
+		"width": 1, "height": 1,
+		"base_value": 1800,
+		"weight": 0.1,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/lucky_charm.svg",
+		"faction_exclusive": "IND"
+	}
+}
+
+
+# ==============================================================================
 # ITEM DEFINITIONS - MODULES (Equipment)
 # ==============================================================================
 
@@ -622,6 +922,11 @@ static func get_all_items() -> Dictionary:
 	all_items.merge(EPIC_ITEMS)
 	all_items.merge(LEGENDARY_ITEMS)
 	all_items.merge(MODULE_ITEMS)
+	all_items.merge(CCG_UNIQUE_ITEMS)
+	all_items.merge(NEX_UNIQUE_ITEMS)
+	all_items.merge(GDF_UNIQUE_ITEMS)
+	all_items.merge(SYN_UNIQUE_ITEMS)
+	all_items.merge(IND_UNIQUE_ITEMS)
 	return all_items
 
 
@@ -673,6 +978,7 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	item.grid_height = def.get("height", 1)
 	item.rarity = def.get("rarity", 0)
 	item.category = def.get("category", ItemCategory.SCRAP)
+	item.faction_exclusive = def.get("faction_exclusive", "")
 	
 	# Calculate value based on weight (heavier = more valuable for same rarity)
 	var base_value = def.get("base_value", 50)
@@ -900,8 +1206,130 @@ static func get_items_by_category(category: int) -> Dictionary:
 	return result
 
 
+## Get items exclusive to a specific faction
+static func get_faction_items(faction_code: String) -> Dictionary:
+	var result = {}
+	var all_items = get_all_items()
+	for item_id in all_items:
+		var item_faction = all_items[item_id].get("faction_exclusive", "")
+		if item_faction == faction_code:
+			result[item_id] = all_items[item_id]
+	return result
+
+
+## Get non-faction-specific items (can appear on any ship)
+static func get_common_pool_items() -> Dictionary:
+	var result = {}
+	var all_items = get_all_items()
+	for item_id in all_items:
+		var item_faction = all_items[item_id].get("faction_exclusive", "")
+		if item_faction == "":
+			result[item_id] = all_items[item_id]
+	return result
+
+
+## Generate complete loot for a container with faction support
+## Returns Array[ItemData]
+static func generate_container_loot_with_faction(
+	ship_tier: int,
+	container_type: int,
+	item_count: int,
+	faction_code: String = ""
+) -> Array:
+	var ContainerTypesClass = load("res://scripts/data/container_types.gd")
+	
+	# Get category weights from container
+	var category_weights: Dictionary = {}
+	if ContainerTypesClass:
+		var container_data = ContainerTypesClass.get_container(container_type)
+		if container_data:
+			category_weights = container_data.category_weights
+	
+	var items: Array = []
+	for i in range(item_count):
+		var item = null
+		
+		# 20% chance for faction-specific item if faction is specified
+		if faction_code != "" and randf() < 0.2:
+			item = _roll_faction_item(faction_code, ship_tier, container_type, category_weights)
+		
+		# If no faction item rolled, use normal loot generation
+		if item == null:
+			item = roll_item_advanced(ship_tier, container_type, category_weights)
+		
+		if item:
+			items.append(item)
+	
+	return items
+
+
+## Roll a faction-specific item
+static func _roll_faction_item(
+	faction_code: String,
+	ship_tier: int,
+	container_type: int,
+	category_weights: Dictionary
+) -> Resource:
+	var faction_items = get_faction_items(faction_code)
+	if faction_items.is_empty():
+		return null
+	
+	# Apply ship tier and container type rarity modifiers
+	var ShipTypesClass = load("res://scripts/data/ship_types.gd")
+	var ContainerTypesClass = load("res://scripts/data/container_types.gd")
+	
+	var weighted_items: Dictionary = {}
+	var total_weight: float = 0.0
+	
+	for item_id in faction_items:
+		var item_def = faction_items[item_id]
+		var item_rarity = item_def.get("rarity", 0)
+		var item_category = item_def.get("category", ItemCategory.SCRAP)
+		
+		# Base weight (higher rarity = lower base weight)
+		var weight: float = 1.0
+		match item_rarity:
+			0: weight = 100.0  # Common
+			1: weight = 60.0   # Uncommon
+			2: weight = 25.0   # Rare
+			3: weight = 10.0   # Epic
+			4: weight = 5.0    # Legendary
+		
+		# Apply ship tier modifier
+		if ShipTypesClass:
+			weight *= ShipTypesClass.get_rarity_modifier(ship_tier, item_rarity)
+		
+		# Apply container type modifier
+		if ContainerTypesClass:
+			weight *= ContainerTypesClass.get_rarity_modifier(container_type, item_rarity)
+		
+		# Apply category weight
+		if not category_weights.is_empty():
+			weight *= category_weights.get(item_category, 1.0)
+		
+		if weight > 0:
+			weighted_items[item_id] = weight
+			total_weight += weight
+	
+	# If no valid items after weighting, return null
+	if weighted_items.is_empty() or total_weight <= 0:
+		return null
+	
+	# Roll weighted selection
+	var roll = randf() * total_weight
+	var cumulative: float = 0.0
+	
+	for item_id in weighted_items:
+		cumulative += weighted_items[item_id]
+		if roll <= cumulative:
+			return create_item(item_id)
+	
+	# Fallback
+	return create_item(weighted_items.keys()[0])
+
+
 ## Generate complete loot for a container
-## Returns array of ItemData
+## Returns Array[ItemData]
 static func generate_container_loot(
 	ship_tier: int,
 	container_type: int,
