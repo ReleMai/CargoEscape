@@ -5,6 +5,12 @@
 # FILE: scripts/loot/inventory.gd
 # PURPOSE: Grid-based inventory for placing items of various sizes
 #
+# FEATURES:
+# - Grid-based placement with collision detection
+# - Weight-based capacity system (default 50kg)
+# - Keyboard shortcuts for inventory management
+# - Visual feedback with color-coded cells
+#
 # ARCHITECTURE:
 # -------------
 # The inventory doesn't handle drag events directly. Instead, the LootManager
