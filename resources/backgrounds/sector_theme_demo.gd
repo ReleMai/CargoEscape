@@ -16,6 +16,8 @@ extends Node2D
 @export var cycle_interval: float = 5.0  # Seconds between theme changes
 @export var show_labels: bool = true
 
+const TEXT_BG_ALPHA: float = 0.7  # Background alpha for text overlay
+
 
 var background_node: Node2D
 var current_theme_index: int = 0
@@ -67,7 +69,7 @@ func _draw() -> void:
 	
 	# Draw background for text
 	var text_bg_rect = Rect2(10, 10, 400, 40)
-	draw_rect(text_bg_rect, Color(0, 0, 0, 0.7))
+	draw_rect(text_bg_rect, Color(0, 0, 0, TEXT_BG_ALPHA))
 	
 	# Draw theme name (note: using draw_string requires a font, so we skip it for now)
 	# Instead, use print statements to console

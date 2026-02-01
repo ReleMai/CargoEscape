@@ -1,9 +1,13 @@
 # ==============================================================================
-# EXAMPLE: USING SECTOR THEMES IN BOARDING PHASE
+# INTEGRATION EXAMPLES: USING SECTOR THEMES IN GAME
 # ==============================================================================
 #
-# This example shows how to integrate sector themes with the boarding phase
-# space background, creating faction-specific atmospheres for ship interiors.
+# This file contains example code snippets showing how to integrate sector themes
+# with various game systems. These are examples/pseudocode for documentation
+# purposes and may need adaptation based on your actual implementation.
+#
+# NOTE: Some examples reference classes that may not exist yet or may have
+# different APIs in your implementation. Adapt as needed.
 #
 # ==============================================================================
 
@@ -155,6 +159,8 @@ func select_music_for_sector(faction_code: String) -> String:
 
 # Example 7: Integration with ship generator
 # ------------------------------------------
+# NOTE: This example assumes Factions.Type enum exists in your implementation
+# Adapt the enum/type names to match your actual Factions class
 func generate_ship_with_matching_background(ship_faction: Factions.Type) -> void:
 	# Get faction code from Factions enum
 	var faction_data = Factions.get_faction(ship_faction)

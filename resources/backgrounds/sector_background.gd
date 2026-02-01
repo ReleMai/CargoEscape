@@ -19,8 +19,8 @@ extends Node2D
 # EXPORTS
 # ==============================================================================
 
-## Which sector/faction theme to use
-@export_enum("CCG:0", "NEX:1", "GDF:2", "SYN:3", "IND:4") var faction_code: String = "CCG"
+## Which sector/faction theme to use (CCG, NEX, GDF, SYN, IND)
+@export var faction_code: String = "CCG"
 
 ## Base scroll speed
 @export var base_scroll_speed: float = 100.0
