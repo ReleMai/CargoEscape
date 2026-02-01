@@ -15,9 +15,17 @@ class_name MainMenu
 # ==============================================================================
 
 @onready var start_button: Button = $MenuContainer/StartButton
+@onready var achievements_button: Button = $MenuContainer/AchievementsButton
 @onready var quit_button: Button = $MenuContainer/QuitButton
 @onready var title_label: Label = $TitleContainer/TitleLabel
 @onready var subtitle_label: Label = $TitleContainer/SubtitleLabel
+
+
+# ==============================================================================
+# PRELOADS
+# ==============================================================================
+
+const AchievementGalleryScene = preload("res://scenes/ui/achievement_gallery.tscn")
 
 # ==============================================================================
 # LIFECYCLE
@@ -37,6 +45,8 @@ func _setup_ui() -> void:
 		subtitle_label.modulate.a = 0
 	if start_button:
 		start_button.modulate.a = 0
+	if achievements_button:
+		achievements_button.modulate.a = 0
 	if quit_button:
 		quit_button.modulate.a = 0
 
@@ -44,6 +54,8 @@ func _setup_ui() -> void:
 func _connect_signals() -> void:
 	if start_button:
 		start_button.pressed.connect(_on_start_pressed)
+	if achievements_button:
+		achievements_button.pressed.connect(_on_achievements_pressed)
 	if quit_button:
 		quit_button.pressed.connect(_on_quit_pressed)
 
@@ -62,6 +74,8 @@ func _play_entrance_animation() -> void:
 	# Fade in buttons with slight delay
 	if start_button:
 		tween.tween_property(start_button, "modulate:a", 1.0, 0.3)
+	if achievements_button:
+		tween.tween_property(achievements_button, "modulate:a", 1.0, 0.3)
 	if quit_button:
 		tween.tween_property(quit_button, "modulate:a", 1.0, 0.3)
 	
@@ -92,6 +106,12 @@ func _start_game() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_achievements_pressed() -> void:
+	# Open achievement gallery as overlay
+	var gallery = AchievementGalleryScene.instantiate()
+	add_child(gallery)
 
 
 # ==============================================================================

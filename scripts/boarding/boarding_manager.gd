@@ -91,6 +91,10 @@ var looting_container: Node2D = null
 var current_ship_tier: int = 1
 var current_ship_data = null
 var current_layout = null
+var current_faction_code: String = ""  # Track faction for achievements
+var boarding_start_time: float = 0.0  # Track boarding time for Speed Runner
+var containers_searched: int = 0  # Track searched containers for Completionist
+var total_containers: int = 0  # Total containers on ship
 
 # Player's collected items
 var collected_items: Array[ItemData] = []
@@ -202,6 +206,12 @@ func _generate_ship() -> void:
 		# Try new generator first, fall back to legacy if it fails
 		var generated = ShipGeneratorClass.generate(current_ship_tier)
 		if generated:
+			# Extract faction code for achievements
+			var factions_class = preload("res://scripts/data/factions.gd")
+			var faction = factions_class.get_faction(generated.faction_type)
+			if faction:
+				current_faction_code = faction.code
+			
 			# Convert GeneratedLayout to legacy LayoutData format for compatibility
 			current_layout = _convert_generated_layout(generated)
 		else:
@@ -355,6 +365,14 @@ func _start_boarding() -> void:
 	# Update UI
 	_update_ui()
 	
+	# Achievement tracking - start boarding
+	boarding_start_time = Time.get_ticks_msec() / 1000.0
+	containers_searched = 0
+	total_containers = current_layout.container_positions.size() if current_layout else 0
+	
+	if AchievementManager:
+		AchievementManager.on_boarding_started(total_containers)
+	
 	emit_signal("boarding_started")
 
 
@@ -480,14 +498,21 @@ func _on_loot_menu_closed() -> void:
 
 
 func _on_container_emptied() -> void:
-	# Container was fully looted
-	pass
+	# Container was fully looted - count as searched
+	containers_searched += 1
+	if AchievementManager:
+		AchievementManager.on_container_searched()
 
 
 func _on_item_transferred(item_data: ItemData) -> void:
 	# Item was successfully dragged to inventory
 	collected_items.append(item_data)
 	total_loot_value += item_data.value
+	_update_ui()
+	
+	# Check for legendary item (rarity 4)
+	if item_data.rarity == 4 and AchievementManager:
+		AchievementManager.on_legendary_item_found()
 	_update_ui()
 
 
@@ -570,6 +595,11 @@ func _end_boarding(success: bool) -> void:
 	# Add to global score
 	if success and GameManager:
 		GameManager.add_score(total_loot_value)
+	
+	# Achievement tracking - boarding completed
+	if success and AchievementManager:
+		var boarding_time = (Time.get_ticks_msec() / 1000.0) - boarding_start_time
+		AchievementManager.on_boarding_completed(boarding_time, current_faction_code)
 	
 	# Transition to results or next scene
 	await get_tree().create_timer(1.0).timeout

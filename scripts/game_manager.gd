@@ -535,6 +535,10 @@ func add_credits(amount: int) -> void:
 	credits += amount
 	credits_changed.emit(credits)
 	print("[GameManager] Credits: +", amount, " (Total: ", credits, ")")
+	
+	# Track for achievements
+	if AchievementManager:
+		AchievementManager.on_credits_earned(amount)
 
 
 func spend_credits(amount: int) -> bool:
