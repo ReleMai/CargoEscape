@@ -92,7 +92,7 @@ var screen_size: Vector2
 
 ## Star data for each layer: Array[Array[Dictionary]]
 ## Each star: {position: Vector2, size: float, color: Color, alpha: float}
-var star_layers: Array[Array] = []
+var star_layers: Array[Array[Dictionary]] = []
 
 ## External scroll speed (set by game manager)
 var external_scroll_speed: float = 0.0
