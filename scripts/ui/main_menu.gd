@@ -54,6 +54,27 @@ func _connect_signals() -> void:
 
 
 func _play_entrance_animation() -> void:
+	# Check if animations should be reduced
+	var should_animate = true
+	if has_node("/root/AccessibilityManager"):
+		should_animate = AccessibilityManager.should_play_animation()
+	
+	if not should_animate:
+		# Instantly show everything without animation
+		if title_label:
+			title_label.modulate.a = 1.0
+		if subtitle_label:
+			subtitle_label.modulate.a = 0.7
+		if start_button:
+			start_button.modulate.a = 1.0
+		if accessibility_button:
+			accessibility_button.modulate.a = 1.0
+		if quit_button:
+			quit_button.modulate.a = 1.0
+		if start_button:
+			start_button.grab_focus()
+		return
+	
 	var tween = create_tween()
 	
 	# Fade in title
@@ -82,6 +103,16 @@ func _play_entrance_animation() -> void:
 # ==============================================================================
 
 func _on_start_pressed() -> void:
+	# Check if animations should be reduced
+	var should_animate = true
+	if has_node("/root/AccessibilityManager"):
+		should_animate = AccessibilityManager.should_play_animation()
+	
+	if not should_animate:
+		# Skip animation and go straight to game
+		_start_game()
+		return
+	
 	# Play a quick fade out then transition to intro
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.3)

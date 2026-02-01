@@ -93,6 +93,14 @@ func _ready() -> void:
 	
 	# Find player for speed display
 	call_deferred("_find_player")
+	
+	# Connect to accessibility changes
+	if has_node("/root/AccessibilityManager"):
+		AccessibilityManager.text_size_changed.connect(_on_text_size_changed)
+		AccessibilityManager.high_contrast_changed.connect(_on_high_contrast_changed)
+		# Apply current settings
+		_apply_text_size()
+		_apply_high_contrast()
 
 
 func _find_player() -> void:
@@ -263,6 +271,90 @@ func animate_score_popup(amount: int, world_position: Vector2) -> void:
 	# This could show "+100" floating up from where points were earned
 	# For now, just a placeholder for future implementation
 	pass
+
+
+# ==============================================================================
+# ACCESSIBILITY
+# ==============================================================================
+
+func _on_text_size_changed(_size) -> void:
+	_apply_text_size()
+
+
+func _on_high_contrast_changed(_enabled: bool) -> void:
+	_apply_high_contrast()
+
+
+func _apply_text_size() -> void:
+	if not has_node("/root/AccessibilityManager"):
+		return
+	
+	var scale = AccessibilityManager.get_text_scale()
+	
+	# Apply to all labels
+	if health_label:
+		_scale_label_font(health_label, scale)
+	if score_label:
+		_scale_label_font(score_label, scale)
+	if speed_label:
+		_scale_label_font(speed_label, scale)
+	if distance_text:
+		_scale_label_font(distance_text, scale)
+	if distance_label:
+		_scale_label_font(distance_label, scale)
+
+
+func _scale_label_font(label: Label, scale: float) -> void:
+	# Get current font size or default
+	var base_size = 16  # Default size
+	if label.has_theme_font_size_override("font_size"):
+		base_size = label.get_theme_font_size("font_size")
+	
+	# Apply scale
+	label.add_theme_font_size_override("font_size", int(base_size * scale))
+
+
+func _apply_high_contrast() -> void:
+	if not has_node("/root/AccessibilityManager"):
+		return
+	
+	var high_contrast = AccessibilityManager.get_high_contrast()
+	
+	if high_contrast:
+		# Apply high contrast colors
+		if health_label:
+			health_label.add_theme_color_override("font_color", Color.WHITE)
+		if score_label:
+			score_label.add_theme_color_override("font_color", Color.WHITE)
+		if speed_label:
+			speed_label.add_theme_color_override("font_color", Color.WHITE)
+		if distance_text:
+			distance_text.add_theme_color_override("font_color", Color.WHITE)
+		if distance_label:
+			distance_label.add_theme_color_override("font_color", Color.WHITE)
+		
+		# Make progress bars more visible
+		if health_bar:
+			health_bar.modulate = Color(1.2, 1.2, 1.2)
+		if distance_bar:
+			distance_bar.modulate = Color(1.2, 1.2, 1.2)
+	else:
+		# Reset to default colors
+		if health_label:
+			health_label.remove_theme_color_override("font_color")
+		if score_label:
+			score_label.remove_theme_color_override("font_color")
+		if speed_label:
+			speed_label.remove_theme_color_override("font_color")
+		if distance_text:
+			distance_text.remove_theme_color_override("font_color")
+		if distance_label:
+			distance_label.remove_theme_color_override("font_color")
+		
+		if health_bar:
+			health_bar.modulate = Color.WHITE
+		if distance_bar:
+			distance_bar.modulate = Color.WHITE
 
 
 # ==============================================================================
