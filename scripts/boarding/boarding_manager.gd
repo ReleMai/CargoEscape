@@ -109,6 +109,11 @@ var entrance_phase: int = 0  # Track animation phases
 var camera_shake: float = 0.0
 var camera_shake_decay: float = 8.0
 
+# Animation constants
+const ENTRANCE_INITIAL_ZOOM: float = 0.4
+const ENTRANCE_FINAL_ZOOM: float = 0.8
+const EXIT_ZOOM: float = 0.5
+
 # ==============================================================================
 # LIFECYCLE
 # ==============================================================================
@@ -735,7 +740,7 @@ func _fade_to_undocking() -> void:
 	# Smooth zoom out effect on camera for cinematic transition
 	if camera:
 		var zoom_tween = create_tween()
-		zoom_tween.tween_property(camera, "zoom", Vector2(0.5, 0.5), 0.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		zoom_tween.tween_property(camera, "zoom", Vector2(EXIT_ZOOM, EXIT_ZOOM), 0.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	
 	# Fade UI elements out
 	_fade_ui_elements()
@@ -817,7 +822,7 @@ func _start_entrance_animation() -> void:
 	
 	# Start with tighter zoom for dramatic reveal
 	if camera:
-		camera.zoom = Vector2(0.4, 0.4)
+		camera.zoom = Vector2(ENTRANCE_INITIAL_ZOOM, ENTRANCE_INITIAL_ZOOM)
 	
 	# Disable player movement during entrance
 	if player:
@@ -852,8 +857,8 @@ func _process_entrance(delta: float) -> void:
 		var zoom_progress = minf(entrance_timer / 1.5, 1.0)
 		var eased_zoom = ease(zoom_progress, -0.4)  # Ease out for smooth deceleration
 		camera.zoom = Vector2(
-			lerpf(0.4, 0.8, eased_zoom),
-			lerpf(0.4, 0.8, eased_zoom)
+			lerpf(ENTRANCE_INITIAL_ZOOM, ENTRANCE_FINAL_ZOOM, eased_zoom),
+			lerpf(ENTRANCE_INITIAL_ZOOM, ENTRANCE_FINAL_ZOOM, eased_zoom)
 		)
 	
 	# Fade in player with glow effect
@@ -937,8 +942,11 @@ func _create_boarding_text_overlay() -> void:
 	
 	var label = Label.new()
 	label.name = "BoardingLabel"
-	var ship_name = current_ship_data.display_name if current_ship_data else "UNKNOWN"
-	label.text = "BOARDING %s..." % ship_name.to_upper()
+	# Safe ship name handling
+	var ship_name = "UNKNOWN"
+	if current_ship_data and "display_name" in current_ship_data:
+		ship_name = current_ship_data.display_name.to_upper()
+	label.text = "BOARDING %s..." % ship_name
 	label.add_theme_font_size_override("font_size", 24)
 	label.add_theme_color_override("font_color", Color(0.3, 0.8, 1.0, 0.0))
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
