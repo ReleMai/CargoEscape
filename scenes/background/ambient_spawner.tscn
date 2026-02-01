@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://ambient_spawner_001"]
+
+[ext_resource type="Script" path="res://scripts/background/ambient_spawner.gd" id="1_ambient"]
+
+[node name="AmbientSpawner" type="Node2D"]
+script = ExtResource("1_ambient")
+screen_size = Vector2(1280, 720)
+spawn_margin = 100.0
+max_concurrent_objects = 15
+spawning_enabled = true
+static_object_interval = 15.0
+moving_object_interval = 8.0
+rare_event_interval = 45.0
+
+[node name="AmbientObjectContainer" type="Node2D" parent="."]
+z_index = -50
