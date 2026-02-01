@@ -147,5 +147,16 @@ func _on_accessibility_pressed() -> void:
 func _input(event: InputEvent) -> void:
 	# Allow pressing Enter/Space to start if no button is focused
 	if event.is_action_pressed("ui_accept"):
-		if not (start_button and start_button.has_focus()) and not (accessibility_button and accessibility_button.has_focus()) and not (quit_button and quit_button.has_focus()):
+		if not _is_any_button_focused():
 			_on_start_pressed()
+
+
+func _is_any_button_focused() -> bool:
+	# Helper to check if any button has focus
+	if start_button and start_button.has_focus():
+		return true
+	if accessibility_button and accessibility_button.has_focus():
+		return true
+	if quit_button and quit_button.has_focus():
+		return true
+	return false

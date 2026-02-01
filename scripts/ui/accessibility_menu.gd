@@ -22,6 +22,9 @@ class_name AccessibilityMenu
 @onready var back_button: Button = $Panel/VBoxContainer/BackButton
 @onready var controls_button: Button = $Panel/VBoxContainer/ControlsButton
 
+# Base font sizes to prevent compounding scaling
+var base_font_sizes: Dictionary = {}
+
 # ==============================================================================
 # LIFECYCLE
 # ==============================================================================
@@ -30,6 +33,8 @@ func _ready() -> void:
 	_setup_ui()
 	_connect_signals()
 	_load_current_settings()
+	# Store base font sizes before scaling
+	_store_base_font_sizes()
 
 
 func _setup_ui() -> void:
@@ -156,6 +161,27 @@ func _on_text_size_changed(_size) -> void:
 # TEXT SIZE APPLICATION
 # ==============================================================================
 
+func _store_base_font_sizes() -> void:
+	# Recursively store base font sizes to prevent compounding
+	_store_sizes_for_children(self)
+
+
+func _store_sizes_for_children(node: Node) -> void:
+	for child in node.get_children():
+		if child is Label or child is Button or child is CheckBox or child is OptionButton:
+			var key = child.get_path()
+			var base_size = 16  # Default
+			
+			if child.has_theme_font_size_override("font_size"):
+				base_size = child.get_theme_font_size("font_size")
+			elif child.get_theme_font_size("font_size") > 0:
+				base_size = child.get_theme_font_size("font_size")
+			
+			base_font_sizes[key] = base_size
+		
+		_store_sizes_for_children(child)
+
+
 func _apply_text_size_to_menu() -> void:
 	var scale = AccessibilityManager.get_text_scale()
 	
@@ -166,16 +192,10 @@ func _apply_text_size_to_menu() -> void:
 func _apply_scale_to_children(node: Node, scale: float) -> void:
 	for child in node.get_children():
 		if child is Label or child is Button or child is CheckBox or child is OptionButton:
-			# Get current or default font size
-			var base_size = 16  # Default Godot font size
+			var key = child.get_path()
+			var base_size = base_font_sizes.get(key, 16)
 			
-			# Try to get actual theme font size
-			if child.has_theme_font_size_override("font_size"):
-				base_size = child.get_theme_font_size("font_size")
-			elif child.get_theme_font_size("font_size") > 0:
-				base_size = child.get_theme_font_size("font_size")
-			
-			# Apply scale
+			# Apply scale using stored base size
 			child.add_theme_font_size_override("font_size", int(base_size * scale))
 		
 		# Recursively apply to children

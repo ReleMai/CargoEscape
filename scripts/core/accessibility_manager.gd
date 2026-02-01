@@ -58,6 +58,9 @@ var screen_reader_mode: bool = false
 ## Custom key mappings (action name -> InputEvent)
 var custom_input_map: Dictionary = {}
 
+## Default input mappings (stored on first load)
+var default_input_map: Dictionary = {}
+
 # ==============================================================================
 # SHADER CACHE
 # ==============================================================================
@@ -71,6 +74,9 @@ var _colorblind_shader: Shader = null
 func _ready() -> void:
 	# Load shader
 	_colorblind_shader = preload("res://scripts/core/shaders/colorblind_filter.gdshader")
+	
+	# Store default input mappings before any changes
+	_store_default_input_map()
 	
 	# Add colorblind overlay to scene tree
 	var overlay_scene = preload("res://scenes/ui/colorblind_overlay.tscn")
@@ -264,18 +270,23 @@ func remap_action(action: String, new_event: InputEvent) -> void:
 	print("[AccessibilityManager] Remapped '", action, "' to ", new_event)
 
 
-func get_action_events(action: String) -> Array[InputEvent]:
+func get_action_events(action: String) -> Array:
 	return InputMap.action_get_events(action)
 
 
 func reset_action_to_default(action: String) -> void:
-	# This would need to store default mappings first
-	# For now, reload from project settings
+	# Restore action to default from stored defaults
 	if custom_input_map.has(action):
 		custom_input_map.erase(action)
 	
-	# Reload from project.godot
-	ProjectSettings.load_resource_pack("res://project.godot")
+	# Clear current events
+	InputMap.action_erase_events(action)
+	
+	# Restore default events if we have them stored
+	if default_input_map.has(action):
+		var default_events = default_input_map[action]
+		for event in default_events:
+			InputMap.action_add_event(action, event)
 	
 	input_remapped.emit(action)
 	_save_settings()
@@ -283,9 +294,25 @@ func reset_action_to_default(action: String) -> void:
 
 func reset_all_inputs() -> void:
 	custom_input_map.clear()
-	# Reload all defaults
+	
+	# Restore all defaults
+	for action in default_input_map:
+		InputMap.action_erase_events(action)
+		var default_events = default_input_map[action]
+		for event in default_events:
+			InputMap.action_add_event(action, event)
+		input_remapped.emit(action)
+
+
+func _store_default_input_map() -> void:
+	# Store the default input configuration from project.godot
 	for action in InputMap.get_actions():
-		reset_action_to_default(action)
+		# Skip built-in UI actions
+		if action.begins_with("ui_"):
+			continue
+		
+		var events = InputMap.action_get_events(action)
+		default_input_map[action] = events.duplicate()
 
 
 # ==============================================================================

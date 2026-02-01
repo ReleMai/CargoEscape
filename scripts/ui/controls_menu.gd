@@ -105,7 +105,9 @@ func _get_action_key_text(action: String) -> String:
 	
 	var event = events[0]
 	if event is InputEventKey:
-		return OS.get_keycode_string(event.physical_keycode)
+		# Use physical_keycode if available, fallback to keycode
+		var keycode = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+		return OS.get_keycode_string(keycode)
 	elif event is InputEventMouseButton:
 		return "Mouse " + str(event.button_index)
 	

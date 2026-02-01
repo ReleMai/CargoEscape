@@ -69,6 +69,9 @@ var player_ref: Node2D
 ## Animation tween for effects
 var tween: Tween
 
+## Base font sizes (stored to prevent compounding scaling)
+var base_font_sizes: Dictionary = {}
+
 
 # ==============================================================================
 # BUILT-IN FUNCTIONS
@@ -93,6 +96,9 @@ func _ready() -> void:
 	
 	# Find player for speed display
 	call_deferred("_find_player")
+	
+	# Store base font sizes before any scaling
+	_store_base_font_sizes()
 	
 	# Connect to accessibility changes
 	if has_node("/root/AccessibilityManager"):
@@ -277,6 +283,32 @@ func animate_score_popup(amount: int, world_position: Vector2) -> void:
 # ACCESSIBILITY
 # ==============================================================================
 
+func _store_base_font_sizes() -> void:
+	# Store original font sizes to prevent compounding scaling
+	if health_label:
+		base_font_sizes["health_label"] = _get_label_base_size(health_label)
+	if score_label:
+		base_font_sizes["score_label"] = _get_label_base_size(score_label)
+	if speed_label:
+		base_font_sizes["speed_label"] = _get_label_base_size(speed_label)
+	if distance_text:
+		base_font_sizes["distance_text"] = _get_label_base_size(distance_text)
+	if distance_label:
+		base_font_sizes["distance_label"] = _get_label_base_size(distance_label)
+
+
+func _get_label_base_size(label: Label) -> int:
+	# Get the actual font size, preferring theme override
+	if label.has_theme_font_size_override("font_size"):
+		return label.get_theme_font_size("font_size")
+	# Try getting from theme
+	var theme_size = label.get_theme_font_size("font_size")
+	if theme_size > 0:
+		return theme_size
+	# Default Godot font size
+	return 16
+
+
 func _on_text_size_changed(_size) -> void:
 	_apply_text_size()
 
@@ -291,26 +323,22 @@ func _apply_text_size() -> void:
 	
 	var scale = AccessibilityManager.get_text_scale()
 	
-	# Apply to all labels
-	if health_label:
-		_scale_label_font(health_label, scale)
-	if score_label:
-		_scale_label_font(score_label, scale)
-	if speed_label:
-		_scale_label_font(speed_label, scale)
-	if distance_text:
-		_scale_label_font(distance_text, scale)
-	if distance_label:
-		_scale_label_font(distance_label, scale)
+	# Apply to all labels using stored base sizes
+	if health_label and base_font_sizes.has("health_label"):
+		_scale_label_font(health_label, "health_label", scale)
+	if score_label and base_font_sizes.has("score_label"):
+		_scale_label_font(score_label, "score_label", scale)
+	if speed_label and base_font_sizes.has("speed_label"):
+		_scale_label_font(speed_label, "speed_label", scale)
+	if distance_text and base_font_sizes.has("distance_text"):
+		_scale_label_font(distance_text, "distance_text", scale)
+	if distance_label and base_font_sizes.has("distance_label"):
+		_scale_label_font(distance_label, "distance_label", scale)
 
 
-func _scale_label_font(label: Label, scale: float) -> void:
-	# Get current font size or default
-	var base_size = 16  # Default size
-	if label.has_theme_font_size_override("font_size"):
-		base_size = label.get_theme_font_size("font_size")
-	
-	# Apply scale
+func _scale_label_font(label: Label, key: String, scale: float) -> void:
+	# Use stored base size to prevent compounding
+	var base_size = base_font_sizes.get(key, 16)
 	label.add_theme_font_size_override("font_size", int(base_size * scale))
 
 
