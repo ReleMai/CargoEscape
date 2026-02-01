@@ -510,11 +510,8 @@ func _spawn_asteroid() -> void:
 		if not asteroid.destroyed.is_connected(_on_enemy_destroyed):
 			asteroid.destroyed.connect(_on_enemy_destroyed)
 	
-	# Re-parent if needed
-	if asteroid.get_parent() != enemy_container:
-		if asteroid.get_parent() != null:
-			asteroid.get_parent().remove_child(asteroid)
-		enemy_container.add_child(asteroid)
+	# Reparent to container
+	ObjectPool.reparent_pooled_object(asteroid, enemy_container)
 
 
 func spawn_enemy() -> void:
@@ -542,11 +539,8 @@ func spawn_enemy() -> void:
 		if not enemy.destroyed.is_connected(_on_enemy_destroyed):
 			enemy.destroyed.connect(_on_enemy_destroyed)
 	
-	# Re-parent if needed
-	if enemy.get_parent() != enemy_container:
-		if enemy.get_parent() != null:
-			enemy.get_parent().remove_child(enemy)
-		enemy_container.add_child(enemy)
+	# Reparent to container
+	ObjectPool.reparent_pooled_object(enemy, enemy_container)
 
 
 func spawn_enemy_wave() -> void:
@@ -596,11 +590,8 @@ func spawn_enemy_wave() -> void:
 			if not enemy.destroyed.is_connected(_on_enemy_destroyed):
 				enemy.destroyed.connect(_on_enemy_destroyed)
 		
-		# Re-parent if needed
-		if enemy.get_parent() != enemy_container:
-			if enemy.get_parent() != null:
-				enemy.get_parent().remove_child(enemy)
-			enemy_container.add_child(enemy)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(enemy, enemy_container)
 
 
 func assign_enemy_pattern(enemy: Node) -> void:

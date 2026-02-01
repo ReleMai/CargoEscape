@@ -92,6 +92,9 @@ var shadow_color: Color
 ## Random seed for consistent shape
 var shape_seed: int
 
+## Counter for generating unique seeds
+static var _seed_counter: int = 0
+
 
 # ==============================================================================
 # NODE REFERENCES
@@ -295,11 +298,8 @@ func _spawn_debris(count: int, size: AsteroidSize) -> void:
 		debris.asteroid_size = size
 		debris.position = position + Vector2(randf_range(-20, 20), randf_range(-20, 20))
 		
-		# Re-parent to scene if needed
-		if debris.get_parent() != parent:
-			if debris.get_parent() != null:
-				debris.get_parent().remove_child(debris)
-			parent.call_deferred("add_child", debris)
+		# Reparent to scene
+		ObjectPool.reparent_pooled_object(debris, parent)
 
 
 # ==============================================================================
@@ -333,8 +333,9 @@ func reset() -> void:
 	# Reset health based on current size
 	_configure_by_size()
 	
-	# Regenerate shape with new seed
-	shape_seed = randi()
+	# Generate unique shape seed for visual variety
+	_seed_counter += 1
+	shape_seed = Time.get_ticks_msec() + _seed_counter
 	_generate_shape()
 	
 	# Reset visual

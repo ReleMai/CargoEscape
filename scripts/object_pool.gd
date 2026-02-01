@@ -140,6 +140,22 @@ func release(obj: Node) -> void:
 	pool["available"].append(obj)
 
 
+## Reparent a pooled object to a new parent
+## @param obj: The pooled object to reparent
+## @param new_parent: The new parent node
+func reparent_pooled_object(obj: Node, new_parent: Node) -> void:
+	if obj == null or new_parent == null:
+		return
+	
+	# Remove from current parent if different
+	if obj.get_parent() != null and obj.get_parent() != new_parent:
+		obj.get_parent().remove_child(obj)
+	
+	# Add to new parent
+	if obj.get_parent() == null:
+		new_parent.add_child(obj)
+
+
 ## Clear a specific pool
 ## @param scene: The PackedScene type to clear
 func clear_pool(scene: PackedScene) -> void:
@@ -235,11 +251,8 @@ func _deactivate_object(obj: Node) -> void:
 		obj.get_parent().remove_child(obj)
 		add_child(obj)
 	
-	# Reset position and visibility
-	obj.position = Vector2.ZERO
+	# Hide and disable processing
 	obj.visible = false
-	
-	# Disable processing to save CPU
 	obj.process_mode = Node.PROCESS_MODE_DISABLED
 
 

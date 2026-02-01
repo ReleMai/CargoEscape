@@ -130,9 +130,3 @@ func reset() -> void:
 	# Reset visual
 	rotation = 0
 	modulate = Color.WHITE
-	
-	# Reconnect signals if needed (they may have been disconnected)
-	if not area_entered.is_connected(_on_area_entered):
-		area_entered.connect(_on_area_entered)
-	if not body_entered.is_connected(_on_body_entered):
-		body_entered.connect(_on_body_entered)

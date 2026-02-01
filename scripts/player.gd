@@ -460,11 +460,8 @@ func _fire_laser() -> void:
 	if damage > 0:
 		laser.set_damage(damage)
 	
-	# Add to scene tree (if not already there)
-	if laser.get_parent() != get_tree().current_scene:
-		if laser.get_parent() != null:
-			laser.get_parent().remove_child(laser)
-		get_tree().current_scene.add_child(laser)
+	# Reparent to scene tree
+	ObjectPool.reparent_pooled_object(laser, get_tree().current_scene)
 
 
 ## Get aim direction toward mouse, clamped within forward cone

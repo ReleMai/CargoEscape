@@ -152,11 +152,8 @@ func _spawn_single() -> void:
 	var enemy := _create_enemy()
 	if enemy:
 		_position_enemy(enemy)
-		# Re-parent to container if needed
-		if enemy.get_parent() != enemy_container:
-			if enemy.get_parent() != null:
-				enemy.get_parent().remove_child(enemy)
-			enemy_container.add_child(enemy)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(enemy, enemy_container)
 		enemy_spawned.emit(enemy)
 
 
@@ -175,11 +172,8 @@ func _spawn_wave() -> void:
 			var y_pos := spawn_margin + spacing * (i + 1)
 			enemy.position = Vector2(screen_size.x + 50 + (i * 30), y_pos)
 			
-			# Re-parent to container if needed
-			if enemy.get_parent() != enemy_container:
-				if enemy.get_parent() != null:
-					enemy.get_parent().remove_child(enemy)
-				enemy_container.add_child(enemy)
+			# Reparent to container
+			ObjectPool.reparent_pooled_object(enemy, enemy_container)
 			enemies.append(enemy)
 	
 	wave_spawned.emit(enemies)
@@ -254,11 +248,8 @@ func spawn_asteroid_cluster(center: Vector2, count: int, spread: float) -> void:
 		)
 		asteroid.position = center + offset
 		
-		# Re-parent if needed
-		if asteroid.get_parent() != enemy_container:
-			if asteroid.get_parent() != null:
-				asteroid.get_parent().remove_child(asteroid)
-			enemy_container.add_child(asteroid)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(asteroid, enemy_container)
 
 
 ## Spawn enemies in a V formation
@@ -274,8 +265,5 @@ func spawn_v_formation(tip_position: Vector2, count: int, spacing: float) -> voi
 		var offset := Vector2(row * spacing, row * spacing * side * 0.5)
 		enemy.position = tip_position + offset
 		
-		# Re-parent if needed
-		if enemy.get_parent() != enemy_container:
-			if enemy.get_parent() != null:
-				enemy.get_parent().remove_child(enemy)
-			enemy_container.add_child(enemy)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(enemy, enemy_container)
