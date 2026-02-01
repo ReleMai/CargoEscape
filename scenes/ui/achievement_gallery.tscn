@@ -1,0 +1,131 @@
+[gd_scene load_steps=5 format=3 uid="uid://d1h8m3n5p2k9q"]
+
+[ext_resource type="Script" path="res://scripts/ui/achievement_gallery.gd" id="1_gallery"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.08, 0.08, 0.12, 0.95)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scroll"]
+bg_color = Color(0.15, 0.15, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_header"]
+font_size = 24
+font_color = Color(1, 1, 1, 1)
+
+[node name="AchievementGallery" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gallery")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ACHIEVEMENTS"
+label_settings = SubResource("LabelSettings_header")
+
+[node name="CompletionLabel" type="Label" parent="Margin/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COMPLETION: 0/6 (0.0%)"
+
+[node name="CloseButton" type="Button" parent="Margin/VBox/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "CLOSE"
+
+[node name="HSeparator" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="Content" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="AchievementsPanel" type="VBoxContainer" parent="Margin/VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Margin/VBox/Content/AchievementsPanel"]
+layout_mode = 2
+text = "Achievements:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox/Content/AchievementsPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AchievementList" type="VBoxContainer" parent="Margin/VBox/Content/AchievementsPanel/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="StatsPanel" type="VBoxContainer" parent="Margin/VBox/Content"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Margin/VBox/Content/StatsPanel"]
+layout_mode = 2
+text = "Statistics:"
+
+[node name="StatsBackground" type="Panel" parent="Margin/VBox/Content/StatsPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_scroll")
+
+[node name="Margin" type="MarginContainer" parent="Margin/VBox/Content/StatsPanel/StatsBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="StatsLabel" type="Label" parent="Margin/VBox/Content/StatsPanel/StatsBackground/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Boardings: 0
+Credits: 0
+Legendary Items: 0
+Fastest Time: --
+Factions: 0/5"
+vertical_alignment = 1

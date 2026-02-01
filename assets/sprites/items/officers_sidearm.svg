@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Officer's Sidearm - Military pistol -->
+  <defs>
+    <linearGradient id="gunGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a4a5a"/>
+      <stop offset="100%" style="stop-color:#2a2a3a"/>
+    </linearGradient>
+  </defs>
+  <!-- Barrel -->
+  <rect x="32" y="24" width="20" height="6" fill="url(#gunGrad)" stroke="#1a1a2a" stroke-width="2"/>
+  <!-- Body -->
+  <rect x="14" y="22" width="24" height="10" rx="2" fill="url(#gunGrad)" stroke="#1a1a2a" stroke-width="2"/>
+  <!-- Grip -->
+  <path d="M 20 32 L 16 40 L 20 44 L 24 40 Z" fill="#3a3a4a" stroke="#1a1a2a" stroke-width="2"/>
+  <!-- GDF marking -->
+  <rect x="18" y="24" width="6" height="6" fill="#cc3333"/>
+  <text x="21" y="28.5" font-size="5" font-weight="bold" text-anchor="middle" fill="#fff">GDF</text>
+  <!-- Highlight -->
+  <rect x="34" y="25" width="2" height="4" fill="#6a6a7a" opacity="0.7"/>
+</svg>

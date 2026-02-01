@@ -243,4 +243,4 @@ func _go_to_escape() -> void:
 		CutsceneManager.skip_to_gameplay_requested.disconnect(_on_cutscene_skip_to_gameplay)
 	CutsceneManager.unregister_cutscene()
 	
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	LoadingScreen.start_transition("res://scenes/main.tscn")

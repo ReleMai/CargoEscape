@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://undocking_scene_001"]
+[gd_scene load_steps=4 format=3 uid="uid://undocking_scene_001"]
 
 [ext_resource type="Script" path="res://scripts/undocking/undocking_manager.gd" id="1_undocking"]
 [ext_resource type="Script" path="res://scripts/undocking/undocking_scene_controller.gd" id="2_controller"]
+[ext_resource type="PackedScene" uid="uid://bpaxn8mxmxdmdc" path="res://scenes/ui/pause_manager.tscn" id="3_pause"]
 
 [node name="UndockingScene" type="Node2D"]
 script = ExtResource("2_controller")
@@ -88,3 +89,5 @@ theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
 theme_override_font_sizes/font_size = 12
 text = "Press SPACE to skip | Hold SPACE for 2x speed | ESC to skip to gameplay"
 horizontal_alignment = 1
+
+[node name="PauseManager" parent="." instance=ExtResource("3_pause")]

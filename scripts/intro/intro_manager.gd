@@ -682,7 +682,7 @@ func _go_to_boarding() -> void:
 		CutsceneManager.skip_to_gameplay_requested.disconnect(_on_cutscene_skip_to_gameplay)
 	CutsceneManager.unregister_cutscene()
 	
-	get_tree().change_scene_to_file("res://scenes/boarding/boarding_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/boarding/boarding_scene.tscn")
 
 
 # ==============================================================================
@@ -719,20 +719,20 @@ func _on_cutscene_skip_to_gameplay() -> void:
 func _on_dev_hideout() -> void:
 	if GameManager:
 		_add_test_items()
-	get_tree().change_scene_to_file("res://scenes/hideout/hideout_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/hideout/hideout_scene.tscn")
 
 
 func _on_dev_escape() -> void:
 	if GameManager:
 		GameManager.reset_game()
 		_add_test_items()
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	LoadingScreen.start_transition("res://scenes/main.tscn")
 
 
 func _on_dev_boarding() -> void:
 	if GameManager:
 		GameManager.reset_game()
-	get_tree().change_scene_to_file("res://scenes/boarding/boarding_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/boarding/boarding_scene.tscn")
 
 
 func _add_test_items() -> void:
