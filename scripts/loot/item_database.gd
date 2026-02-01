@@ -434,6 +434,12 @@ const LEGENDARY_ITEMS = {
 # ==============================================================================
 # ITEM DEFINITIONS - TRADE GOODS (Raw Materials, Processed Goods, Luxury Items)
 # ==============================================================================
+# 
+# BLACK MARKET PRICING LOGIC:
+# - Basic raw materials (iron, plastic, textiles): LOWER on black market (oversupply, legal to trade)
+# - Regulated items (fuel, medical, weapons, chemicals): HIGHER on black market (restricted, high demand)
+# - Luxury items: Varies based on scarcity and demand (some higher, some lower)
+#
 
 const TRADE_GOODS_ITEMS = {
 	# Raw Materials (Common)
@@ -442,7 +448,7 @@ const TRADE_GOODS_ITEMS = {
 		"description": "Raw iron ore chunks. Essential for manufacturing and construction.",
 		"width": 2, "height": 1,
 		"base_value": 50,
-		"black_market_value": 40,
+		"black_market_value": 40,  # Lower - legal commodity with oversupply
 		"weight": 5.0,
 		"tags": ["raw", "metal"],
 		"rarity": 0,
@@ -1103,10 +1109,8 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	
 	# Set weight, black market value, and tags
 	item.weight = weight
-	var black_market_value = def.get("black_market_value", item.value)
-	item.black_market_value = black_market_value
-	var tags = def.get("tags", [])
-	item.tags = tags
+	item.black_market_value = def.get("black_market_value", item.value)
+	item.tags = def.get("tags", [])
 	
 	# Search time based on size and rarity
 	var size = item.grid_width * item.grid_height
