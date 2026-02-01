@@ -338,7 +338,7 @@ static func random_direction() -> Vector2:
 
 ## Weighted random selection from an array
 ## weights should be same length as items
-static func weighted_random(items: Array, weights: Array):
+static func weighted_random(items: Array, weights: Array) -> Variant:
 	var total_weight := 0.0
 	for w in weights:
 		total_weight += w

@@ -1,0 +1,118 @@
+[gd_scene load_steps=7 format=3 uid="uid://c2vm0ej5ggyx7"]
+
+[ext_resource type="Script" path="res://scripts/ui/achievement_popup.gd" id="1_popup"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popup"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.84, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_header"]
+font_size = 10
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_tier"]
+font_size = 10
+font_color = Color(1, 0.84, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 18
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_desc"]
+font_size = 12
+font_color = Color(0.7, 0.7, 0.7, 1)
+
+[node name="AchievementPopup" type="Control"]
+custom_minimum_size = Vector2(350, 100)
+anchors_preset = 0
+offset_right = 350.0
+offset_bottom = 100.0
+script = ExtResource("1_popup")
+
+[node name="Background" type="Panel" parent="." node_paths=PackedStringArray()]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_popup")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="IconContainer" type="MarginContainer" parent="HBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="IconRect" type="TextureRect" parent="HBox/IconContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBox" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TopMargin" type="Control" parent="HBox/VBox"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="HBox/VBox"]
+layout_mode = 2
+
+[node name="AchievementLabel" type="Label" parent="HBox/VBox/Header"]
+layout_mode = 2
+text = "ACHIEVEMENT UNLOCKED"
+label_settings = SubResource("LabelSettings_header")
+
+[node name="Spacer" type="Control" parent="HBox/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TierLabel" type="Label" parent="HBox/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "GOLD"
+label_settings = SubResource("LabelSettings_tier")
+
+[node name="TitleLabel" type="Label" parent="HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Achievement Title"
+label_settings = SubResource("LabelSettings_title")
+
+[node name="DescriptionLabel" type="Label" parent="HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Achievement description goes here"
+label_settings = SubResource("LabelSettings_desc")
+
+[node name="BottomMargin" type="Control" parent="HBox/VBox"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="RightMargin" type="Control" parent="HBox"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
