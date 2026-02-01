@@ -114,6 +114,9 @@ const ENTRANCE_INITIAL_ZOOM: float = 0.4
 const ENTRANCE_FINAL_ZOOM: float = 0.8
 const EXIT_ZOOM: float = 0.5
 
+# Animation layer tracking for cleanup
+var _active_animation_layers: Array[CanvasLayer] = []
+
 # ==============================================================================
 # LIFECYCLE
 # ==============================================================================
@@ -132,6 +135,11 @@ func _ready() -> void:
 	
 	# Start entrance animation
 	_start_entrance_animation()
+
+
+func _exit_tree() -> void:
+	# Clean up any active animation layers to prevent memory leaks
+	_cleanup_animation_layers()
 
 
 func _process(delta: float) -> void:
@@ -655,9 +663,7 @@ func _play_escape_success_effects() -> void:
 	shake_camera(8.0)
 	
 	# Bright flash of success with cyan/green
-	var flash_layer = CanvasLayer.new()
-	flash_layer.layer = 90
-	add_child(flash_layer)
+	var flash_layer = _create_tracked_canvas_layer("SuccessFlash", 90)
 	
 	var flash = ColorRect.new()
 	flash.color = Color(0.2, 0.9, 0.6, 0.5)  # Brighter success flash
@@ -667,7 +673,7 @@ func _play_escape_success_effects() -> void:
 	
 	var tween = create_tween()
 	tween.tween_property(flash, "color:a", 0.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_callback(flash_layer.queue_free)
+	tween.tween_callback(func(): _remove_tracked_layer(flash_layer))
 	
 	# Success text overlay
 	_create_escape_text_overlay()
@@ -681,10 +687,7 @@ func _play_escape_success_effects() -> void:
 
 ## Creates "ESCAPE SUCCESSFUL" text overlay
 func _create_escape_text_overlay() -> void:
-	var text_layer = CanvasLayer.new()
-	text_layer.name = "EscapeText"
-	text_layer.layer = 91
-	add_child(text_layer)
+	var text_layer = _create_tracked_canvas_layer("EscapeText", 91)
 	
 	var label = Label.new()
 	label.name = "EscapeLabel"
@@ -703,7 +706,7 @@ func _create_escape_text_overlay() -> void:
 	tween.tween_interval(0.2)
 	# Fade out
 	tween.tween_property(label, "theme_override_colors/font_color:a", 0.0, 0.3)
-	tween.tween_callback(text_layer.queue_free)
+	tween.tween_callback(func(): _remove_tracked_layer(text_layer))
 
 
 ## Creates a subtle visual effect when a container is opened
@@ -725,9 +728,7 @@ func _create_container_open_effect(container: Node2D) -> void:
 ## Creates a smooth fade transition to the undocking scene
 func _fade_to_undocking() -> void:
 	# Create a fade overlay
-	var fade_layer = CanvasLayer.new()
-	fade_layer.layer = 100  # On top of everything
-	add_child(fade_layer)
+	var fade_layer = _create_tracked_canvas_layer("UndockingFade", 100)
 	
 	var fade_rect = ColorRect.new()
 	fade_rect.color = Color(0.008, 0.012, 0.025, 0.0)  # Match undocking background
@@ -811,6 +812,31 @@ func shake_camera(intensity: float = 5.0) -> void:
 	camera_shake = intensity
 
 
+## Clean up all active animation layers
+func _cleanup_animation_layers() -> void:
+	for layer in _active_animation_layers:
+		if is_instance_valid(layer):
+			layer.queue_free()
+	_active_animation_layers.clear()
+
+
+## Helper to create and track a canvas layer for animations
+func _create_tracked_canvas_layer(layer_name: String, layer_level: int) -> CanvasLayer:
+	var canvas_layer = CanvasLayer.new()
+	canvas_layer.name = layer_name
+	canvas_layer.layer = layer_level
+	add_child(canvas_layer)
+	_active_animation_layers.append(canvas_layer)
+	return canvas_layer
+
+
+## Helper to remove a tracked layer
+func _remove_tracked_layer(layer: CanvasLayer) -> void:
+	_active_animation_layers.erase(layer)
+	if is_instance_valid(layer):
+		layer.queue_free()
+
+
 # ==============================================================================
 # ENTRANCE ANIMATION
 # ==============================================================================
@@ -892,10 +918,7 @@ func _process_entrance(delta: float) -> void:
 
 func _create_entrance_fade() -> void:
 	# Create fade layer
-	var fade_layer = CanvasLayer.new()
-	fade_layer.name = "EntranceFade"
-	fade_layer.layer = 100
-	add_child(fade_layer)
+	var fade_layer = _create_tracked_canvas_layer("EntranceFade", 100)
 	
 	var fade_rect = ColorRect.new()
 	fade_rect.name = "FadeRect"
@@ -906,15 +929,12 @@ func _create_entrance_fade() -> void:
 	# Fade in tween - slightly faster for snappier feel
 	var tween = create_tween()
 	tween.tween_property(fade_rect, "color:a", 0.0, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_callback(fade_layer.queue_free)
+	tween.tween_callback(func(): _remove_tracked_layer(fade_layer))
 
 
 ## Creates scan line effect during boarding entrance
 func _create_scan_line_effect() -> void:
-	var scan_layer = CanvasLayer.new()
-	scan_layer.name = "ScanEffect"
-	scan_layer.layer = 99
-	add_child(scan_layer)
+	var scan_layer = _create_tracked_canvas_layer("ScanEffect", 99)
 	
 	var scan_line = ColorRect.new()
 	scan_line.name = "ScanLine"
@@ -930,15 +950,12 @@ func _create_scan_line_effect() -> void:
 	var tween = create_tween()
 	tween.tween_property(scan_line, "position:y", screen_height, 0.8).set_ease(Tween.EASE_IN_OUT)
 	tween.parallel().tween_property(scan_line, "color:a", 0.0, 0.8).set_ease(Tween.EASE_IN)
-	tween.tween_callback(scan_layer.queue_free)
+	tween.tween_callback(func(): _remove_tracked_layer(scan_layer))
 
 
 ## Creates "BOARDING..." text overlay
 func _create_boarding_text_overlay() -> void:
-	var text_layer = CanvasLayer.new()
-	text_layer.name = "BoardingText"
-	text_layer.layer = 98
-	add_child(text_layer)
+	var text_layer = _create_tracked_canvas_layer("BoardingText", 98)
 	
 	var label = Label.new()
 	label.name = "BoardingLabel"
@@ -958,7 +975,7 @@ func _create_boarding_text_overlay() -> void:
 	var tween = create_tween()
 	tween.tween_property(label, "theme_override_colors/font_color:a", 1.0, 0.3).set_delay(0.2)
 	tween.tween_property(label, "theme_override_colors/font_color:a", 0.0, 0.4).set_delay(0.6)
-	tween.tween_callback(text_layer.queue_free)
+	tween.tween_callback(func(): _remove_tracked_layer(text_layer))
 
 
 ## Triggers player spawn/materialization particle effect
@@ -967,9 +984,7 @@ func _trigger_player_spawn_effect() -> void:
 		return
 	
 	# Create spawn flash
-	var flash_layer = CanvasLayer.new()
-	flash_layer.layer = 95
-	add_child(flash_layer)
+	var flash_layer = _create_tracked_canvas_layer("SpawnFlash", 95)
 	
 	var flash = ColorRect.new()
 	flash.color = Color(0.3, 0.8, 1.0, 0.6)  # Cyan flash
@@ -979,7 +994,7 @@ func _trigger_player_spawn_effect() -> void:
 	
 	var tween = create_tween()
 	tween.tween_property(flash, "color:a", 0.0, 0.2)
-	tween.tween_callback(flash_layer.queue_free)
+	tween.tween_callback(func(): _remove_tracked_layer(flash_layer))
 	
 	# Small camera shake
 	shake_camera(3.0)
