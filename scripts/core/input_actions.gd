@@ -47,6 +47,25 @@ const INTERACT: StringName = &"interact"
 const INVENTORY: StringName = &"inventory"
 const PAUSE: StringName = &"pause"
 
+# ==============================================================================
+# INVENTORY MANAGEMENT ACTIONS
+# ==============================================================================
+
+# Quick slot selection (1-9)
+const INVENTORY_SLOT_1: StringName = &"inventory_slot_1"
+const INVENTORY_SLOT_2: StringName = &"inventory_slot_2"
+const INVENTORY_SLOT_3: StringName = &"inventory_slot_3"
+const INVENTORY_SLOT_4: StringName = &"inventory_slot_4"
+const INVENTORY_SLOT_5: StringName = &"inventory_slot_5"
+const INVENTORY_SLOT_6: StringName = &"inventory_slot_6"
+const INVENTORY_SLOT_7: StringName = &"inventory_slot_7"
+const INVENTORY_SLOT_8: StringName = &"inventory_slot_8"
+const INVENTORY_SLOT_9: StringName = &"inventory_slot_9"
+
+# Item actions
+const DROP_ITEM: StringName = &"drop_item"
+const USE_ITEM: StringName = &"use_item"
+
 
 # ==============================================================================
 # UI ACTIONS
@@ -80,6 +99,24 @@ const DEFAULT_BINDINGS: Dictionary = {
 	INTERACT: [KEY_E, KEY_SPACE],
 	INVENTORY: [KEY_TAB, KEY_I],
 	PAUSE: [KEY_ESCAPE, KEY_P],
+	
+	# Inventory slots (1-9 for quick access)
+	INVENTORY_SLOT_1: [KEY_1],
+	INVENTORY_SLOT_2: [KEY_2],
+	INVENTORY_SLOT_3: [KEY_3],
+	INVENTORY_SLOT_4: [KEY_4],
+	INVENTORY_SLOT_5: [KEY_5],
+	INVENTORY_SLOT_6: [KEY_6],
+	INVENTORY_SLOT_7: [KEY_7],
+	INVENTORY_SLOT_8: [KEY_8],
+	INVENTORY_SLOT_9: [KEY_9],
+	
+	# Item actions
+	DROP_ITEM: [KEY_Q],
+	# Note: USE_ITEM shares E key with INTERACT but is context-specific
+	# The inventory's _unhandled_input() handles USE_ITEM and marks input as handled,
+	# preventing it from bubbling to world interaction handlers (handled last in chain)
+	USE_ITEM: [KEY_E],
 }
 
 

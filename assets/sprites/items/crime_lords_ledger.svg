@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Crime Lord's Ledger - Ornate dark book -->
+  <defs>
+    <linearGradient id="darkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a24"/>
+      <stop offset="100%" style="stop-color:#0a0a14"/>
+    </linearGradient>
+  </defs>
+  <rect x="18" y="12" width="28" height="40" rx="2" fill="url(#darkGrad)" stroke="#00d9e0" stroke-width="2"/>
+  <!-- Book spine -->
+  <rect x="18" y="12" width="4" height="40" fill="#00a0a8"/>
+  <!-- Decorative border -->
+  <rect x="22" y="16" width="20" height="32" fill="none" stroke="#00d9e0" stroke-width="1"/>
+  <!-- Skull symbol -->
+  <circle cx="32" cy="32" r="6" fill="#00d9e0"/>
+  <circle cx="30" cy="30" r="1.5" fill="#1a1a24"/>
+  <circle cx="34" cy="30" r="1.5" fill="#1a1a24"/>
+  <path d="M 28 34 L 32 36 L 36 34" stroke="#1a1a24" fill="none" stroke-width="1.5"/>
+</svg>

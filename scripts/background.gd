@@ -92,7 +92,7 @@ var screen_size: Vector2
 
 ## Star data for each layer: Array[Array[Dictionary]]
 ## Each star: {position: Vector2, size: float, color: Color, alpha: float}
-var star_layers: Array = []
+var star_layers: Array[Array[Dictionary]] = []
 
 ## External scroll speed (set by game manager)
 var external_scroll_speed: float = 0.0
@@ -169,7 +169,7 @@ func _generate_all_stars() -> void:
 	star_layers.clear()
 	
 	for layer_index in range(stars_per_layer.size()):
-		var layer_stars: Array = []
+		var layer_stars: Array[Dictionary] = []
 		var count := stars_per_layer[layer_index]
 		var default_size := Vector2(1, 3)
 		var size_range: Vector2
@@ -363,3 +363,17 @@ func get_current_speed() -> float:
 	if use_external_speed:
 		return external_scroll_speed
 	return base_scroll_speed
+
+
+## Apply sector theme colors (for sector-themed backgrounds)
+func set_theme_colors(theme) -> void:
+	if not theme:
+		return
+	
+	# Update star colors if available
+	if theme.has("star_colors") and not theme.star_colors.is_empty():
+		star_colors = theme.star_colors.duplicate()
+	
+	# Regenerate stars with new colors
+	_generate_all_stars()
+	queue_redraw()
