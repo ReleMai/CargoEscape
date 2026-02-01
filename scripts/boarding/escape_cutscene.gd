@@ -421,7 +421,7 @@ func _populate_loot_summary() -> void:
 		for i in items_to_show:
 			var item = collected_items[i]
 			var item_label = Label.new()
-			item_label.text = "• %s ($%d)" % [item.item_name, item.value]
+			item_label.text = "• %s ($%d)" % [item.name, item.value]
 			loot_items_list.add_child(item_label)
 		
 		if collected_items.size() > items_to_show:
@@ -470,6 +470,7 @@ func _complete_cutscene() -> void:
 func _fade_to_undocking() -> void:
 	# Create fade overlay
 	var fade = ColorRect.new()
+	# Match undocking scene's dark space background for seamless transition
 	fade.color = Color(0.008, 0.012, 0.025, 0.0)
 	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
