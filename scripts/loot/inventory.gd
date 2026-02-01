@@ -107,8 +107,11 @@ func _process(_delta: float) -> void:
 		_update_hover_preview()
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _unhandled_input(_event: InputEvent) -> void:
 	"""Handle keyboard shortcuts for inventory management"""
+	# Note: event parameter required by Godot's virtual function signature
+	# We use Input.is_action_just_pressed() instead of checking event directly
+	
 	# Handle number keys 1-9 for slot selection
 	for i in range(9):
 		var action_name = "inventory_slot_%d" % (i + 1)
@@ -556,7 +559,8 @@ func _select_slot(slot_index: int) -> void:
 	
 	# Check if this slot has an item
 	if slot_index >= slot_items.size():
-		# No item in this slot
+		# No item in this slot - clear selection
+		# This prevents confusion about which item is selected
 		selected_slot = -1
 		emit_signal("selected_slot_changed", -1)
 		_update_cell_colors()

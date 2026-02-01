@@ -114,7 +114,8 @@ const DEFAULT_BINDINGS: Dictionary = {
 	# Item actions
 	DROP_ITEM: [KEY_Q],
 	# Note: USE_ITEM shares E key with INTERACT but is context-specific
-	# It's handled via _unhandled_input in inventory, preventing conflicts
+	# The inventory's _unhandled_input() handles USE_ITEM and marks input as handled,
+	# preventing it from bubbling to world interaction handlers (handled last in chain)
 	USE_ITEM: [KEY_E],
 }
 
