@@ -165,11 +165,18 @@ func _apply_text_size_to_menu() -> void:
 
 func _apply_scale_to_children(node: Node, scale: float) -> void:
 	for child in node.get_children():
-		if child is Label or child is Button or child is CheckBox:
-			# Scale font size
+		if child is Label or child is Button or child is CheckBox or child is OptionButton:
+			# Get current or default font size
+			var base_size = 16  # Default Godot font size
+			
+			# Try to get actual theme font size
 			if child.has_theme_font_size_override("font_size"):
-				var base_size = child.get_theme_font_size("font_size")
-				child.add_theme_font_size_override("font_size", int(base_size * scale))
+				base_size = child.get_theme_font_size("font_size")
+			elif child.get_theme_font_size("font_size") > 0:
+				base_size = child.get_theme_font_size("font_size")
+			
+			# Apply scale
+			child.add_theme_font_size_override("font_size", int(base_size * scale))
 		
 		# Recursively apply to children
 		_apply_scale_to_children(child, scale)

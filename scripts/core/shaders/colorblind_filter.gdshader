@@ -1,4 +1,5 @@
 shader_type canvas_item;
+render_mode unshaded;
 
 // Colorblind simulation shader for Godot 4.x
 // Based on research from:
@@ -29,7 +30,7 @@ const mat3 TRITANOPIA = mat3(
 );
 
 void fragment() {
-	vec4 color = texture(TEXTURE, UV);
+	vec4 color = texture(SCREEN_TEXTURE, SCREEN_UV);
 	vec3 rgb = color.rgb;
 	
 	if (mode == 1) {
