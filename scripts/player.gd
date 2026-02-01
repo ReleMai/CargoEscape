@@ -54,6 +54,9 @@ signal hit
 ## Emitted when player collides with something (for effects)
 signal collision_occurred(impact_strength: float)
 
+## Emitted when player fires weapon (for effects like screen shake)
+signal weapon_fired
+
 ## Emitted when player state changes
 signal state_changed(old_state: State, new_state: State)
 
@@ -459,9 +462,12 @@ func _fire_laser() -> void:
 		damage = game_manager.get_laser_damage()
 	if damage > 0:
 		laser.set_damage(damage)
-	
-	# Reparent to scene tree
+
+	# Reparent to scene tree (using pool)
 	ObjectPool.reparent_pooled_object(laser, get_tree().current_scene)
+	
+	# Emit weapon fired signal for effects
+	weapon_fired.emit()
 
 
 ## Get aim direction toward mouse, clamped within forward cone

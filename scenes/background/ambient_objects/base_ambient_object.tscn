@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://ambient_object_base_001"]
+
+[ext_resource type="Script" path="res://scripts/background/ambient_object.gd" id="1_ambient_obj"]
+
+[node name="AmbientObject" type="Node2D"]
+script = ExtResource("1_ambient_obj")
+velocity = Vector2(-50, 0)
+rotation_speed = 0.0
+visual_scale = 1.0
+base_color = Color(1, 1, 1, 1)
+despawn_distance = 200.0

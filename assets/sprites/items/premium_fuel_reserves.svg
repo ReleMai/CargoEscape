@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Premium Fuel - Canister with premium label -->
+  <rect x="20" y="15" width="24" height="38" rx="4" fill="#4a5a6a" stroke="#2a3a4a" stroke-width="2"/>
+  <rect x="28" y="8" width="8" height="10" fill="#5a6a7a" stroke="#2a3a4a" stroke-width="2"/>
+  <rect x="22" y="25" width="20" height="12" fill="#bf9b30" stroke="#8b6f47" stroke-width="2"/>
+  <text x="32" y="33" font-size="8" text-anchor="middle" fill="#fff">PREM</text>
+  <!-- Shine effect -->
+  <rect x="24" y="18" width="4" height="20" fill="#7a8a9a" opacity="0.5"/>
+</svg>

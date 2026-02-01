@@ -26,6 +26,8 @@ signal item_destroyed(item: LootItem)
 signal inventory_full
 signal item_drag_started(item: LootItem)
 signal item_drag_ended(item: LootItem)
+signal item_used(item: LootItem)
+signal selected_slot_changed(slot_index: int)
 
 # ==============================================================================
 # EXPORTS
@@ -42,6 +44,7 @@ signal item_drag_ended(item: LootItem)
 @export var occupied_color: Color = Color(0.2, 0.2, 0.28, 0.9)
 @export var hover_valid_color: Color = Color(0.2, 0.7, 0.3, 0.6)
 @export var hover_invalid_color: Color = Color(0.7, 0.2, 0.2, 0.6)
+@export var selected_color: Color = Color(0.3, 0.5, 0.7, 0.8)
 
 # ==============================================================================
 # STATE
@@ -64,6 +67,10 @@ var drag_original_pos: Vector2i = Vector2i(-1, -1)
 
 # Total value
 var total_value: int = 0
+
+# Keyboard shortcut support
+var selected_slot: int = -1  # -1 means no selection, 0-8 for slots 1-9
+var slot_items: Array[LootItem] = []  # Quick access slots (max 9 items)
 
 # ==============================================================================
 # NODE REFERENCES
@@ -98,6 +105,32 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if hover_item:
 		_update_hover_preview()
+
+
+func _unhandled_input(_event: InputEvent) -> void:
+	"""Handle keyboard shortcuts for inventory management"""
+	# Note: event parameter required by Godot's virtual function signature
+	# We use Input.is_action_just_pressed() instead of checking event directly
+	
+	# Handle number keys 1-9 for slot selection
+	for i in range(9):
+		var action_name = "inventory_slot_%d" % (i + 1)
+		if Input.is_action_just_pressed(action_name):
+			_select_slot(i)
+			get_viewport().set_input_as_handled()
+			return
+	
+	# Handle drop item (Q)
+	if Input.is_action_just_pressed("drop_item"):
+		_drop_selected_item()
+		get_viewport().set_input_as_handled()
+		return
+	
+	# Handle use/equip item (E)
+	if Input.is_action_just_pressed("use_item"):
+		_use_selected_item()
+		get_viewport().set_input_as_handled()
+		return
 
 
 # ==============================================================================
@@ -146,10 +179,24 @@ func _create_cell_visuals() -> void:
 
 
 func _update_cell_colors() -> void:
+	# Get selected item for highlighting
+	var selected_item = get_selected_item() if selected_slot >= 0 else null
+	
 	for y in range(grid_height):
 		for x in range(grid_width):
 			if y < cells.size() and x < cells[y].size():
-				cells[y][x].color = occupied_color if grid[x][y] else empty_color
+				var key = "%d,%d" % [x, y]
+				var cell_item = cell_items.get(key)
+				
+				# Check if this cell belongs to the selected item
+				var is_selected = selected_item and cell_item == selected_item
+				
+				if is_selected:
+					cells[y][x].color = selected_color
+				elif grid[x][y]:
+					cells[y][x].color = occupied_color
+				else:
+					cells[y][x].color = empty_color
 
 
 # ==============================================================================
@@ -229,6 +276,7 @@ func place_item(item: LootItem, pos: Vector2i) -> bool:
 	total_value += item.item_data.value
 	_update_value_display()
 	_update_cell_colors()
+	_update_slot_items()
 	
 	emit_signal("item_placed", item, pos)
 	return true
@@ -257,6 +305,7 @@ func remove_item(item: LootItem) -> bool:
 	
 	_update_value_display()
 	_update_cell_colors()
+	_update_slot_items()
 	
 	emit_signal("item_removed", item)
 	return true
@@ -494,3 +543,102 @@ func _on_inventory_item_destroy(item: LootItem) -> void:
 	if dragging_from_inventory == item:
 		return
 	destroy_item(item)
+
+
+# ==============================================================================
+# KEYBOARD SHORTCUT HELPERS
+# ==============================================================================
+
+func _select_slot(slot_index: int) -> void:
+	"""Select an inventory slot by index (0-8 for slots 1-9)"""
+	if slot_index < 0 or slot_index >= 9:
+		return
+	
+	# Update slot items list based on current inventory
+	_update_slot_items()
+	
+	# Check if this slot has an item
+	if slot_index >= slot_items.size():
+		# No item in this slot - clear selection
+		# This prevents confusion about which item is selected
+		selected_slot = -1
+		emit_signal("selected_slot_changed", -1)
+		_update_cell_colors()
+		return
+	
+	selected_slot = slot_index
+	emit_signal("selected_slot_changed", slot_index)
+	_update_cell_colors()
+
+
+func _drop_selected_item() -> void:
+	"""Drop the currently selected item"""
+	if selected_slot < 0 or selected_slot >= slot_items.size():
+		return
+	
+	var item = slot_items[selected_slot]
+	if not item or not is_instance_valid(item):
+		return
+	
+	# Emit signal so parent can handle dropping
+	emit_signal("item_destroyed", item)
+	destroy_item(item)
+	
+	# Clear selection after dropping
+	selected_slot = -1
+	_update_slot_items()
+
+
+func _use_selected_item() -> void:
+	"""Use/equip the currently selected item"""
+	if selected_slot < 0 or selected_slot >= slot_items.size():
+		return
+	
+	var item = slot_items[selected_slot]
+	if not item or not is_instance_valid(item):
+		return
+	
+	# Emit signal so parent can handle usage
+	emit_signal("item_used", item)
+
+
+func _update_slot_items() -> void:
+	"""Update the quick access slot items array"""
+	slot_items.clear()
+	
+	# Get all unique items sorted by grid position
+	var items = get_all_items()
+	
+	# Cache grid positions to avoid redundant lookups during sorting
+	var item_positions: Dictionary = {}
+	for item in items:
+		var pos = get_item_grid_position(item)
+		# Only include items with valid positions
+		if pos.x >= 0 and pos.y >= 0:
+			item_positions[item] = pos
+	
+	# Filter out items without valid positions
+	var valid_items: Array[LootItem] = []
+	for item in items:
+		if item in item_positions:
+			valid_items.append(item)
+	
+	# Sort items by their grid position (top-left to bottom-right)
+	valid_items.sort_custom(func(a: LootItem, b: LootItem) -> bool:
+		var pos_a = item_positions[a]
+		var pos_b = item_positions[b]
+		if pos_a.y != pos_b.y:
+			return pos_a.y < pos_b.y
+		return pos_a.x < pos_b.x
+	)
+	
+	# Take first 9 items
+	for i in range(min(9, valid_items.size())):
+		slot_items.append(valid_items[i])
+
+
+func get_selected_item() -> LootItem:
+	"""Get the currently selected item, or null if none"""
+	if selected_slot < 0 or selected_slot >= slot_items.size():
+		return null
+	return slot_items[selected_slot]
