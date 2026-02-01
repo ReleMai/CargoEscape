@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b7xm4wq9kp3n2"]
+[gd_scene load_steps=8 format=3 uid="uid://b7xm4wq9kp3n2"]
 
 [ext_resource type="Script" path="res://scripts/boarding/boarding_manager.gd" id="1_manager"]
 [ext_resource type="PackedScene" uid="uid://bkp2xnq7fm4y3" path="res://scenes/boarding/boarding_player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://dqw8m3x6np2k4" path="res://scenes/boarding/exit_point.tscn" id="4_exit"]
 [ext_resource type="PackedScene" uid="uid://dmn6xk2rav4qy" path="res://scenes/loot/inventory.tscn" id="5_inventory"]
 [ext_resource type="Script" path="res://scripts/boarding/loot_menu.gd" id="6_lootmenu"]
+[ext_resource type="PackedScene" uid="uid://pause_manager_uid" path="res://scenes/ui/pause_manager.tscn" id="7_pause"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_boundary"]
 size = Vector2(50, 1000)
@@ -264,3 +265,5 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Press [E] to board your ship"
 horizontal_alignment = 1
+
+[node name="PauseManager" parent="." instance=ExtResource("7_pause")]

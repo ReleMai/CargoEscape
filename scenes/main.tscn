@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://gk4xyz678main"]
+[gd_scene load_steps=9 format=3 uid="uid://gk4xyz678main"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://fj2xyz345bg" path="res://scenes/background.tscn" id="2_background"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dh7xyz789hud" path="res://scenes/ui/hud.tscn" id="5_hud"]
 [ext_resource type="PackedScene" uid="uid://ei9xyz012gameover" path="res://scenes/ui/game_over_screen.tscn" id="6_gameover"]
 [ext_resource type="PackedScene" uid="uid://station123456" path="res://scenes/ui/station.tscn" id="7_station"]
+[ext_resource type="PackedScene" uid="uid://pause_manager_uid" path="res://scenes/ui/pause_manager.tscn" id="8_pause"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -36,3 +37,5 @@ visible = false
 
 [node name="SpaceStation" parent="." instance=ExtResource("7_station")]
 visible = false
+
+[node name="PauseManager" parent="." instance=ExtResource("8_pause")]

@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://pause_manager_uid"]
+
+[ext_resource type="Script" path="res://scripts/ui/pause_manager.gd" id="1_manager"]
+[ext_resource type="PackedScene" uid="uid://pause_menu_uid" path="res://scenes/ui/pause_menu.tscn" id="2_pause"]
+[ext_resource type="PackedScene" uid="uid://settings_menu_uid" path="res://scenes/ui/settings_menu.tscn" id="3_settings"]
+
+[node name="PauseManager" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_manager")
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_pause")]
+
+[node name="SettingsMenu" parent="." instance=ExtResource("3_settings")]

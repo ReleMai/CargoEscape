@@ -1,0 +1,166 @@
+[gd_scene load_steps=2 format=3 uid="uid://settings_menu_uid"]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_menu.gd" id="1_settings"]
+
+[node name="SettingsMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="AudioSettings" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AudioLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Audio"
+
+[node name="MasterVolume" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/AudioSettings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/MasterVolume"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Master Volume:"
+
+[node name="MasterSlider" type="HSlider" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/MasterVolume"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/MasterVolume"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+
+[node name="SFXVolume" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/AudioSettings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/SFXVolume"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "SFX Volume:"
+
+[node name="SFXSlider" type="HSlider" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/SFXVolume"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/SFXVolume"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+
+[node name="MusicVolume" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/AudioSettings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/MusicVolume"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Music Volume:"
+
+[node name="MusicSlider" type="HSlider" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/MusicVolume"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/MusicVolume"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+
+[node name="DisplaySettings" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DisplayLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/DisplaySettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Display"
+
+[node name="FullscreenToggle" type="CheckButton" parent="Panel/MarginContainer/VBoxContainer/DisplaySettings"]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="ControlsSettings" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ControlsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/ControlsSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Controls"
+
+[node name="ControlsInfo" type="Label" parent="Panel/MarginContainer/VBoxContainer/ControlsSettings"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Control rebinding coming soon!"
+
+[node name="Spacer" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Back"
