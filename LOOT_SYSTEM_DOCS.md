@@ -60,8 +60,8 @@ This creates tension and strategic decisions:
 │  • 1-9 → Quick select slot          │
 │  • Q → Drop selected item           │
 │  • E → Use/equip selected item      │
-│  • Tab → Toggle inventory           │
-│  • Escape → Close menus             │
+│  • Tab/I → Toggle inventory         │
+│  • Esc → Close menus                │
 └──────────────────┬──────────────────┘
        ▼
 ┌─────────────────────────────────────┐
@@ -94,8 +94,8 @@ This creates tension and strategic decisions:
 - **1-9** → Quick select inventory slots (items are sorted top-left to bottom-right)
 - **Q** → Drop/destroy the currently selected item
 - **E** → Use/equip the currently selected item
-- **Tab** → Toggle inventory view
-- **Escape** → Close menus
+- **Tab / I** → Toggle inventory view (uses existing inventory action)
+- **Escape** → Close menus (uses existing ui_cancel action)
 
 **Note:** The selected inventory slot is highlighted with a blue color to show which item is active.
 

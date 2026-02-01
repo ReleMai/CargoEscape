@@ -112,10 +112,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventKey:
 		return
 	
-	var key_event = event as InputEventKey
-	if not key_event.pressed or key_event.echo:
-		return
-	
 	# Handle number keys 1-9 for slot selection
 	for i in range(9):
 		var action_name = "inventory_slot_%d" % (i + 1)
@@ -612,10 +608,15 @@ func _update_slot_items() -> void:
 	# Get all unique items sorted by grid position
 	var items = get_all_items()
 	
+	# Cache grid positions to avoid redundant lookups during sorting
+	var item_positions: Dictionary = {}
+	for item in items:
+		item_positions[item] = get_item_grid_position(item)
+	
 	# Sort items by their grid position (top-left to bottom-right)
 	items.sort_custom(func(a: LootItem, b: LootItem) -> bool:
-		var pos_a = get_item_grid_position(a)
-		var pos_b = get_item_grid_position(b)
+		var pos_a = item_positions[a]
+		var pos_b = item_positions[b]
 		if pos_a.y != pos_b.y:
 			return pos_a.y < pos_b.y
 		return pos_a.x < pos_b.x

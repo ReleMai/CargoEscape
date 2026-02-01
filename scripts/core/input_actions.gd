@@ -104,7 +104,7 @@ const DEFAULT_BINDINGS: Dictionary = {
 	INVENTORY: [KEY_TAB, KEY_I],
 	PAUSE: [KEY_ESCAPE, KEY_P],
 	
-	# Inventory slots
+	# Inventory slots (1-9 for quick access)
 	INVENTORY_SLOT_1: [KEY_1],
 	INVENTORY_SLOT_2: [KEY_2],
 	INVENTORY_SLOT_3: [KEY_3],
@@ -117,11 +117,9 @@ const DEFAULT_BINDINGS: Dictionary = {
 	
 	# Item actions
 	DROP_ITEM: [KEY_Q],
+	# Note: USE_ITEM shares E key with INTERACT but is context-specific
+	# It's handled via _unhandled_input in inventory, preventing conflicts
 	USE_ITEM: [KEY_E],
-	
-	# Menu controls
-	TOGGLE_INVENTORY: [KEY_TAB],
-	CLOSE_MENU: [KEY_ESCAPE],
 }
 
 

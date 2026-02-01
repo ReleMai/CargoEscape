@@ -25,7 +25,7 @@ A side-scrolling space escape game built in Godot 4.5
 | 1-9 | Quick select inventory slot |
 | Q | Drop selected item |
 | E | Use/equip selected item |
-| Tab | Toggle inventory view |
+| Tab / I | Toggle inventory view |
 | Escape | Close menus |
 
 ## Game Rules

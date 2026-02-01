@@ -38,9 +38,9 @@ The GameManager needs to be set up as an Autoload:
 ### Inventory Management (Loot Phase)
 - **1-9** - Quick select inventory slots 1-9
 - **Q** - Drop selected item
-- **E** - Use/equip selected item (or interact)
-- **Tab** - Toggle inventory view
-- **Escape** - Close menus
+- **E** - Use/equip selected item (or interact in world)
+- **Tab / I** - Toggle inventory view (existing action)
+- **Escape** - Close menus (existing action)
 
 ## Troubleshooting
 
