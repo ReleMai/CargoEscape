@@ -218,7 +218,8 @@ func on_player_action(action: String) -> void:
 	elif step_data.wait_for_action == "none":
 		# Auto-complete after showing message
 		await get_tree().create_timer(4.0).timeout
-		if current_step == step_data.get("id"):  # Still on same step
+		# Check if still on same step (compare enum values)
+		if STEP_DATA.get(current_step) == step_data:
 			complete_current_step()
 
 

@@ -582,9 +582,9 @@ func teleport_to(pos: Vector2) -> void:
 # TUTORIAL INTEGRATION
 # ==============================================================================
 
+## Signal for tutorial system
+signal tutorial_movement_detected
+
 func _notify_tutorial_movement() -> void:
-	# Find boarding manager and notify it
-	var boarding_manager = get_parent()
-	if boarding_manager and boarding_manager.has_method("_on_player_moved"):
-		boarding_manager._on_player_moved()
+	tutorial_movement_detected.emit()
 

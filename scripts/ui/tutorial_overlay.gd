@@ -16,6 +16,19 @@
 extends CanvasLayer
 
 # ==============================================================================
+# CONSTANTS
+# ==============================================================================
+
+## Target identifiers for highlighting (matched with STEP_DATA in TutorialManager)
+const HIGHLIGHT_TARGETS = {
+	"container": {"group": "containers", "name": null},
+	"inventory": {"group": null, "name": "InventoryPanel"},
+	"timer": {"group": null, "name": "TimerLabel"},
+	"exit": {"group": "exit_point", "name": null},
+	"station_sell": {"group": null, "name": "SellButton"}
+}
+
+# ==============================================================================
 # SIGNALS
 # ==============================================================================
 
@@ -187,24 +200,19 @@ func _update_highlight_position() -> void:
 
 func _find_highlight_target(target_name: String) -> Node:
 	# Search for target in the scene tree
-	var root = get_tree().root
+	var target_config = HIGHLIGHT_TARGETS.get(target_name)
+	if not target_config:
+		push_warning("[TutorialOverlay] Unknown highlight target: ", target_name)
+		return null
 	
-	match target_name:
-		"container":
-			# Find first container in the scene
-			return _find_node_by_group("containers")
-		"inventory":
-			# Find inventory UI element
-			return _find_node_by_name("InventoryPanel", root)
-		"timer":
-			# Find timer label
-			return _find_node_by_name("TimerLabel", root)
-		"exit":
-			# Find exit point
-			return _find_node_by_group("exit_point")
-		"station_sell":
-			# Find sell button or panel
-			return _find_node_by_name("SellButton", root)
+	# Try group first
+	if target_config.group:
+		return _find_node_by_group(target_config.group)
+	
+	# Then try by name
+	if target_config.name:
+		var root = get_tree().root
+		return _find_node_by_name_fast(target_config.name, root)
 	
 	return null
 
@@ -216,17 +224,9 @@ func _find_node_by_group(group_name: String) -> Node:
 	return null
 
 
-func _find_node_by_name(node_name: String, parent: Node) -> Node:
-	# Recursive search for node by name
-	if parent.name == node_name:
-		return parent
-	
-	for child in parent.get_children():
-		var result = _find_node_by_name(node_name, child)
-		if result:
-			return result
-	
-	return null
+func _find_node_by_name_fast(node_name: String, parent: Node) -> Node:
+	# Use Godot's built-in find_child which is faster than manual recursion
+	return parent.find_child(node_name, true, false)
 
 
 # ==============================================================================

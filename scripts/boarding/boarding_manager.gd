@@ -168,6 +168,7 @@ func _setup_connections() -> void:
 		player.interaction_requested.connect(_on_player_interact)
 		player.reached_exit.connect(_on_player_reached_exit)
 		player.inventory_toggled.connect(_toggle_inventory)
+		player.tutorial_movement_detected.connect(_on_player_moved)
 	
 	if exit_point:
 		exit_point.escape_triggered.connect(_on_escape_triggered)
