@@ -111,7 +111,8 @@ class_name ItemData
 ## Path to sprite asset
 @export var icon_path: String = ""
 
-# Deprecated: Keep for backward compatibility
+# Deprecated: Superseded by base_value. Use get_station_value() instead for new code.
+# Kept for backward compatibility with existing systems.
 @export var value: int = 100
 
 
