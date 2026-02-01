@@ -47,15 +47,15 @@ func _handle_input() -> void:
 		return
 	
 	# Theme selection (1-5)
-	if Input.is_action_just_pressed("ui_text_1") or Input.is_key_pressed(KEY_1):
+	if Input.is_physical_key_pressed(KEY_1):
 		dynamic_background.change_theme("Blue")
-	elif Input.is_action_just_pressed("ui_text_2") or Input.is_key_pressed(KEY_2):
+	elif Input.is_physical_key_pressed(KEY_2):
 		dynamic_background.change_theme("Purple")
-	elif Input.is_action_just_pressed("ui_text_3") or Input.is_key_pressed(KEY_3):
+	elif Input.is_physical_key_pressed(KEY_3):
 		dynamic_background.change_theme("Orange")
-	elif Input.is_action_just_pressed("ui_text_4") or Input.is_key_pressed(KEY_4):
+	elif Input.is_physical_key_pressed(KEY_4):
 		dynamic_background.change_theme("Green")
-	elif Input.is_action_just_pressed("ui_text_5") or Input.is_key_pressed(KEY_5):
+	elif Input.is_physical_key_pressed(KEY_5):
 		dynamic_background.change_theme("Red")
 	
 	# Toggle auto-scroll
@@ -72,21 +72,18 @@ func _handle_input() -> void:
 		print("Scroll speed: ", dynamic_background.base_scroll_speed)
 	
 	# Toggle day/night cycle
-	if Input.is_key_pressed(KEY_T):
+	if Input.is_key_just_pressed(KEY_T):
 		dynamic_background.enable_day_night_cycle = !dynamic_background.enable_day_night_cycle
 		print("Day/Night cycle: ", dynamic_background.enable_day_night_cycle)
-		await get_tree().create_timer(0.2).timeout
 	
 	# Trigger random event
-	if Input.is_key_pressed(KEY_E):
+	if Input.is_key_just_pressed(KEY_E):
 		dynamic_background._trigger_random_event()
-		await get_tree().create_timer(0.2).timeout
 	
 	# Reset
-	if Input.is_key_pressed(KEY_R):
+	if Input.is_key_just_pressed(KEY_R):
 		dynamic_background.reset()
 		print("Background reset")
-		await get_tree().create_timer(0.2).timeout
 
 
 func _update_label() -> void:

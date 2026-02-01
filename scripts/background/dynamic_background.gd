@@ -478,7 +478,7 @@ func _update_nebula_color(layer: Node2D, color: Color) -> void:
 func _update_day_night_cycle(delta: float) -> void:
 	cycle_time += delta
 	
-	# Calculate brightness (0.5 to 1.0 cycle)
+	# Calculate brightness (0.0 to 1.0 cycle using sine wave)
 	var cycle_progress = fmod(cycle_time, cycle_duration) / cycle_duration
 	current_brightness = 0.5 + sin(cycle_progress * TAU) * 0.5
 	
