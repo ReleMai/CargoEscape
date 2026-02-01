@@ -125,12 +125,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	# Apply speed multiplier from CutsceneManager
-	var speed_mult = 1.0
-	if has_node("/root/CutsceneManager"):
-		var cutscene_mgr = get_node("/root/CutsceneManager")
-		speed_mult = cutscene_mgr.get_speed_multiplier()
-	
+	var speed_mult = CutsceneManager.get_speed_multiplier()
 	var modified_delta = delta * speed_mult
+	
 	phase_timer += modified_delta
 	
 	# Warning light blink

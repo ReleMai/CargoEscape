@@ -96,6 +96,13 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# Apply speed multiplier from CutsceneManager for transitions
+	var speed_mult = 1.0
+	if is_transitioning:
+		speed_mult = CutsceneManager.get_speed_multiplier()
+	
+	var modified_delta = delta * speed_mult
+	
 	ship_bob_time += delta
 	engine_flicker += delta * 15.0
 	
@@ -104,19 +111,13 @@ func _process(delta: float) -> void:
 	
 	# Handle transition
 	if is_transitioning:
-		_process_transition(delta)
-		_update_camera_shake(delta)
-		_update_speed_lines(delta)
+		_process_transition(modified_delta)
+		_update_camera_shake(modified_delta)
+		_update_speed_lines(modified_delta)
 		
 		# Update skip hint visibility
 		if skip_hint:
 			skip_hint.modulate.a = CutsceneManager.get_skip_hint_alpha()
-		
-		# Apply speed multiplier for fast forward
-		var speed_mult = CutsceneManager.get_speed_multiplier()
-		if speed_mult > 1.0:
-			# Double the transition timer to make it go faster
-			transition_timer += delta * (speed_mult - 1.0)
 	
 	# Decay flash
 	if flash_alpha > 0:
