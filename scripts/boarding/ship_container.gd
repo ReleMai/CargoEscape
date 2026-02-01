@@ -91,6 +91,8 @@ enum LootTier { NEAR = 1, MIDDLE = 2, FAR = 3, DEEPEST = 4 }
 # Hover state
 var is_hovered: bool = false
 var hover_tween: Tween = null
+var pulse_time: float = 0.0
+var search_pulse_time: float = 0.0
 
 # ==============================================================================
 # STATE
@@ -141,10 +143,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if is_searching and current_search_item:
 		_update_search(delta)
+		search_pulse_time += delta
+	else:
+		search_pulse_time = 0.0
 	
 	# Update hover highlight with pulse effect
 	if is_hovered and highlight and highlight.visible:
-		var pulse = (sin(Time.get_ticks_msec() / 200.0) + 1.0) / 2.0
+		pulse_time += delta
+		var pulse = (sin(pulse_time * 5.0) + 1.0) / 2.0
 		var glow_rect = highlight.get_node_or_null("Glow")
 		if glow_rect:
 			glow_rect.color.a = 0.2 + pulse * 0.15
@@ -396,7 +402,7 @@ func _update_visuals() -> void:
 		ContainerState.SEARCHING:
 			color = searching_color
 			# Add pulsing effect during search
-			var pulse = (sin(Time.get_ticks_msec() / 300.0) + 1.0) / 2.0
+			var pulse = (sin(search_pulse_time * 3.0) + 1.0) / 2.0
 			color = color.lerp(Color(0.5, 0.5, 0.6), pulse * 0.3)
 			label_text = "Searching..."
 		ContainerState.OPEN:
@@ -532,6 +538,10 @@ func _hide_highlight() -> void:
 	if glow_rect:
 		hover_tween = create_tween()
 		hover_tween.tween_property(glow_rect, "color:a", 0.0, 0.2)
-		await hover_tween.finished
+		# Don't await - let it finish in background to avoid tween conflicts
 	
-	highlight.visible = false
+	# Use a timer instead of await to hide after animation
+	get_tree().create_timer(0.2).timeout.connect(func(): 
+		if highlight and not is_hovered:
+			highlight.visible = false
+	)

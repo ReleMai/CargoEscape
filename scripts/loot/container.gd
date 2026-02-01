@@ -98,6 +98,7 @@ var loot_item_scene: PackedScene
 ## Animation state
 var animation_time: float = 0.0
 var is_searching: bool = false
+var pulse_time: float = 0.0
 
 
 # ==============================================================================

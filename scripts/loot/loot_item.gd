@@ -140,6 +140,7 @@ var original_scale: Vector2 = Vector2.ONE
 var search_time: float = 0.0
 var search_duration: float = 1.5  # Default search time
 var is_being_searched: bool = false
+var pulse_time: float = 0.0
 
 
 # ==============================================================================
@@ -151,7 +152,7 @@ var silhouette: ColorRect = null
 var rarity_glow: ColorRect = null
 var value_label: Label = null
 var question_mark: Label = null
-var search_progress_ring: Control = null
+var search_progress_overlay: ColorRect = null
 
 
 # ==============================================================================
@@ -171,17 +172,20 @@ func _ready() -> void:
 	set_state(ItemState.HIDDEN)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	# Follow mouse while dragging
 	if is_dragging:
 		global_position = get_global_mouse_position() + drag_offset
 	
 	# Update search progress
 	if is_being_searched and current_state == ItemState.HIDDEN:
-		search_time += _delta
+		search_time += delta
+		pulse_time += delta
 		_update_search_progress_visual()
 		if search_time >= search_duration:
 			_complete_search()
+	else:
+		pulse_time = 0.0
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -288,8 +292,8 @@ func _create_silhouette(w: float, h: float) -> void:
 	question_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	silhouette.add_child(question_mark)
 	
-	# Create search progress ring
-	_create_search_progress_ring(w, h)
+	# Create search progress overlay
+	_create_search_progress_overlay(w, h)
 
 
 ## Create the item visual using ItemVisuals system
@@ -326,59 +330,30 @@ func _create_value_label(_w: float, h: float) -> void:
 	add_child(value_label)
 
 
-## Create the search progress ring overlay
-func _create_search_progress_ring(w: float, h: float) -> void:
-	search_progress_ring = Control.new()
-	search_progress_ring.name = "SearchProgressRing"
-	search_progress_ring.size = Vector2(w, h)
-	search_progress_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	search_progress_ring.visible = false
-	silhouette.add_child(search_progress_ring)
+## Create the search progress overlay (simpler approach using ColorRect)
+func _create_search_progress_overlay(w: float, h: float) -> void:
+	search_progress_overlay = ColorRect.new()
+	search_progress_overlay.name = "SearchProgressOverlay"
+	search_progress_overlay.position = Vector2(0, h - 4)
+	search_progress_overlay.size = Vector2(0, 4)
+	search_progress_overlay.color = Color(0.4, 0.8, 1.0, 0.9)
+	search_progress_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	search_progress_overlay.visible = false
+	silhouette.add_child(search_progress_overlay)
 
 
 ## Update search progress visual
 func _update_search_progress_visual() -> void:
-	if search_progress_ring:
-		search_progress_ring.visible = is_being_searched
-		search_progress_ring.queue_redraw()
-		
-		# Custom draw for progress ring
-		if not search_progress_ring.draw.is_connected(_draw_search_progress):
-			search_progress_ring.draw.connect(_draw_search_progress)
-
-
-## Draw the search progress ring
-func _draw_search_progress() -> void:
-	if not is_being_searched or not search_progress_ring:
-		return
-	
-	var progress = get_search_progress()
-	var center = search_progress_ring.size / 2
-	var radius = min(search_progress_ring.size.x, search_progress_ring.size.y) / 2 - 4
-	var thickness = 3.0
-	
-	# Draw progress arc
-	var start_angle = -PI / 2
-	var end_angle = start_angle + progress * TAU
-	
-	_draw_arc(search_progress_ring, center, radius, start_angle, end_angle, 
-			  Color(0.4, 0.8, 1.0, 0.8), thickness)
-
-
-## Helper to draw arc on a control
-func _draw_arc(control: Control, center: Vector2, radius: float, 
-			   start_angle: float, end_angle: float, color: Color, thickness: float) -> void:
-	var segments = 32
-	var angle_step = (end_angle - start_angle) / segments
-	
-	for i in range(segments):
-		var angle1 = start_angle + i * angle_step
-		var angle2 = start_angle + (i + 1) * angle_step
-		
-		var p1 = center + Vector2(cos(angle1), sin(angle1)) * radius
-		var p2 = center + Vector2(cos(angle2), sin(angle2)) * radius
-		
-		control.draw_line(p1, p2, color, thickness)
+	if search_progress_overlay:
+		search_progress_overlay.visible = is_being_searched
+		if is_being_searched:
+			var progress = get_search_progress()
+			var max_width = silhouette.size.x if silhouette else size.x
+			search_progress_overlay.size.x = progress * max_width
+			
+			# Add pulsing effect to the overlay
+			var pulse = (sin(pulse_time * 5.0) + 1.0) / 2.0
+			search_progress_overlay.color.a = 0.7 + pulse * 0.2
 
 
 # ==============================================================================
