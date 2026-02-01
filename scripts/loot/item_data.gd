@@ -85,6 +85,10 @@ class_name ItemData
 ## Array of faction types that WON'T have this item (use Factions.Type enum values)
 @export var faction_restricted: Array[int] = []
 
+## Faction-specific item - string representation for simpler lookups
+## "CCG", "NEX", "GDF", "SYN", "IND", or "" for non-faction-specific
+@export var faction_exclusive: String = ""
+
 @export_group("Spawn Settings")
 ## Probability weight in loot tables (higher = more common)
 ## 1.0 = normal, 2.0 = twice as likely, 0.5 = half as likely

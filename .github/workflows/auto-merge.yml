@@ -1,0 +1,332 @@
+name: PR Validation & Queue
+
+on:
+  # Run when PRs are opened, updated, or ready for review
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  # Run when PR is labeled ready-to-merge
+  pull_request_target:
+    types: [labeled]
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to validate'
+        required: false
+        type: number
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    # Only run on non-WIP, non-draft PRs
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request_target' && github.event.label.name == 'ready-to-merge') ||
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft && !contains(github.event.pull_request.title, '[WIP]'))
+    
+    steps:
+      - name: Get PR number
+        id: get-pr
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ inputs.pr_number }}" ]; then
+            echo "pr_number=${{ inputs.pr_number }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "pull_request_target" ]; then
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          else
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install gdtoolkit
+        run: pip install gdtoolkit
+      
+      - name: Validate Godot Project
+        id: validate
+        run: |
+          echo "🔍 Pre-Queue Validation..."
+          echo ""
+          ERRORS=0
+          WARNINGS=0
+          
+          # Check 1: project.godot exists
+          echo "📁 Checking project.godot..."
+          if [ -f "project.godot" ]; then
+            echo "   ✅ project.godot found"
+          else
+            echo "   ❌ project.godot not found!"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          # Check 2: GDScript syntax
+          echo "📝 Checking GDScript syntax..."
+          SCRIPT_ERRORS=0
+          SCRIPT_COUNT=0
+          
+          for file in $(find . -name "*.gd" -type f 2>/dev/null | head -100); do
+            SCRIPT_COUNT=$((SCRIPT_COUNT + 1))
+            if ! gdparse "$file" > /dev/null 2>&1; then
+              echo "   ❌ Syntax error: $file"
+              SCRIPT_ERRORS=$((SCRIPT_ERRORS + 1))
+            fi
+          done
+          
+          if [ $SCRIPT_ERRORS -eq 0 ]; then
+            echo "   ✅ All $SCRIPT_COUNT GDScript files valid"
+          else
+            echo "   ❌ $SCRIPT_ERRORS files with syntax errors"
+            ERRORS=$((ERRORS + SCRIPT_ERRORS))
+          fi
+          
+          # Check 3: Scene files
+          echo "🎬 Checking scene files..."
+          SCENE_ERRORS=0
+          SCENE_COUNT=0
+          
+          for file in $(find . -name "*.tscn" -type f 2>/dev/null); do
+            SCENE_COUNT=$((SCENE_COUNT + 1))
+            if ! grep -q "\[gd_scene" "$file" 2>/dev/null; then
+              echo "   ❌ Invalid scene: $file"
+              SCENE_ERRORS=$((SCENE_ERRORS + 1))
+            fi
+          done
+          
+          if [ $SCENE_ERRORS -eq 0 ]; then
+            echo "   ✅ All $SCENE_COUNT scene files valid"
+          else
+            ERRORS=$((ERRORS + SCENE_ERRORS))
+          fi
+          
+          # Check 4: Resource files
+          echo "📦 Checking resource files..."
+          RESOURCE_COUNT=$(find . -name "*.tres" -type f 2>/dev/null | wc -l)
+          echo "   ✅ Found $RESOURCE_COUNT resource files"
+          
+          # Check 5: Merge conflict markers
+          echo "🔀 Checking for conflict markers..."
+          CONFLICT_FILES=$(grep -rl "^<<<<<<< " --include="*.gd" --include="*.tscn" --include="*.tres" . 2>/dev/null || true)
+          
+          if [ -z "$CONFLICT_FILES" ]; then
+            echo "   ✅ No conflict markers"
+          else
+            echo "   ❌ Conflict markers found!"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          echo ""
+          echo "═══════════════════════════════════════"
+          if [ $ERRORS -eq 0 ]; then
+            echo "✅ VALIDATION PASSED"
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ VALIDATION FAILED ($ERRORS errors)"
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+          echo "═══════════════════════════════════════"
+      
+      - name: Add to Merge Queue
+        if: steps.validate.outputs.passed == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = ${{ steps.get-pr.outputs.pr_number }};
+            
+            console.log(`\n✅ Validation passed - adding PR #${prNumber} to merge queue\n`);
+            
+            // Get PR details
+            const { data: pr } = await github.rest.pulls.get({
+              owner, repo, pull_number: prNumber
+            });
+            
+            // Check if already in queue
+            const currentLabels = pr.labels.map(l => l.name);
+            
+            if (currentLabels.includes('queued-for-merge')) {
+              console.log('PR is already in the merge queue');
+              return;
+            }
+            
+            if (currentLabels.includes('merged')) {
+              console.log('PR is already merged');
+              return;
+            }
+            
+            // Ensure queue labels exist
+            const queueLabels = [
+              { name: 'queued-for-merge', color: '1d76db', desc: 'PR is in the merge queue' },
+              { name: 'ready-to-merge', color: '0e8a16', desc: 'PR is ready to merge' }
+            ];
+            
+            for (const label of queueLabels) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner, repo, name: label.name, color: label.color, description: label.desc
+                  });
+                }
+              }
+            }
+            
+            // Add to queue
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber,
+              labels: ['queued-for-merge', 'ready-to-merge']
+            });
+            
+            // Auto-assign priority based on PR content
+            const title = pr.title.toLowerCase();
+            let priorityLabel = 'priority-medium';
+            let priorityDesc = '🟡 Medium';
+            
+            if (title.includes('fix') && (title.includes('critical') || title.includes('crash') || title.includes('break'))) {
+              priorityLabel = 'priority-critical';
+              priorityDesc = '🔴 Critical';
+            } else if (title.includes('fix') || title.includes('bug')) {
+              priorityLabel = 'priority-high';
+              priorityDesc = '🟠 High';
+            } else if (title.includes('doc') || title.includes('readme') || title.includes('comment') || title.includes('type hint')) {
+              priorityLabel = 'priority-low';
+              priorityDesc = '🟢 Low';
+            }
+            
+            // Check if priority already assigned
+            const hasPriority = currentLabels.some(l => l.startsWith('priority-'));
+            
+            if (!hasPriority) {
+              // Ensure priority label exists
+              const priorityColors = {
+                'priority-critical': 'd73a4a',
+                'priority-high': 'ff7b00',
+                'priority-medium': 'fbca04',
+                'priority-low': '0e8a16'
+              };
+              
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: priorityLabel });
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner, repo, name: priorityLabel, color: priorityColors[priorityLabel]
+                  });
+                }
+              }
+              
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: prNumber, labels: [priorityLabel]
+              });
+              
+              console.log(`Auto-assigned priority: ${priorityLabel}`);
+            }
+            
+            // Post comment about queue status
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: prNumber,
+              body: `✅ **Validation Passed** - Added to Merge Queue\n\n` +
+                `This PR has been validated and added to the priority merge queue.\n\n` +
+                `**Priority:** ${priorityDesc}\n` +
+                `**Status:** Waiting in queue\n\n` +
+                `PRs are merged one at a time in priority order:\n` +
+                `🔴 Critical → 🟠 High → 🟡 Medium → 🟢 Low\n\n` +
+                `_The queue processes every 5 minutes._`
+            });
+      
+      - name: Report Validation Failure
+        if: steps.validate.outputs.passed != 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = ${{ steps.get-pr.outputs.pr_number }};
+            
+            console.log(`\n❌ Validation failed for PR #${prNumber}\n`);
+            
+            // Ensure label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: 'validation-failed' });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner, repo, name: 'validation-failed', color: 'd93f0b',
+                  description: 'PR failed validation checks'
+                });
+              }
+            }
+            
+            // Add validation-failed label
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber, labels: ['validation-failed']
+            });
+            
+            // Remove queue labels if present
+            for (const label of ['queued-for-merge', 'ready-to-merge']) {
+              try {
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: label
+                });
+              } catch (e) { /* ignore */ }
+            }
+            
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: prNumber,
+              body: `❌ **Validation Failed**\n\n` +
+                `This PR did not pass the project integrity checks and cannot be added to the merge queue.\n\n` +
+                `Please review the [workflow logs](${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}) and fix the issues.\n\n` +
+                `**Common issues:**\n` +
+                `- GDScript syntax errors\n` +
+                `- Invalid scene files\n` +
+                `- Merge conflict markers left in code\n\n` +
+                `_Push a fix and the validation will run again automatically._`
+            });
+
+  # Track merged PRs
+  label-merged:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Add merged label
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.payload.pull_request.number;
+            
+            // Ensure merged label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: 'merged' });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner, repo, name: 'merged', color: '6f42c1',
+                  description: 'PR has been merged'
+                });
+              }
+            }
+            
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber, labels: ['merged']
+            });
+            
+            console.log(`✅ Added 'merged' label to PR #${prNumber}`);

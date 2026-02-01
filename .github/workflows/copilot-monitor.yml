@@ -1,0 +1,152 @@
+name: Copilot Task Monitor
+
+on:
+  # Run every 15 minutes
+  schedule:
+    - cron: '*/15 * * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no re-queuing)'
+        type: boolean
+        default: false
+
+permissions:
+  issues: write
+  pull-requests: read
+  contents: read
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for rate-limited issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const dryRun = ${{ github.event.inputs.dry_run || false }};
+            
+            // Error messages to look for
+            const errorPatterns = [
+              'rate limit was exceeded',
+              'agent encountered an error',
+              'unable to start working'
+            ];
+            
+            console.log('🔍 Scanning issues for rate-limited Copilot tasks...');
+            
+            // Get all open issues
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100
+            });
+            
+            // Filter to only issues (not PRs)
+            const issuesOnly = issues.filter(issue => !issue.pull_request);
+            console.log(`Found ${issuesOnly.length} open issues`);
+            
+            const rateLimitedIssues = [];
+            
+            for (const issue of issuesOnly) {
+              // Get comments for this issue
+              const comments = await github.rest.issues.listComments({
+                owner,
+                repo,
+                issue_number: issue.number
+              });
+              
+              // Check if any comment contains rate limit error
+              const hasRateLimitError = comments.data.some(comment => 
+                errorPatterns.some(pattern => 
+                  comment.body.toLowerCase().includes(pattern.toLowerCase())
+                )
+              );
+              
+              if (hasRateLimitError) {
+                // Check if already has a "retry requested" comment recently (within 30 min)
+                const recentRetry = comments.data.some(comment => {
+                  const commentAge = Date.now() - new Date(comment.created_at).getTime();
+                  const thirtyMinutes = 30 * 60 * 1000;
+                  return comment.body.includes('🔄 Retry requested') && commentAge < thirtyMinutes;
+                });
+                
+                if (!recentRetry) {
+                  rateLimitedIssues.push({
+                    number: issue.number,
+                    title: issue.title
+                  });
+                  console.log(`⚠️ Rate-limited: #${issue.number} - ${issue.title}`);
+                } else {
+                  console.log(`⏳ Already retried recently: #${issue.number}`);
+                }
+              }
+            }
+            
+            console.log(`\n📊 Found ${rateLimitedIssues.length} issues needing retry`);
+            
+            // Count active WIP PRs (to check capacity)
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100
+            });
+            
+            const activeCopilotPRs = prs.filter(pr => 
+              pr.title.includes('[WIP]') || pr.user.login === 'copilot'
+            ).length;
+            
+            console.log(`📈 Active Copilot PRs: ${activeCopilotPRs}`);
+            
+            // Re-queue logic
+            const maxConcurrent = 20;
+            const availableSlots = Math.max(0, maxConcurrent - activeCopilotPRs);
+            const toRetry = rateLimitedIssues.slice(0, Math.min(availableSlots, 5)); // Max 5 at a time
+            
+            if (toRetry.length === 0) {
+              console.log('✅ No issues to retry or at capacity');
+              return;
+            }
+            
+            console.log(`\n🚀 Retrying ${toRetry.length} issues...`);
+            
+            for (const issue of toRetry) {
+              if (dryRun) {
+                console.log(`[DRY RUN] Would retry: #${issue.number} - ${issue.title}`);
+              } else {
+                // Add a comment to trigger Copilot retry
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: issue.number,
+                  body: `🔄 **Retry requested** by automated monitor.\n\n@copilot Please try again on this issue. The previous attempt failed due to rate limiting.\n\n_Automated retry at ${new Date().toISOString()}_`
+                });
+                console.log(`✅ Retry requested: #${issue.number} - ${issue.title}`);
+                
+                // Small delay between requests
+                await new Promise(resolve => setTimeout(resolve, 2000));
+              }
+            }
+            
+            // Create summary
+            const summary = `
+            ## Copilot Monitor Summary
+            
+            | Metric | Value |
+            |--------|-------|
+            | Open Issues Scanned | ${issuesOnly.length} |
+            | Rate-Limited Found | ${rateLimitedIssues.length} |
+            | Active Copilot PRs | ${activeCopilotPRs} |
+            | Issues Retried | ${dryRun ? '0 (dry run)' : toRetry.length} |
+            
+            ${rateLimitedIssues.length > 0 ? '### Rate-Limited Issues\n' + rateLimitedIssues.map(i => `- #${i.number}: ${i.title}`).join('\n') : ''}
+            `;
+            
+            console.log(summary);
+            core.summary.addRaw(summary).write();
