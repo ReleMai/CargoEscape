@@ -25,6 +25,7 @@ extends Node2D
 const StationDataClass = preload("res://scripts/data/station_data.gd")
 const AsteroidClass = preload("res://scripts/enemies/asteroid.gd")
 const AsteroidScene = preload("res://scenes/enemies/asteroid.tscn")
+const ScreenShake = preload("res://scripts/core/screen_shake.gd")
 
 
 # ==============================================================================
@@ -107,14 +108,9 @@ var distance_traveled: float = 0.0
 ## Has reached destination?
 var reached_destination: bool = false
 
-## Camera shake effect
-var camera_shake_intensity: float = 0.0
-var camera_shake_decay: float = 6.0
+## Screen shake system
+var screen_shake: ScreenShake = null
 var camera_base_position: Vector2 = Vector2.ZERO
-
-## Shake cooldown to prevent infinite shake loops
-var shake_cooldown: float = 0.0
-const SHAKE_COOLDOWN_TIME: float = 0.15  # Minimum time between shakes
 
 
 # ==============================================================================
@@ -126,6 +122,17 @@ func _ready() -> void:
 	
 	# Get screen dimensions
 	screen_size = get_viewport_rect().size
+	
+	# Initialize screen shake system
+	screen_shake = ScreenShake.new()
+	screen_shake.default_intensity = 0.6
+	screen_shake.default_duration = 0.4
+	screen_shake.max_offset = 15.0
+	screen_shake.shake_frequency = 35.0
+	screen_shake.decay_mode = ScreenShake.DecayMode.EXPONENTIAL
+	screen_shake.shake_mode = ScreenShake.ShakeMode.TRAUMA
+	screen_shake.cooldown_time = 0.15
+	add_child(screen_shake)
 	
 	# Add player to group so enemies can find it
 	player.add_to_group("player")
@@ -195,27 +202,15 @@ func _process(delta: float) -> void:
 
 ## Update camera shake effect
 func _update_camera_shake(delta: float) -> void:
-	# Update shake cooldown
-	if shake_cooldown > 0:
-		shake_cooldown = maxf(0, shake_cooldown - delta)
-	
-	if camera_shake_intensity > 0.01:
-		camera_shake_intensity = maxf(0, camera_shake_intensity - camera_shake_decay * delta)
+	if screen_shake and screen_shake.is_shaking():
+		# Get shake offset from the screen shake system
+		var shake_offset = screen_shake.get_shake_offset()
 		
 		# Apply shake to all visual nodes
-		var shake_offset = Vector2(
-			randf_range(-camera_shake_intensity, camera_shake_intensity),
-			randf_range(-camera_shake_intensity, camera_shake_intensity)
-		)
-		
-		# Apply to background and enemy container
 		if background:
 			background.position = camera_base_position + shake_offset
 		if enemy_container:
 			enemy_container.position = shake_offset
-		if player:
-			# Don't shake player, but shake their visual slightly
-			pass
 	else:
 		# Reset positions
 		if background:
@@ -225,12 +220,11 @@ func _update_camera_shake(delta: float) -> void:
 
 
 ## Trigger camera shake (with cooldown to prevent infinite loops)
-func shake_camera(intensity: float = 8.0, bypass_cooldown: bool = false) -> void:
-	if not bypass_cooldown and shake_cooldown > 0:
-		return  # Shake is on cooldown
-	
-	camera_shake_intensity = maxf(camera_shake_intensity, intensity)
-	shake_cooldown = SHAKE_COOLDOWN_TIME
+func shake_camera(intensity: float = 0.5, bypass_cooldown: bool = false) -> void:
+	if screen_shake:
+		# Convert legacy intensity (pixel-based) to normalized 0-1 range
+		var normalized_intensity = clampf(intensity / 15.0, 0.0, 1.0)
+		screen_shake.shake(normalized_intensity, -1.0, bypass_cooldown)
 
 
 # ==============================================================================
@@ -249,6 +243,10 @@ func setup_player_connections() -> void:
 	# Connect new collision signal if player has it
 	if player.has_signal("collision_occurred"):
 		player.collision_occurred.connect(_on_player_collision)
+	
+	# Connect weapon fired signal for screen shake
+	if player.has_signal("weapon_fired"):
+		player.weapon_fired.connect(_on_player_weapon_fired)
 	
 	print("Connected to Player signals")
 
@@ -491,9 +489,9 @@ func _spawn_asteroid() -> void:
 	var spawn_y := randf_range(spawn_margin, screen_size.y - spawn_margin)
 	asteroid.position = Vector2(spawn_x, spawn_y)
 	
-	# Connect destroyed signal
+	# Connect destroyed signal with asteroid size for shake intensity
 	if asteroid.has_signal("destroyed"):
-		asteroid.destroyed.connect(_on_enemy_destroyed)
+		asteroid.destroyed.connect(func(): _on_asteroid_destroyed(asteroid))
 	
 	enemy_container.add_child(asteroid)
 
@@ -675,6 +673,11 @@ func _on_player_collision(impact_strength: float = 0.0) -> void:
 	shake_camera(shake_intensity)
 
 
+func _on_player_weapon_fired() -> void:
+	# Small screen shake for weapon recoil effect
+	shake_camera(2.0)
+
+
 func _flash_damage() -> void:
 	# Create a brief red flash overlay
 	var flash_layer = CanvasLayer.new()
@@ -695,6 +698,23 @@ func _flash_damage() -> void:
 func _on_enemy_destroyed() -> void:
 	# Could add score for enemies that pass by
 	pass
+
+
+func _on_asteroid_destroyed(asteroid: Asteroid) -> void:
+	# Trigger screen shake based on asteroid size (explosion effect)
+	var shake_intensity := 0.3  # Base intensity
+	
+	# Adjust intensity based on asteroid size
+	match asteroid.asteroid_size:
+		AsteroidClass.AsteroidSize.SMALL:
+			shake_intensity = 0.2
+		AsteroidClass.AsteroidSize.MEDIUM:
+			shake_intensity = 0.4
+		AsteroidClass.AsteroidSize.LARGE:
+			shake_intensity = 0.7
+	
+	# Trigger shake for explosion
+	shake_camera(shake_intensity * 15.0)  # Convert to legacy pixel scale
 
 
 func _on_game_over() -> void:
