@@ -406,6 +406,11 @@ func _transition_to_hideout() -> void:
 
 
 func _go_to_hideout() -> void:
+	# Auto-save progress before transitioning to hideout
+	if has_node("/root/SaveManager"):
+		var save_manager = get_node("/root/SaveManager")
+		save_manager.auto_save()
+	
 	get_tree().change_scene_to_file("res://scenes/hideout/hideout_scene.tscn")
 
 

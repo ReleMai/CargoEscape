@@ -155,6 +155,17 @@ func _input(event: InputEvent) -> void:
 			skip_to_menu()
 		elif event is InputEventMouseButton and event.pressed:
 			skip_to_menu()
+	
+	# Manual save with F5 key
+	if event is InputEventKey and event.pressed and event.keycode == KEY_F5:
+		if has_node("/root/SaveManager"):
+			var save_manager = get_node("/root/SaveManager")
+			if save_manager.save_game():
+				print("[Hideout] Manual save successful!")
+				_show_save_notification("Game Saved!")
+			else:
+				print("[Hideout] Manual save failed!")
+				_show_save_notification("Save Failed!")
 
 
 func _setup_initial_state() -> void:
@@ -388,6 +399,11 @@ func _on_depart_pressed() -> void:
 
 
 func _go_to_boarding() -> void:
+	# Auto-save progress before leaving hideout
+	if has_node("/root/SaveManager"):
+		var save_manager = get_node("/root/SaveManager")
+		save_manager.auto_save()
+	
 	new_mission_requested.emit()
 	get_tree().change_scene_to_file("res://scenes/boarding/boarding_scene.tscn")
 
@@ -447,8 +463,35 @@ func _on_return_pressed() -> void:
 
 
 func _go_to_menu() -> void:
+	# Auto-save before returning to menu
+	if has_node("/root/SaveManager"):
+		var save_manager = get_node("/root/SaveManager")
+		save_manager.auto_save()
+	
 	returned_to_menu.emit()
 	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
+
+
+## Show a brief notification message to the player
+func _show_save_notification(message: String) -> void:
+	# Create notification label
+	var notification = Label.new()
+	notification.text = message
+	notification.modulate = Color(1, 1, 1, 0)
+	notification.position = Vector2(20, 20)
+	
+	# Style it
+	notification.add_theme_font_size_override("font_size", 24)
+	notification.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3))
+	
+	add_child(notification)
+	
+	# Fade in and out
+	var tween = create_tween()
+	tween.tween_property(notification, "modulate:a", 1.0, 0.3)
+	tween.tween_interval(1.5)
+	tween.tween_property(notification, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(notification.queue_free)
 
 
 # ==============================================================================
