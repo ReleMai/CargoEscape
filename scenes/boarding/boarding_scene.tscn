@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dqw8m3x6np2k4" path="res://scenes/boarding/exit_point.tscn" id="4_exit"]
 [ext_resource type="PackedScene" uid="uid://dmn6xk2rav4qy" path="res://scenes/loot/inventory.tscn" id="5_inventory"]
 [ext_resource type="Script" path="res://scripts/boarding/loot_menu.gd" id="6_lootmenu"]
+[ext_resource type="PackedScene" uid="uid://bpaxn8mxmxdmdc" path="res://scenes/ui/pause_manager.tscn" id="7_pause"]
 [ext_resource type="PackedScene" uid="uid://bpm8n3k5qx7ry" path="res://scenes/boarding/minimap.tscn" id="7_minimap"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_boundary"]
@@ -276,3 +277,5 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Press [E] to board your ship"
 horizontal_alignment = 1
+
+[node name="PauseManager" parent="." instance=ExtResource("7_pause")]
