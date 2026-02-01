@@ -124,10 +124,17 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	phase_timer += delta
+	# Apply speed multiplier from CutsceneManager
+	var speed_mult = 1.0
+	if has_node("/root/CutsceneManager"):
+		var cutscene_mgr = get_node("/root/CutsceneManager")
+		speed_mult = cutscene_mgr.get_speed_multiplier()
+	
+	var modified_delta = delta * speed_mult
+	phase_timer += modified_delta
 	
 	# Warning light blink
-	warning_timer += delta
+	warning_timer += modified_delta
 	if warning_timer > 0.25:
 		warning_timer = 0.0
 		warning_on = not warning_on
@@ -135,19 +142,19 @@ func _process(delta: float) -> void:
 	# Update based on phase
 	match current_phase:
 		Phase.FADE_IN:
-			_process_fade_in(delta)
+			_process_fade_in(modified_delta)
 		Phase.DOCKED:
-			_process_docked(delta)
+			_process_docked(modified_delta)
 		Phase.CLAMPS_RELEASE:
-			_process_clamps(delta)
+			_process_clamps(modified_delta)
 		Phase.SEPARATION:
-			_process_separation(delta)
+			_process_separation(modified_delta)
 		Phase.ACCELERATION:
-			_process_acceleration(delta)
+			_process_acceleration(modified_delta)
 		Phase.SPACE_FLIGHT:
-			_process_space_flight(delta)
+			_process_space_flight(modified_delta)
 		Phase.BLEND_OUT:
-			_process_blend_out(delta)
+			_process_blend_out(modified_delta)
 	
 	queue_redraw()
 
