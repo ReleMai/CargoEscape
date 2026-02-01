@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot/item_data.gd" id="1_basic"]
+
+[resource]
+script = ExtResource("1_basic")
+id = "singularity_gem"
+name = "Singularity Gem"
+description = "Crystallized black hole energy. Radiates impossible light. Defies known physics."
+tags = Array[String](["artifact", "exotic", "illegal", "dangerous", "unique", "mysterious"])
+grid_width = 2
+grid_height = 2
+weight = 1.0
+stack_size = 1
+base_value = 5000
+black_market_value = 15000
+rarity = 4
+category = 4
+faction_affinity = -1
+faction_restricted = Array[int]([0, 4])
+spawn_weight = 0.01
+base_search_time = 5.0
+search_time_multiplier = 0.0
+rarity_color = Color(1, 1, 1, 1)
+icon_path = "res://assets/sprites/items/singularity_gem.svg"
+value = 5000

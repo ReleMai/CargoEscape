@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot/item_data.gd" id="1_basic"]
+
+[resource]
+script = ExtResource("1_basic")
+id = "data_chip"
+name = "Data Chip"
+description = "Encrypted storage module. May contain valuable intel or corporate secrets."
+tags = Array[String](["component", "tech", "data", "valuable"])
+grid_width = 1
+grid_height = 1
+weight = 0.2
+stack_size = 10
+base_value = 85
+black_market_value = 120
+rarity = 1
+category = 1
+faction_affinity = 1
+faction_restricted = Array[int]([])
+spawn_weight = 1.0
+base_search_time = 1.5
+search_time_multiplier = 0.0
+rarity_color = Color(1, 1, 1, 1)
+icon_path = "res://assets/sprites/items/data_chip.svg"
+value = 85

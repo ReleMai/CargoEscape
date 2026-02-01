@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot/item_data.gd" id="1_basic"]
+
+[resource]
+script = ExtResource("1_basic")
+id = "scrap_metal"
+name = "Scrap Metal"
+description = "Salvaged hull plating and structural debris. Common but useful for repairs and recycling."
+tags = Array[String](["scrap", "metal", "recyclable"])
+grid_width = 1
+grid_height = 1
+weight = 5.0
+stack_size = 50
+base_value = 15
+black_market_value = 12
+rarity = 0
+category = 0
+faction_affinity = -1
+faction_restricted = Array[int]([])
+spawn_weight = 2.0
+base_search_time = 1.0
+search_time_multiplier = 0.0
+rarity_color = Color(1, 1, 1, 1)
+icon_path = "res://assets/sprites/items/scrap_metal.svg"
+value = 15

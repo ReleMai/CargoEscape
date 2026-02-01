@@ -1251,11 +1251,20 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	item.category = def.get("category", ItemCategory.SCRAP)
 	item.faction_exclusive = def.get("faction_exclusive", "")
 	
+	# New metadata properties
+	item.tags = def.get("tags", [])
+	item.weight = def.get("weight", 1.0)
+	item.base_value = def.get("base_value", 50)
+	item.black_market_value = def.get("black_market_value", item.base_value)
+	item.faction_affinity = def.get("faction_affinity", -1)
+	item.faction_restricted = def.get("faction_restricted", [])
+	item.spawn_weight = def.get("spawn_weight", 1.0)
+	item.stack_size = def.get("stack_size", 1)
+	item.icon_path = def.get("icon", "")
+	
 	# Calculate value based on weight (heavier = more valuable for same rarity)
-	var base_value = def.get("base_value", 50)
-	var weight = def.get("weight", 1.0)
 	# Value bonus for weight: +2% per kg
-	item.value = int(base_value * (1.0 + weight * 0.02))
+	item.value = int(item.base_value * (1.0 + item.weight * 0.02))
 	
 	# Search time based on size and rarity
 	var size = item.grid_width * item.grid_height
