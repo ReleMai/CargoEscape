@@ -339,6 +339,10 @@ func _spawn_container(pos: Vector2, container_type: int) -> void:
 	if container.has_method("generate_loot"):
 		container.generate_loot(current_ship_tier, container_type)
 	
+	# Connect item_revealed signal to combo system
+	if container.has_signal("item_revealed"):
+		container.item_revealed.connect(_on_item_revealed)
+	
 	containers_parent.add_child(container)
 
 
@@ -489,6 +493,13 @@ func _on_item_transferred(item_data: ItemData) -> void:
 	collected_items.append(item_data)
 	total_loot_value += item_data.value
 	_update_ui()
+
+
+## Called when an item is revealed in a container
+func _on_item_revealed(item_data: ItemData) -> void:
+	# Increase combo in GameManager's combo system
+	if GameManager and GameManager.combo_system:
+		GameManager.combo_system.increase_combo()
 
 
 func _on_item_destroyed(item: LootItem) -> void:
