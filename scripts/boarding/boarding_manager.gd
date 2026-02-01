@@ -90,8 +90,8 @@ var looting_container: Node2D = null
 
 # Ship data
 var current_ship_tier: int = 1
-var current_ship_data = null
-var current_layout = null
+var current_ship_data: ShipTypesClass.ShipData = null
+var current_layout: ShipLayoutClass.LayoutData = null
 
 # Player's collected items
 var collected_items: Array[ItemData] = []
@@ -220,7 +220,7 @@ func _generate_ship() -> void:
 
 
 ## Convert new GeneratedLayout to legacy LayoutData format
-func _convert_generated_layout(generated) -> RefCounted:
+func _convert_generated_layout(generated: ShipGeneratorClass.GeneratedLayout) -> RefCounted:
 	# Create a legacy LayoutData compatible object
 	var layout = ShipLayoutClass.LayoutData.new()
 	layout.ship_tier = generated.ship_tier

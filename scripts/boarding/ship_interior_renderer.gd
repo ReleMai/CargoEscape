@@ -126,7 +126,7 @@ func _clear_enhanced_visuals() -> void:
 
 
 ## Get room rectangles for container spawning validation
-func get_room_rects() -> Array:
+func get_room_rects() -> Array[Rect2]:
 	if current_layout:
 		return current_layout.room_rects
 	return []
