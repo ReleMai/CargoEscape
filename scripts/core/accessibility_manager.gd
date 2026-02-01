@@ -312,7 +312,7 @@ func _store_default_input_map() -> void:
 			continue
 		
 		var events = InputMap.action_get_events(action)
-		default_input_map[action] = events.duplicate()
+		default_input_map[action] = events.duplicate(true)  # Deep copy
 
 
 # ==============================================================================

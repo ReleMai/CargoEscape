@@ -71,6 +71,7 @@ func _play_entrance_animation() -> void:
 			accessibility_button.modulate.a = 1.0
 		if quit_button:
 			quit_button.modulate.a = 1.0
+		# Focus start button immediately (no animation to wait for)
 		if start_button:
 			start_button.grab_focus()
 		return
@@ -93,7 +94,7 @@ func _play_entrance_animation() -> void:
 	if quit_button:
 		tween.tween_property(quit_button, "modulate:a", 1.0, 0.3)
 	
-	# Focus the start button for keyboard/controller navigation
+	# Focus the start button for keyboard/controller navigation (after animation)
 	if start_button:
 		tween.tween_callback(start_button.grab_focus)
 
