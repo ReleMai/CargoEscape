@@ -35,6 +35,7 @@ signal ship_generated(tier: int, time_limit: float)
 
 const ShipTypesClass = preload("res://scripts/data/ship_types.gd")
 const ContainerTypesClass = preload("res://scripts/data/container_types.gd")
+const FactionsClass = preload("res://scripts/data/factions.gd")
 const ShipLayoutClass = preload("res://scripts/boarding/ship_layout.gd")
 const ShipGeneratorClass = preload("res://scripts/boarding/ship_generator.gd")
 const ShipInteriorRendererClass = preload("res://scripts/boarding/ship_interior_renderer.gd")
@@ -204,7 +205,6 @@ func _generate_ship() -> void:
 		var generated = ShipGeneratorClass.generate(current_ship_tier)
 		if generated:
 			# Extract faction code from generated layout
-			var FactionsClass = load("res://scripts/data/factions.gd")
 			var faction = FactionsClass.get_faction(generated.faction_type)
 			if faction:
 				current_faction_code = faction.code

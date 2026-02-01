@@ -1229,7 +1229,7 @@ static func get_common_pool_items() -> Dictionary:
 
 
 ## Generate complete loot for a container with faction support
-## Returns array of ItemData
+## Returns Array[ItemData]
 static func generate_container_loot_with_faction(
 	ship_tier: int,
 	container_type: int,
@@ -1329,7 +1329,7 @@ static func _roll_faction_item(
 
 
 ## Generate complete loot for a container
-## Returns array of ItemData
+## Returns Array[ItemData]
 static func generate_container_loot(
 	ship_tier: int,
 	container_type: int,

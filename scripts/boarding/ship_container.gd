@@ -152,6 +152,8 @@ func set_container_type(type_id: int) -> void:
 
 
 ## Generate loot for this container based on ship and container type
+## NOTE: faction_code parameter added to support faction-specific items.
+##       This is backward compatible - leave empty for non-faction-specific loot.
 func generate_loot(tier: int, _container_type: int = -1, faction_code: String = "") -> void:
 	ship_tier = tier
 	if _container_type >= 0:
