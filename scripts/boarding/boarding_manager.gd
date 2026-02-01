@@ -502,6 +502,13 @@ func _on_item_revealed(item_data: ItemData) -> void:
 		GameManager.combo_system.increase_combo()
 
 
+## Called when search is cancelled (player moved away)
+func _on_search_cancelled() -> void:
+	# Don't break combo on search cancellation - only on damage or timer expiry
+	# This allows player to move between containers without losing combo
+	pass
+
+
 func _on_item_destroyed(item: LootItem) -> void:
 	# Item was destroyed from inventory
 	if item and item.item_data:
@@ -578,9 +585,17 @@ func _end_boarding(success: bool) -> void:
 	if success and inventory:
 		_transfer_inventory_to_game_manager()
 	
-	# Add to global score
+	# Add to global score with combo multiplier
 	if success and GameManager:
-		GameManager.add_score(total_loot_value)
+		var score_to_add = total_loot_value
+		if GameManager.combo_system:
+			score_to_add = GameManager.combo_system.apply_multiplier(total_loot_value)
+			print("[BoardingManager] Score: %d (base) x %.1fx (combo) = %d (total)" % [
+				total_loot_value, 
+				GameManager.combo_system.get_multiplier(),
+				score_to_add
+			])
+		GameManager.add_score(score_to_add)
 	
 	# Transition to results or next scene
 	await get_tree().create_timer(1.0).timeout
