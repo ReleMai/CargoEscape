@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot/item_data.gd" id="1_basic"]
+
+[resource]
+script = ExtResource("1_basic")
+id = "alien_artifact"
+name = "Alien Artifact"
+description = "Unknown origin. Emits faint energy readings. Forbidden by galactic law."
+tags = Array[String](["artifact", "alien", "illegal", "mysterious", "dangerous"])
+grid_width = 2
+grid_height = 2
+weight = 3.0
+stack_size = 1
+base_value = 850
+black_market_value = 2500
+rarity = 3
+category = 4
+faction_affinity = 3
+faction_restricted = Array[int]([0, 2])
+spawn_weight = 0.15
+base_search_time = 4.0
+search_time_multiplier = 0.0
+rarity_color = Color(1, 1, 1, 1)
+icon_path = "res://assets/sprites/items/alien_artifact.svg"
+value = 850
