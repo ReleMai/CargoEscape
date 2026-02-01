@@ -152,7 +152,7 @@ func set_container_type(type_id: int) -> void:
 
 
 ## Generate loot for this container based on ship and container type
-func generate_loot(tier: int, _container_type: int = -1) -> void:
+func generate_loot(tier: int, _container_type: int = -1, faction_code: String = "") -> void:
 	ship_tier = tier
 	if _container_type >= 0:
 		set_container_type(_container_type)
@@ -165,8 +165,14 @@ func generate_loot(tier: int, _container_type: int = -1) -> void:
 	if container_data:
 		count = randi_range(container_data.min_slots, container_data.max_slots)
 	
-	# Generate items using the advanced system
-	var items = ItemDB.generate_container_loot(ship_tier, container_type_id, count)
+	# Generate items using the faction-aware system if faction is specified
+	var items: Array = []
+	if faction_code != "":
+		items = ItemDB.generate_container_loot_with_faction(ship_tier, container_type_id, count, faction_code)
+	else:
+		# Fallback to non-faction-specific loot
+		items = ItemDB.generate_container_loot(ship_tier, container_type_id, count)
+	
 	for item in items:
 		if item:
 			hidden_items.append(item)

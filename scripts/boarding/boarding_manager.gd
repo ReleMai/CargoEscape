@@ -91,6 +91,7 @@ var looting_container: Node2D = null
 var current_ship_tier: int = 1
 var current_ship_data = null
 var current_layout = null
+var current_faction_code: String = ""  # Faction code (CCG, NEX, GDF, SYN, IND)
 
 # Player's collected items
 var collected_items: Array[ItemData] = []
@@ -202,11 +203,20 @@ func _generate_ship() -> void:
 		# Try new generator first, fall back to legacy if it fails
 		var generated = ShipGeneratorClass.generate(current_ship_tier)
 		if generated:
+			# Extract faction code from generated layout
+			var FactionsClass = load("res://scripts/data/factions.gd")
+			var faction = FactionsClass.get_faction(generated.faction_type)
+			if faction:
+				current_faction_code = faction.code
+			else:
+				current_faction_code = ""
+			
 			# Convert GeneratedLayout to legacy LayoutData format for compatibility
 			current_layout = _convert_generated_layout(generated)
 		else:
 			# Fallback to legacy generator
 			current_layout = ShipLayoutClass.generate_layout(current_ship_tier)
+			current_faction_code = ""  # Legacy doesn't have faction
 		_apply_layout()
 	
 	# Update UI with ship info
@@ -335,9 +345,9 @@ func _spawn_container(pos: Vector2, container_type: int) -> void:
 	if container.has_method("set_container_type"):
 		container.set_container_type(container_type)
 	
-	# Generate loot for this container
+	# Generate loot for this container with faction support
 	if container.has_method("generate_loot"):
-		container.generate_loot(current_ship_tier, container_type)
+		container.generate_loot(current_ship_tier, container_type, current_faction_code)
 	
 	containers_parent.add_child(container)
 
