@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmpb8y7hs5qf2"]
+
+[ext_resource type="Script" path="res://scripts/ui/tutorial_overlay.gd" id="1_tutorial_overlay"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_highlight"]
+bg_color = Color(1, 1, 0.3, 0.2)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 0, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="TutorialOverlay" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_tutorial_overlay")
+
+[node name="HighlightRect" type="ColorRect" parent="."]
+visible = false
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(1, 1, 0, 0.3)
+
+[node name="TooltipPanel" type="PanelContainer" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 420.0
+offset_bottom = 150.0
+
+[node name="VBox" type="VBoxContainer" parent="TooltipPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="TooltipPanel/VBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Tutorial Title"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="TooltipPanel/VBox"]
+layout_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="TooltipPanel/VBox"]
+layout_mode = 2
+text = "Tutorial description goes here.
+Use this text to explain the current step."
+autowrap_mode = 3
+
+[node name="SkipButton" type="Button" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 51.0
+grow_horizontal = 0
+text = "Skip Tutorial"
+
+[node name="ArrowPointer" type="Polygon2D" parent="."]
+visible = false
+color = Color(1, 1, 0, 0.8)
+polygon = PackedVector2Array(-10, -20, 0, 0, 10, -20, 0, -15)

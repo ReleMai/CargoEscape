@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot/item_data.gd" id="1_basic"]
+
+[resource]
+script = ExtResource("1_basic")
+id = "weapon_core"
+name = "Weapon Core"
+description = "Power source for military-grade armaments. Heavily regulated and illegal in civilian sectors."
+tags = Array[String](["valuable", "weapon", "military", "illegal", "dangerous"])
+grid_width = 2
+grid_height = 2
+weight = 8.0
+stack_size = 1
+base_value = 400
+black_market_value = 800
+rarity = 2
+category = 2
+faction_affinity = 2
+faction_restricted = Array[int]([0])
+spawn_weight = 0.4
+base_search_time = 3.0
+search_time_multiplier = 0.0
+rarity_color = Color(1, 1, 1, 1)
+icon_path = "res://assets/sprites/items/weapon_core.svg"
+value = 400
