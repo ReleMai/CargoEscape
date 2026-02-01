@@ -78,6 +78,9 @@ class_name ItemData
 ## Item tags for categorization and trading
 @export var tags: Array[String] = []
 
+## Weight in kilograms (affects inventory capacity)
+@export var weight: float = 1.0
+
 ## Rarity tier affects spawn rates and visual effects
 ## 0=Common, 1=Uncommon, 2=Rare, 3=Epic, 4=Legendary
 @export_range(0, 4) var rarity: int = 0
@@ -151,6 +154,11 @@ func get_search_time() -> float:
 ## Get value per cell (efficiency metric)
 func get_value_density() -> float:
 	return float(value) / float(get_cell_count())
+
+
+## Get item weight
+func get_weight() -> float:
+	return weight
 
 
 ## Get rarity name as string
@@ -245,4 +253,6 @@ static func create_item(item_name: String, width: int, height: int, item_value: 
 	item.grid_height = height
 	item.value = item_value
 	item.base_search_time = 1.0 + width * height * 0.5
+	# Set weight based on size (larger items are heavier)
+	item.weight = float(width * height) * 0.5
 	return item

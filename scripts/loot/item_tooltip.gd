@@ -61,6 +61,7 @@ var vbox: VBoxContainer
 var name_label: Label
 var rarity_label: Label
 var value_label: Label
+var weight_label: Label
 var desc_label: Label
 var border_panel: Panel
 
@@ -181,6 +182,13 @@ func _create_content() -> void:
 	value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(value_label)
 	
+	# Weight
+	weight_label = Label.new()
+	weight_label.add_theme_font_size_override("font_size", 14)
+	weight_label.add_theme_color_override("font_color", Color(0.7, 0.8, 0.9))
+	weight_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(weight_label)
+	
 	# Description
 	desc_label = Label.new()
 	desc_label.add_theme_font_size_override("font_size", 11)
@@ -246,6 +254,9 @@ func _update_content() -> void:
 	
 	# Value
 	value_label.text = "💰 %d credits" % current_item.value
+	
+	# Weight
+	weight_label.text = "⚖ %.1f kg" % current_item.weight
 	
 	# Description
 	if current_item.description != "":

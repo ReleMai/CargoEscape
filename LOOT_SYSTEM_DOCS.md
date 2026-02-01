@@ -185,9 +185,35 @@ A Resource class that defines item properties.
 @export var grid_width: int = 1       # Width in cells
 @export var grid_height: int = 2      # Height in cells
 @export var value: int = 100          # Worth in credits
+@export var weight: float = 1.0       # Weight in kilograms
 @export var rarity: int = 0           # 0-4 (Common to Legendary)
 @export var base_search_time: float   # Time to search
 @export var sprite: Texture2D         # Item image
+```
+
+### Inventory Capacity System
+
+The inventory has a weight-based capacity system that limits how much cargo you can carry:
+
+**Capacity Limits:**
+- **Default Max Capacity:** 50.0 kg
+- Items have individual weights (typically 0.5 - 10.0 kg based on size)
+- Larger grid items generally weigh more
+
+**UI Indicators:**
+- **Weight Bar:** Shows current weight vs. max capacity with color coding:
+  - 🟢 **Green** (< 75%): Plenty of space
+  - 🟡 **Yellow** (75-100%): Getting full
+  - 🔴 **Red** (> 100%): Over-encumbered
+- **Weight Label:** Displays "Weight: X / Y kg"
+- **Item Tooltips:** Show individual item weight (⚖ X kg)
+
+**Key Functions:**
+```gdscript
+get_current_weight()         # Returns current inventory weight
+get_max_capacity()           # Returns maximum capacity
+can_carry_weight(weight)     # Check if weight can be added
+is_over_encumbered()         # Check if over capacity
 ```
 
 ---
