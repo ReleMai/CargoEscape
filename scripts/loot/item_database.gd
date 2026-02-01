@@ -374,6 +374,251 @@ const EPIC_ITEMS = {
 
 
 # ==============================================================================
+# ITEM DEFINITIONS - CONTRABAND (Illegal items with high black market value)
+# ==============================================================================
+
+const CONTRABAND_ITEMS = {
+	# ===== WEAPONS (Illegal in most sectors) =====
+	"plasma_pistol": {
+		"name": "Plasma Pistol",
+		"description": "Military-grade energy weapon. Highly illegal in civilian sectors.",
+		"width": 1, "height": 2,
+		"base_value": 100,
+		"weight": 1.5,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/plasma_pistol.svg"
+	},
+	"assault_rifle": {
+		"name": "Assault Rifle",
+		"description": "GDF standard issue ballistic weapon. Possession is a felony.",
+		"width": 2, "height": 1,
+		"base_value": 150,
+		"weight": 3.0,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/assault_rifle.svg"
+	},
+	"vibro_blade": {
+		"name": "Vibro-Blade",
+		"description": "High-frequency combat blade. Banned by galactic treaty.",
+		"width": 1, "height": 2,
+		"base_value": 80,
+		"weight": 0.8,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/vibro_blade.svg"
+	},
+	"emp_grenade": {
+		"name": "EMP Grenade",
+		"description": "Electromagnetic pulse device. Illegal tech weapon.",
+		"width": 1, "height": 1,
+		"base_value": 50,
+		"weight": 0.5,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/emp_grenade.svg"
+	},
+	"plasma_cannon": {
+		"name": "Plasma Cannon",
+		"description": "Heavy energy weapon. Military restricted equipment.",
+		"width": 3, "height": 2,
+		"base_value": 300,
+		"weight": 8.0,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/plasma_cannon.svg"
+	},
+	"neural_disruptor": {
+		"name": "Neural Disruptor",
+		"description": "Mind control device. Banned for ethical violations.",
+		"width": 1, "height": 2,
+		"base_value": 200,
+		"weight": 1.0,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/neural_disruptor.svg"
+	},
+	
+	# ===== DRUGS & CHEMICALS =====
+	"stim_packs": {
+		"name": "Stim Packs",
+		"description": "Military combat stimulants. Highly addictive and illegal.",
+		"width": 1, "height": 1,
+		"base_value": 20,
+		"weight": 0.1,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/stim_packs.svg"
+	},
+	"neural_boosters": {
+		"name": "Neural Boosters",
+		"description": "Cognitive enhancement drugs. Banned performance enhancers.",
+		"width": 1, "height": 1,
+		"base_value": 50,
+		"weight": 0.2,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/neural_boosters.svg"
+	},
+	"toxic_waste": {
+		"name": "Toxic Waste",
+		"description": "Hazardous chemical byproduct. Illegal to transport without permit.",
+		"width": 2, "height": 2,
+		"base_value": 0,
+		"weight": 5.0,
+		"rarity": 1,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/toxic_waste.svg"
+	},
+	"synth_narcotics": {
+		"name": "Synthetic Narcotics",
+		"description": "Designer drugs from Shadow Syndicate labs. Extremely illegal.",
+		"width": 1, "height": 1,
+		"base_value": 80,
+		"weight": 0.3,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/synth_narcotics.svg"
+	},
+	"combat_serum": {
+		"name": "Combat Serum",
+		"description": "Experimental military enhancement drug. Dangerous side effects.",
+		"width": 1, "height": 2,
+		"base_value": 120,
+		"weight": 0.5,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/combat_serum.svg"
+	},
+	
+	# ===== STOLEN/RESTRICTED DATA & ARTIFACTS =====
+	"classified_data": {
+		"name": "Classified Data",
+		"description": "Encrypted military intelligence. Worth a fortune to the right buyer.",
+		"width": 1, "height": 1,
+		"base_value": 0,
+		"weight": 0.1,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/classified_data.svg"
+	},
+	"military_codes": {
+		"name": "Military Codes",
+		"description": "GDF encryption keys. Treason to possess without authorization.",
+		"width": 1, "height": 1,
+		"base_value": 0,
+		"weight": 0.1,
+		"rarity": 4,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/military_codes.svg"
+	},
+	"stolen_artifacts": {
+		"name": "Stolen Artifacts",
+		"description": "Ancient relics taken from protected sites. Cultural crime.",
+		"width": 2, "height": 2,
+		"base_value": 500,
+		"weight": 2.0,
+		"rarity": 3,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/stolen_artifacts.svg"
+	},
+	"corporate_secrets": {
+		"name": "Corporate Secrets",
+		"description": "Nexus Corporation trade secrets. Industrial espionage evidence.",
+		"width": 1, "height": 1,
+		"base_value": 100,
+		"weight": 0.1,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/corporate_secrets.svg"
+	},
+	"banned_ai_core": {
+		"name": "Banned AI Core",
+		"description": "Sentient AI processor. Outlawed after the Machine Wars.",
+		"width": 2, "height": 2,
+		"base_value": 750,
+		"weight": 5.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/banned_ai_core.svg"
+	},
+	
+	# ===== ADDITIONAL CONTRABAND =====
+	"counterfeit_credits": {
+		"name": "Counterfeit Credits",
+		"description": "Forged currency chips. Economic crime punishable by life imprisonment.",
+		"width": 1, "height": 1,
+		"base_value": 200,
+		"weight": 0.2,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/counterfeit_credits.svg"
+	},
+	"slave_collar": {
+		"name": "Slave Collar",
+		"description": "Neural control device. Slavery abolished centuries ago.",
+		"width": 1, "height": 1,
+		"base_value": 50,
+		"weight": 0.5,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/slave_collar.svg"
+	},
+	"pirate_beacon": {
+		"name": "Pirate Beacon",
+		"description": "Modified distress signal for ambushes. Piracy equipment.",
+		"width": 1, "height": 2,
+		"base_value": 150,
+		"weight": 2.0,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/pirate_beacon.svg"
+	},
+	"cloning_sample": {
+		"name": "Cloning Sample",
+		"description": "Illegal genetic material. Human cloning is strictly forbidden.",
+		"width": 1, "height": 1,
+		"base_value": 300,
+		"weight": 0.1,
+		"rarity": 3,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/cloning_sample.svg"
+	},
+	"bioweapon_vial": {
+		"name": "Bioweapon Vial",
+		"description": "Engineered pathogen. Possession is a war crime.",
+		"width": 1, "height": 1,
+		"base_value": 100,
+		"weight": 0.2,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/bioweapon_vial.svg"
+	},
+	"quantum_jammer": {
+		"name": "Quantum Jammer",
+		"description": "FTL communication disruptor. Banned by all governments.",
+		"width": 2, "height": 2,
+		"base_value": 400,
+		"weight": 3.0,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/quantum_jammer.svg"
+	},
+	"black_market_pass": {
+		"name": "Black Market Pass",
+		"description": "Shadow Syndicate authorization codes. Grants access to illegal markets.",
+		"width": 1, "height": 1,
+		"base_value": 250,
+		"weight": 0.1,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/black_market_pass.svg"
+	}
+}
+
+
+# ==============================================================================
 # ITEM DEFINITIONS - LEGENDARY (Rarity 4)
 # ==============================================================================
 
@@ -578,7 +823,20 @@ const LOOT_TABLE_FAR = {
 	"module_scanner": 2,
 	"module_engine_booster": 2,
 	"module_laser_amp": 2,
-	"module_targeting": 2
+	"module_targeting": 2,
+	# Contraband items
+	"plasma_pistol": 3,
+	"assault_rifle": 2,
+	"vibro_blade": 3,
+	"emp_grenade": 4,
+	"stim_packs": 5,
+	"neural_boosters": 4,
+	"toxic_waste": 3,
+	"synth_narcotics": 3,
+	"counterfeit_credits": 3,
+	"slave_collar": 2,
+	"pirate_beacon": 2,
+	"black_market_pass": 2
 }
 
 # Tier 3: Deepest space - epics, legendaries, best modules
@@ -605,7 +863,19 @@ const LOOT_TABLE_DEEPEST = {
 	"module_targeting": 5,
 	"module_shield": 4,
 	"module_scanner": 3,
-	"module_thrusters": 2
+	"module_thrusters": 2,
+	# High-tier contraband items
+	"plasma_cannon": 3,
+	"neural_disruptor": 3,
+	"combat_serum": 3,
+	"classified_data": 4,
+	"military_codes": 2,
+	"stolen_artifacts": 3,
+	"corporate_secrets": 4,
+	"banned_ai_core": 2,
+	"cloning_sample": 3,
+	"bioweapon_vial": 2,
+	"quantum_jammer": 3
 }
 
 
@@ -620,6 +890,7 @@ static func get_all_items() -> Dictionary:
 	all_items.merge(COMPONENT_ITEMS)
 	all_items.merge(VALUABLE_ITEMS)
 	all_items.merge(EPIC_ITEMS)
+	all_items.merge(CONTRABAND_ITEMS)
 	all_items.merge(LEGENDARY_ITEMS)
 	all_items.merge(MODULE_ITEMS)
 	return all_items
