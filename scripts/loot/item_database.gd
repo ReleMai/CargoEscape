@@ -679,9 +679,8 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	
 	# Calculate value based on weight (heavier = more valuable for same rarity)
 	var base_value = def.get("base_value", 50)
-	var weight = def.get("weight", 1.0)
 	# Value bonus for weight: +2% per kg
-	item.value = int(base_value * (1.0 + weight * 0.02))
+	item.value = int(base_value * (1.0 + item.weight * 0.02))
 	
 	# Search time based on size and rarity
 	var size = item.grid_width * item.grid_height

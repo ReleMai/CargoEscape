@@ -72,6 +72,10 @@ var total_value: int = 0
 # Total weight
 var current_weight: float = 0.0
 
+# Cached style for weight bar (to avoid recreating every update)
+var _weight_bar_style: StyleBoxFlat = null
+var _last_weight_color: Color = Color.BLACK
+
 # ==============================================================================
 # NODE REFERENCES
 # ==============================================================================
@@ -396,10 +400,13 @@ func _update_weight_display() -> void:
 		else:
 			bar_color = Color(0.9, 0.2, 0.2)  # Red
 		
-		# Apply color to the progress bar fill
-		var style = StyleBoxFlat.new()
-		style.bg_color = bar_color
-		weight_bar.add_theme_stylebox_override("fill", style)
+		# Only update style if color changed (optimization)
+		if bar_color != _last_weight_color:
+			_last_weight_color = bar_color
+			if not _weight_bar_style:
+				_weight_bar_style = StyleBoxFlat.new()
+			_weight_bar_style.bg_color = bar_color
+			weight_bar.add_theme_stylebox_override("fill", _weight_bar_style)
 
 
 func get_total_value() -> int:
