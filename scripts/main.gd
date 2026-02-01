@@ -112,6 +112,9 @@ var reached_destination: bool = false
 var screen_shake: ScreenShake = null
 var camera_base_position: Vector2 = Vector2.ZERO
 
+## Legacy intensity conversion factor (matches max_offset)
+const LEGACY_SHAKE_MAX: float = 15.0
+
 
 # ==============================================================================
 # BUILT-IN FUNCTIONS
@@ -127,7 +130,7 @@ func _ready() -> void:
 	screen_shake = ScreenShake.new()
 	screen_shake.default_intensity = 0.6
 	screen_shake.default_duration = 0.4
-	screen_shake.max_offset = 15.0
+	screen_shake.max_offset = LEGACY_SHAKE_MAX
 	screen_shake.shake_frequency = 35.0
 	screen_shake.decay_mode = ScreenShake.DecayMode.EXPONENTIAL
 	screen_shake.shake_mode = ScreenShake.ShakeMode.TRAUMA
@@ -232,7 +235,7 @@ func _update_camera_shake(delta: float) -> void:
 func shake_camera(intensity: float = 0.5, bypass_cooldown: bool = false) -> void:
 	if screen_shake:
 		# Convert legacy intensity (pixel-based) to normalized 0-1 range
-		var normalized_intensity = clampf(intensity / 15.0, 0.0, 1.0)
+		var normalized_intensity = clampf(intensity / LEGACY_SHAKE_MAX, 0.0, 1.0)
 		screen_shake.shake(normalized_intensity, -1.0, bypass_cooldown)
 
 
@@ -711,7 +714,7 @@ func _on_enemy_destroyed() -> void:
 
 func _on_asteroid_destroyed(asteroid: Asteroid) -> void:
 	# Trigger screen shake based on asteroid size (explosion effect)
-	var shake_intensity := 0.3  # Base intensity
+	var shake_intensity: float
 	
 	# Adjust intensity based on asteroid size
 	match asteroid.asteroid_size:
@@ -721,9 +724,11 @@ func _on_asteroid_destroyed(asteroid: Asteroid) -> void:
 			shake_intensity = 0.4
 		AsteroidClass.AsteroidSize.LARGE:
 			shake_intensity = 0.7
+		_:
+			shake_intensity = 0.3  # Fallback for unknown sizes
 	
-	# Trigger shake for explosion
-	shake_camera(shake_intensity * 15.0)  # Convert to legacy pixel scale
+	# Trigger shake for explosion (convert to legacy pixel scale)
+	shake_camera(shake_intensity * LEGACY_SHAKE_MAX)
 
 
 func _on_game_over() -> void:
