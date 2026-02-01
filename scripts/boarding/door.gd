@@ -65,7 +65,7 @@ enum LockType {
 # ==============================================================================
 
 var current_state: State = State.OPEN
-var connected_rooms: Array = []  # Room indices this door connects
+var connected_rooms: Array[int] = []  # Room indices this door connects
 var player_nearby: bool = false
 var _auto_close_timer: float = 0.0
 

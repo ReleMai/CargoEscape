@@ -89,8 +89,8 @@ var looting_container: Node2D = null
 
 # Ship data
 var current_ship_tier: int = 1
-var current_ship_data = null
-var current_layout = null
+var current_ship_data: ShipTypesClass.ShipData = null
+var current_layout: ShipLayoutClass.LayoutData = null
 
 # Player's collected items
 var collected_items: Array[ItemData] = []
