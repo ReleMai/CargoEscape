@@ -292,7 +292,7 @@ func _on_end_run_pressed() -> void:
 	run_ended.emit(total_credits)
 	hide_station()
 	# Return to main menu
-	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/intro/intro_scene.tscn")
 
 
 # ==============================================================================

@@ -35,12 +35,14 @@ signal ship_generated(tier: int, time_limit: float)
 
 const ShipTypesClass = preload("res://scripts/data/ship_types.gd")
 const ContainerTypesClass = preload("res://scripts/data/container_types.gd")
+const FactionsClass = preload("res://scripts/data/factions.gd")
 const ShipLayoutClass = preload("res://scripts/boarding/ship_layout.gd")
 const ShipGeneratorClass = preload("res://scripts/boarding/ship_generator.gd")
 const ShipInteriorRendererClass = preload("res://scripts/boarding/ship_interior_renderer.gd")
 const LootMenuClass = preload("res://scripts/boarding/loot_menu.gd")
 const GameOverScene = preload("res://scenes/boarding/game_over.tscn")
 const ShipContainerScene = preload("res://scenes/boarding/ship_container.tscn")
+const EscapeCutsceneScene = preload("res://scenes/boarding/escape_cutscene.tscn")
 
 # ==============================================================================
 # EXPORTS
@@ -75,6 +77,7 @@ const ShipContainerScene = preload("res://scenes/boarding/ship_container.tscn")
 @onready var loot_menu: Control = %LootMenu
 @onready var escape_prompt: Control = %EscapePrompt
 @onready var ship_tier_label: Label = %ShipTierLabel  # Shows current ship tier
+@onready var minimap: Control = %Minimap  # Minimap UI element
 
 # ==============================================================================
 # STATE
@@ -91,9 +94,16 @@ var looting_container: Node2D = null
 var current_ship_tier: int = 1
 var current_ship_data = null
 var current_layout = null
+var current_faction_code: String = ""  # Faction code (CCG, NEX, GDF, SYN, IND)
+var current_ship_data: ShipTypesClass.ShipData = null
+var current_layout: ShipLayoutClass.LayoutData = null
 
 # Player's collected items
 var collected_items: Array[ItemData] = []
+
+# Container tracking
+var containers_searched: int = 0
+var total_containers: int = 0
 
 # Camera and centering
 var layout_offset: Vector2 = Vector2.ZERO  # Offset to center the ship
@@ -141,6 +151,7 @@ func _process(delta: float) -> void:
 	
 	_update_timer(delta)
 	_update_camera(delta)
+	_update_minimap()
 	
 	# Decay camera shake
 	if camera_shake > 0:
@@ -206,11 +217,19 @@ func _generate_ship() -> void:
 		# Try new generator first, fall back to legacy if it fails
 		var generated = ShipGeneratorClass.generate(current_ship_tier)
 		if generated:
+			# Extract faction code from generated layout
+			var faction = FactionsClass.get_faction(generated.faction_type)
+			if faction:
+				current_faction_code = faction.code
+			else:
+				current_faction_code = ""
+			
 			# Convert GeneratedLayout to legacy LayoutData format for compatibility
 			current_layout = _convert_generated_layout(generated)
 		else:
 			# Fallback to legacy generator
 			current_layout = ShipLayoutClass.generate_layout(current_ship_tier)
+			current_faction_code = ""  # Legacy doesn't have faction
 		_apply_layout()
 	
 	# Update UI with ship info
@@ -222,7 +241,7 @@ func _generate_ship() -> void:
 
 
 ## Convert new GeneratedLayout to legacy LayoutData format
-func _convert_generated_layout(generated) -> RefCounted:
+func _convert_generated_layout(generated: ShipGeneratorClass.GeneratedLayout) -> RefCounted:
 	# Create a legacy LayoutData compatible object
 	var layout = ShipLayoutClass.LayoutData.new()
 	layout.ship_tier = generated.ship_tier
@@ -306,6 +325,9 @@ func _apply_layout() -> void:
 	# Spawn containers at validated positions (already offset since containers_parent is offset)
 	for container_data in current_layout.container_positions:
 		_spawn_container(container_data.position, container_data.type)
+	
+	# Initialize minimap with layout
+	_setup_minimap()
 
 
 ## Render the ship interior based on layout
@@ -339,11 +361,16 @@ func _spawn_container(pos: Vector2, container_type: int) -> void:
 	if container.has_method("set_container_type"):
 		container.set_container_type(container_type)
 	
-	# Generate loot for this container
+	# Generate loot for this container with faction support
 	if container.has_method("generate_loot"):
-		container.generate_loot(current_ship_tier, container_type)
+		container.generate_loot(current_ship_tier, container_type, current_faction_code)
+	
+	# Connect to container signals to track search completion
+	if container.has_signal("container_opened"):
+		container.container_opened.connect(_on_container_searched)
 	
 	containers_parent.add_child(container)
+	total_containers += 1
 
 
 func _start_boarding() -> void:
@@ -351,6 +378,8 @@ func _start_boarding() -> void:
 	time_remaining = total_time
 	total_loot_value = 0
 	collected_items.clear()
+	containers_searched = 0
+	total_containers = 0
 	
 	# Position player at start (if not using procedural layout)
 	if player and not use_procedural_layout:
@@ -358,6 +387,14 @@ func _start_boarding() -> void:
 	
 	# Update UI
 	_update_ui()
+	
+	# Achievement tracking - start boarding
+	boarding_start_time = Time.get_ticks_msec() / 1000.0
+	containers_searched = 0
+	total_containers = current_layout.container_positions.size() if current_layout else 0
+	
+	if AchievementManager:
+		AchievementManager.on_boarding_started(total_containers)
 	
 	emit_signal("boarding_started")
 
@@ -442,6 +479,9 @@ func _interact_with_container(container: Node2D) -> void:
 		if container.current_state == ShipContainer.ContainerState.CLOSED:
 			container.set_state(ShipContainer.ContainerState.OPEN)
 			container.emit_signal("container_opened")
+			
+			# Mark as searched on minimap
+			_mark_container_searched(container)
 		
 		# Open loot menu if container has items
 		if not container.item_data_list.is_empty():
@@ -451,6 +491,9 @@ func _interact_with_container(container: Node2D) -> void:
 	# Generic container with open_container method
 	if container.has_method("open_container"):
 		container.open_container()
+		
+		# Mark as searched on minimap
+		_mark_container_searched(container)
 		
 		# Try to get items from container
 		if container.has_method("get") and container.get("item_data_list"):
@@ -487,8 +530,15 @@ func _on_loot_menu_closed() -> void:
 
 
 func _on_container_emptied() -> void:
-	# Container was fully looted
-	pass
+	# Container was fully looted - count as searched
+	containers_searched += 1
+	if AchievementManager:
+		AchievementManager.on_container_searched()
+
+
+func _on_container_searched() -> void:
+	# Container was opened/searched
+	containers_searched += 1
 
 
 func _on_item_transferred(item_data: ItemData) -> void:
@@ -496,6 +546,10 @@ func _on_item_transferred(item_data: ItemData) -> void:
 	collected_items.append(item_data)
 	total_loot_value += item_data.value
 	_update_ui()
+	
+	# Check for legendary item (rarity 4)
+	if item_data.rarity == 4 and AchievementManager:
+		AchievementManager.on_legendary_item_found()
 
 
 func _on_item_destroyed(item: LootItem) -> void:
@@ -585,6 +639,11 @@ func _end_boarding(success: bool) -> void:
 	if success and GameManager:
 		GameManager.add_score(total_loot_value)
 	
+	# Achievement tracking - boarding completed
+	if success and AchievementManager:
+		var boarding_time = (Time.get_ticks_msec() / 1000.0) - boarding_start_time
+		AchievementManager.on_boarding_completed(boarding_time, current_faction_code)
+	
 	# Transition to results or next scene
 	await get_tree().create_timer(1.0).timeout
 	_show_results(success)
@@ -616,14 +675,8 @@ func _show_results(success: bool) -> void:
 			var station_data = preload("res://resources/stations/abandoned_station.tres")
 			gm.set_escape_station(station_data)
 		
-		# Play escape success effects
-		_play_escape_success_effects()
-		
-		# Wait a moment then transition
-		await get_tree().create_timer(0.3).timeout
-		
-		# Seamless fade transition to undocking
-		await _fade_to_undocking()
+		# Start escape cutscene instead of direct transition
+		_start_escape_cutscene()
 	else:
 		# Big shake when time runs out
 		shake_camera(15.0)
@@ -633,6 +686,24 @@ func _show_results(success: bool) -> void:
 		var game_over = GameOverScene.instantiate()
 		add_child(game_over)
 		game_over.set_lost_loot(total_loot_value)
+
+
+## Start the escape cutscene with current game data
+func _start_escape_cutscene() -> void:
+	var cutscene = EscapeCutsceneScene.instantiate()
+	add_child(cutscene)
+	
+	# Prepare cutscene data
+	var cutscene_data = {
+		"time_remaining": time_remaining,
+		"total_loot_value": total_loot_value,
+		"collected_items": collected_items,
+		"containers_searched": containers_searched,
+		"total_containers": total_containers
+	}
+	
+	# Start the cutscene
+	cutscene.start_cutscene(cutscene_data)
 
 
 func _play_escape_success_effects() -> void:
@@ -678,8 +749,13 @@ func _fade_to_undocking() -> void:
 	
 	await tween.finished
 	
+	# Auto-save progress after successful boarding
+	if has_node("/root/SaveManager"):
+		var save_manager = get_node("/root/SaveManager")
+		save_manager.auto_save()
+	
 	# Change scene - the undocking scene will fade in
-	get_tree().change_scene_to_file("res://scenes/undocking/undocking_scene.tscn")
+	LoadingScreen.start_transition("res://scenes/undocking/undocking_scene.tscn")
 
 
 # ==============================================================================
@@ -821,3 +897,100 @@ func _on_exit_interacted() -> void:
 		var tutorial_manager = get_node("/root/TutorialManager")
 		tutorial_manager.on_player_action("exit_reached")
 
+
+# ==============================================================================
+# MINIMAP
+# ==============================================================================
+
+## Setup the minimap with current layout data
+func _setup_minimap() -> void:
+	if not minimap or not current_layout:
+		return
+	
+	# Get the minimap renderer from the scene
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	# Set the layout data
+	renderer.set_layout(current_layout)
+	
+	# Set exit position
+	if exit_point:
+		renderer.set_exit_position(current_layout.exit_position)
+	
+	# Build container list with positions and searched states
+	_update_minimap_containers()
+
+
+## Update minimap every frame
+func _update_minimap() -> void:
+	if not minimap or not player:
+		return
+	
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	# Update player position (account for layout offset)
+	var player_position_relative_to_layout = player.position - layout_offset
+	renderer.update_player_position(player_position_relative_to_layout)
+
+
+## Update minimap container states
+func _update_minimap_containers() -> void:
+	if not minimap or not containers_parent:
+		return
+	
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	var container_list = []
+	for container_node in containers_parent.get_children():
+		if container_node is ShipContainer:
+			var container_data = {
+				"position": container_node.position,
+				"searched": container_node.current_state != ShipContainer.ContainerState.CLOSED
+			}
+			container_list.append(container_data)
+	
+	renderer.set_containers(container_list)
+
+
+## Get the minimap renderer node
+func _get_minimap_renderer() -> Node:
+	if not minimap:
+		return null
+	
+	# Navigate to the renderer: Minimap/MarginContainer/SubViewportContainer/SubViewport/MinimapRenderer
+	var container = minimap.get_node_or_null("MarginContainer/SubViewportContainer")
+	if not container:
+		return null
+	
+	var viewport = container.get_node_or_null("SubViewport")
+	if not viewport:
+		return null
+	
+	return viewport.get_node_or_null("MinimapRenderer")
+
+
+## Mark a container as searched on the minimap
+func _mark_container_searched(container: Node2D) -> void:
+	if not minimap or not container:
+		return
+	
+	var renderer = _get_minimap_renderer()
+	if not renderer:
+		return
+	
+	var container_pos = container.position
+	renderer.mark_container_searched(container_pos)
+	
+	# Also refresh the full container list
+	_update_minimap_containers()
+
+
+# ==============================================================================
+# UPDATED INTERACTION HANDLERS
+# ==============================================================================

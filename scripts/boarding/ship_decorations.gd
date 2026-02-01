@@ -84,7 +84,7 @@ class DecorationData:
 # STATE
 # ==============================================================================
 
-var _decorations: Array = []  # Array of DecorationData
+var _decorations: Array[DecorationData] = []  # Array of DecorationData
 var _floor_color: Color = Color(0.15, 0.18, 0.2)
 var _wall_color: Color = Color(0.25, 0.28, 0.32)
 var _accent_color: Color = Color(0.6, 0.5, 0.3)

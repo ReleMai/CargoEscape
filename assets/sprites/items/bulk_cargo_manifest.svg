@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Cargo Manifest - Clipboard with list -->
+  <rect x="18" y="8" width="28" height="48" fill="#e8dcc0" stroke="#6b5d42" stroke-width="2"/>
+  <rect x="24" y="4" width="16" height="8" fill="#8b7355" stroke="#6b5d42" stroke-width="2"/>
+  <line x1="22" y1="16" x2="42" y2="16" stroke="#6b5d42" stroke-width="1.5"/>
+  <line x1="22" y1="22" x2="42" y2="22" stroke="#6b5d42" stroke-width="1.5"/>
+  <line x1="22" y1="28" x2="42" y2="28" stroke="#6b5d42" stroke-width="1.5"/>
+  <line x1="22" y1="34" x2="38" y2="34" stroke="#6b5d42" stroke-width="1.5"/>
+  <line x1="22" y1="40" x2="42" y2="40" stroke="#6b5d42" stroke-width="1.5"/>
+  <line x1="22" y1="46" x2="36" y2="46" stroke="#6b5d42" stroke-width="1.5"/>
+</svg>
