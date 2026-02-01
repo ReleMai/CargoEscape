@@ -69,6 +69,9 @@ func trigger_escape() -> void:
 	if not is_active:
 		return
 	
+	# Play escape sound
+	AudioManager.play_sfx("escape", 0.0)
+	
 	emit_signal("escape_triggered")
 
 

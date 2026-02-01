@@ -144,6 +144,10 @@ var smoothed_direction: Vector2 = Vector2.ZERO
 ## Target rotation for sprite tilt
 var target_tilt: float = 0.0
 
+## Footstep timing
+var _footstep_timer: float = 0.0
+var _footstep_interval: float = 0.35  # Time between footsteps
+
 
 # ==============================================================================
 # LIFECYCLE
@@ -173,6 +177,15 @@ func _physics_process(delta: float) -> void:
 			_process_interacting_state(delta)
 		State.DISABLED:
 			_process_disabled_state(delta)
+	
+	# Update footstep sounds when moving
+	if current_state == State.MOVING and velocity.length() > max_speed * 0.3:
+		_footstep_timer += delta
+		if _footstep_timer >= _footstep_interval:
+			_play_footstep()
+			_footstep_timer = 0.0
+	else:
+		_footstep_timer = 0.0
 	
 	# Always apply movement (even if velocity is zero)
 	move_and_slide()
@@ -392,6 +405,14 @@ func _update_sprite_tilt(delta: float) -> void:
 	
 	# Smoothly interpolate to target
 	sprite.rotation = lerpf(sprite.rotation, target_tilt, tilt_speed * delta)
+
+
+## Play footstep sound with variation
+func _play_footstep() -> void:
+	# Vary pitch and volume slightly for more natural sound
+	var pitch_variation = randf_range(0.9, 1.1)
+	var volume_db = randf_range(-8.0, -6.0)
+	AudioManager.play_sfx("footstep", volume_db, pitch_variation)
 
 
 ## Set up the interaction prompt label
