@@ -45,8 +45,34 @@ jobs:
               wipActive: [],
               wipStale: [],
               needsReview: [],
-              hasConflicts: []
+              hasConflicts: [],
+              recentlyMerged: []
             };
+            
+            // Get recently merged PRs (last 7 days)
+            const mergedPRs = await github.paginate(github.rest.pulls.list, {
+              owner, repo, state: 'closed', per_page: 50
+            });
+            
+            for (const pr of mergedPRs) {
+              if (pr.merged_at) {
+                const mergedDate = new Date(pr.merged_at);
+                const daysSinceMerge = (Date.now() - mergedDate) / (1000 * 60 * 60 * 24);
+                if (daysSinceMerge <= 7) {
+                  categories.recentlyMerged.push(pr);
+                  
+                  // Add 'merged' label if missing
+                  const currentLabels = pr.labels.map(l => l.name);
+                  if (!currentLabels.includes('merged')) {
+                    try {
+                      await github.rest.issues.addLabels({
+                        owner, repo, issue_number: pr.number, labels: ['merged']
+                      });
+                    } catch (e) { /* ignore */ }
+                  }
+                }
+              }
+            }
             
             // Labels to use
             const LABELS = {
@@ -55,7 +81,8 @@ jobs:
               STALE: 'stale',
               NEEDS_REVIEW: 'needs-review',
               CONFLICTS: 'has-conflicts',
-              COPILOT: 'copilot-authored'
+              COPILOT: 'copilot-authored',
+              MERGED: 'merged'
             };
             
             // Ensure labels exist
@@ -65,7 +92,8 @@ jobs:
               [LABELS.STALE]: 'cccccc',       // Gray
               [LABELS.NEEDS_REVIEW]: '0052cc', // Blue
               [LABELS.CONFLICTS]: 'd93f0b',   // Red
-              [LABELS.COPILOT]: '7057ff'      // Purple
+              [LABELS.COPILOT]: '7057ff',      // Purple
+              [LABELS.MERGED]: '6f42c1'        // Deep purple
             };
             
             for (const [label, color] of Object.entries(labelColors)) {
@@ -183,6 +211,14 @@ jobs:
               console.log(`   #${pr.number}: ${pr.title.substring(0, 60)}`);
             }
             
+            console.log(`\n✨ Recently Merged (7 days): ${categories.recentlyMerged.length}`);
+            for (const pr of categories.recentlyMerged.slice(0, 10)) {
+              console.log(`   #${pr.number}: ${pr.title.substring(0, 60)}`);
+            }
+            if (categories.recentlyMerged.length > 10) {
+              console.log(`   ... and ${categories.recentlyMerged.length - 10} more`);
+            }
+            
             // Update or create tracking issue
             const TRACKING_ISSUE_TITLE = '📋 PR Status Dashboard';
             
@@ -231,6 +267,19 @@ jobs:
             
             ---
             
+            ## ✨ Recently Merged (${categories.recentlyMerged.length})
+            > PRs merged in the last 7 days
+            
+            ${categories.recentlyMerged.length > 0 
+              ? categories.recentlyMerged.slice(0, 20).map(pr => {
+                  const mergedDate = new Date(pr.merged_at);
+                  const daysAgo = Math.round((Date.now() - mergedDate) / (1000 * 60 * 60 * 24));
+                  return `- ✅ #${pr.number} - ${pr.title.replace('[WIP] ', '')} (${daysAgo === 0 ? 'today' : daysAgo + 'd ago'})`;
+                }).join('\n')
+              : '_No recently merged PRs_'}
+            
+            ---
+            
             ## 📈 Statistics
             | Status | Count |
             |--------|-------|
@@ -239,6 +288,7 @@ jobs:
             | Active WIP | ${categories.wipActive.length} |
             | Stale | ${categories.wipStale.length} |
             | Has Conflicts | ${categories.hasConflicts.length} |
+            | Recently Merged | ${categories.recentlyMerged.length} |
             
             ---
             
@@ -247,6 +297,7 @@ jobs:
             - [View WIP PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Awork-in-progress)
             - [View Stale PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Astale)
             - [View Copilot PRs](https://github.com/${owner}/${repo}/pulls?q=is%3Aopen+label%3Acopilot-authored)
+            - [View Recently Merged](https://github.com/${owner}/${repo}/pulls?q=is%3Amerged+label%3Amerged)
             `;
             
             // Ensure dashboard label exists
@@ -287,6 +338,7 @@ jobs:
                 ['✅ Ready to Merge', String(categories.readyToMerge.length)],
                 ['🔨 WIP (Active)', String(categories.wipActive.length)],
                 ['😴 Stale', String(categories.wipStale.length)],
-                ['⚠️ Conflicts', String(categories.hasConflicts.length)]
+                ['⚠️ Conflicts', String(categories.hasConflicts.length)],
+                ['✨ Recently Merged', String(categories.recentlyMerged.length)]
               ])
               .write();
