@@ -88,6 +88,10 @@ enum LootTier { NEAR = 1, MIDDLE = 2, FAR = 3, DEEPEST = 4 }
 @onready var state_label: Label = $StateLabel
 @onready var search_progress_bar: ProgressBar = $SearchProgressBar
 
+# Hover state
+var is_hovered: bool = false
+var hover_tween: Tween = null
+
 # ==============================================================================
 # STATE
 # ==============================================================================
@@ -128,11 +132,22 @@ func _ready() -> void:
 	_load_container_data()
 	_setup_visuals()
 	set_state(ContainerState.CLOSED)
+	
+	# Connect hover signals
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 
 
 func _process(delta: float) -> void:
 	if is_searching and current_search_item:
 		_update_search(delta)
+	
+	# Update hover highlight with pulse effect
+	if is_hovered and highlight and highlight.visible:
+		var pulse = (sin(Time.get_ticks_msec() / 200.0) + 1.0) / 2.0
+		var glow_rect = highlight.get_node_or_null("Glow")
+		if glow_rect:
+			glow_rect.color.a = 0.2 + pulse * 0.15
 
 
 # ==============================================================================
@@ -380,6 +395,9 @@ func _update_visuals() -> void:
 			label_text = "%d items" % total if total > 0 else ""
 		ContainerState.SEARCHING:
 			color = searching_color
+			# Add pulsing effect during search
+			var pulse = (sin(Time.get_ticks_msec() / 300.0) + 1.0) / 2.0
+			color = color.lerp(Color(0.5, 0.5, 0.6), pulse * 0.3)
 			label_text = "Searching..."
 		ContainerState.OPEN:
 			color = open_color
@@ -471,3 +489,49 @@ func _load_container_sprite() -> void:
 					child.visible = false
 	else:
 		print("Warning: Container sprite not found: ", sprite_path)
+
+
+# ==============================================================================
+# HOVER EFFECTS
+# ==============================================================================
+
+func _on_mouse_entered() -> void:
+	is_hovered = true
+	_show_highlight()
+
+
+func _on_mouse_exited() -> void:
+	is_hovered = false
+	_hide_highlight()
+
+
+func _show_highlight() -> void:
+	if not highlight:
+		return
+	
+	# Cancel any existing tween
+	if hover_tween:
+		hover_tween.kill()
+	
+	highlight.visible = true
+	var glow_rect = highlight.get_node_or_null("Glow")
+	if glow_rect:
+		hover_tween = create_tween()
+		hover_tween.tween_property(glow_rect, "color:a", 0.3, 0.2)
+
+
+func _hide_highlight() -> void:
+	if not highlight:
+		return
+	
+	# Cancel any existing tween
+	if hover_tween:
+		hover_tween.kill()
+	
+	var glow_rect = highlight.get_node_or_null("Glow")
+	if glow_rect:
+		hover_tween = create_tween()
+		hover_tween.tween_property(glow_rect, "color:a", 0.0, 0.2)
+		await hover_tween.finished
+	
+	highlight.visible = false
