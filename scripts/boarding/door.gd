@@ -362,6 +362,13 @@ func open() -> void:
 	current_state = State.OPEN
 	_auto_close_timer = 0.0
 	_update_appearance()
+	
+	# Play door open sound
+	if is_airlock:
+		AudioManager.play_sfx("airlock_open", -2.0)
+	else:
+		AudioManager.play_sfx("door_open", -4.0)
+	
 	emit_signal("door_opened", self)
 
 
@@ -371,6 +378,13 @@ func close() -> void:
 	
 	current_state = State.CLOSED
 	_update_appearance()
+	
+	# Play door close sound
+	if is_airlock:
+		AudioManager.play_sfx("airlock_close", -2.0)
+	else:
+		AudioManager.play_sfx("door_close", -4.0)
+	
 	emit_signal("door_closed", self)
 
 

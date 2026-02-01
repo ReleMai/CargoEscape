@@ -205,6 +205,8 @@ func start_search() -> void:
 	if current_state == ContainerState.CLOSED:
 		set_state(ContainerState.SEARCHING)
 		emit_signal("container_opened")
+		# Play container open sound
+		AudioManager.play_sfx_varied("container_open", 0.15, -3.0)
 	
 	# Pick next item to search
 	current_search_item = hidden_items[0]
@@ -217,6 +219,8 @@ func start_search() -> void:
 	
 	is_searching = true
 	emit_signal("search_started")
+	# Play search sound
+	AudioManager.play_sfx_varied("container_search", 0.1, -5.0)
 
 
 ## Cancel the current search (called when player moves)
