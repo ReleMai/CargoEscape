@@ -392,6 +392,9 @@ func _on_item_drag_ended(item: LootItem, _drop_pos: Vector2) -> void:
 				if current_container and current_container.has_method("remove_item"):
 					current_container.remove_item(item.item_data)
 				
+				# Play loot pickup sound
+				AudioManager.play_sfx_varied("loot_pickup", 0.2, -2.0)
+				
 				emit_signal("item_transferred", item.item_data)
 				
 				# Check if container is now empty
