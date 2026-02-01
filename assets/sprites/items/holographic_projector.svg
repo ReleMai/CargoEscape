@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Holographic Projector - Tech device with light beam -->
+  <rect x="16" y="36" width="32" height="16" rx="2" fill="#3a4a5a" stroke="#00d9e0" stroke-width="2"/>
+  <!-- Lens -->
+  <circle cx="32" cy="36" r="6" fill="#002233" stroke="#00d9e0" stroke-width="2"/>
+  <circle cx="32" cy="36" r="4" fill="#004466"/>
+  <circle cx="32" cy="36" r="2" fill="#00ffff"/>
+  <!-- Light projection -->
+  <path d="M 24 36 L 18 20 L 46 20 L 40 36" fill="#00d9e0" opacity="0.2"/>
+  <line x1="24" y1="36" x2="18" y2="20" stroke="#00d9e0" stroke-width="1" opacity="0.5"/>
+  <line x1="40" y1="36" x2="46" y2="20" stroke="#00d9e0" stroke-width="1" opacity="0.5"/>
+  <!-- Hologram symbol -->
+  <polygon points="32,16 36,22 28,22" fill="#00ffff" opacity="0.6"/>
+  <!-- Base details -->
+  <rect x="20" y="44" width="24" height="2" fill="#00a0a8"/>
+</svg>

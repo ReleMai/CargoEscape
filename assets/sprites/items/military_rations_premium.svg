@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Military Rations - Sealed package -->
+  <rect x="16" y="22" width="32" height="20" rx="2" fill="#40444c" stroke="#cc3333" stroke-width="2"/>
+  <!-- GDF Label -->
+  <rect x="20" y="26" width="24" height="12" fill="#cc3333"/>
+  <text x="32" y="33" font-size="10" font-weight="bold" text-anchor="middle" fill="#fff">GDF</text>
+  <!-- Seal -->
+  <circle cx="44" cy="38" r="3" fill="#8a8a8a" stroke="#333" stroke-width="1"/>
+  <!-- Stars -->
+  <polygon points="24,30 25,28 26,30 28,29 26,31 27,33 25,32 23,33 24,31 22,29" fill="#ffd700"/>
+</svg>
