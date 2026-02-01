@@ -10,11 +10,12 @@
 ## TABLE OF CONTENTS
 1. [Overview](#overview)
 2. [Game Flow](#game-flow)
-3. [Components](#components)
-4. [Item System](#item-system)
-5. [Inventory System](#inventory-system)
-6. [Creating New Items](#creating-new-items)
-7. [Customization](#customization)
+3. [Controls](#controls)
+4. [Components](#components)
+5. [Item System](#item-system)
+6. [Inventory System](#inventory-system)
+7. [Creating New Items](#creating-new-items)
+8. [Customization](#customization)
 
 ---
 
@@ -56,7 +57,11 @@ This creates tension and strategic decisions:
 │  • Click container → Opens it       │
 │  • Click item → Starts searching    │
 │  • Drag revealed → To inventory     │
-│  • R on item → Rotate (future)      │
+│  • 1-9 → Quick select slot          │
+│  • Q → Drop selected item           │
+│  • E → Use/equip selected item      │
+│  • Tab/I → Toggle inventory         │
+│  • Esc → Close menus                │
 └──────────────────┬──────────────────┘
        ▼
 ┌─────────────────────────────────────┐
@@ -73,6 +78,26 @@ This creates tension and strategic decisions:
 │  (Space dodge minigame)             │
 └─────────────────────────────────────┘
 ```
+
+---
+
+## CONTROLS
+
+### Mouse Controls
+- **Left-click** on container → Opens container
+- **Left-click** on hidden item → Starts searching/revealing
+- **Left-click and drag** revealed item → Pick up and move
+- **Release** over inventory → Place item in inventory
+- **Right-click** item in inventory → Destroy item
+
+### Keyboard Shortcuts
+- **1-9** → Quick select inventory slots (items are sorted top-left to bottom-right)
+- **Q** → Drop/destroy the currently selected item
+- **E** → Use/equip the currently selected item
+- **Tab / I** → Toggle inventory view (uses existing inventory action)
+- **Escape** → Close menus (uses existing ui_cancel action)
+
+**Note:** The selected inventory slot is highlighted with a blue color to show which item is active.
 
 ---
 

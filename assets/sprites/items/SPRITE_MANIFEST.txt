@@ -1,0 +1,85 @@
+ITEM SPRITE MANIFEST
+======================================================================
+
+Total Items: 57
+Format: 64x64 PNG with transparency
+Rarity Effects: Borders and glows applied
+
+
+CARGO/
+----------------------------------------
+  - broken_lens.png (common)
+  - cargo_barrel.png (common)
+  - coolant_tube.png (uncommon)
+  - copper_wire.png (uncommon)
+  - corroded_pipe.png (common)
+  - hull_fragment.png (common)
+  - scrap_electronics.png (common)
+  - scrap_mechanical.png (common)
+  - scrap_metal.png (common)
+  - scrap_plastics.png (common)
+  - shipping_container.png (common)
+  - supply_crate.png (common)
+  - wire_bundle.png (common)
+
+TECH/
+----------------------------------------
+  - ai_chip.png (common)
+  - data_chip.png (uncommon)
+  - encrypted_drive.png (rare)
+  - fuel_cell.png (uncommon)
+  - fusion_cell.png (epic)
+  - hologram_projector.png (common)
+  - nav_beacon.png (uncommon)
+  - nav_computer.png (rare)
+  - plasma_coil.png (rare)
+  - processor_unit.png (rare)
+  - quantum_core.png (epic)
+  - quantum_cpu.png (epic)
+  - targeting_array.png (rare)
+
+WEAPONS/
+----------------------------------------
+  - ion_blade.png (common)
+  - laser_rifle.png (common)
+  - plasma_pistol.png (common)
+  - weapon_core.png (rare)
+
+MEDICAL/
+----------------------------------------
+  - cryo_sample.png (rare)
+  - med_kit.png (uncommon)
+  - nano_bandages.png (common)
+  - oxygen_canister.png (uncommon)
+  - stim_pack.png (common)
+
+CONTRABAND/
+----------------------------------------
+  - black_market_chip.png (common)
+  - dark_matter_vial.png (epic)
+  - neural_stims.png (common)
+
+LUXURY/
+----------------------------------------
+  - alien_artifact.png (legendary)
+  - ancient_relic.png (legendary)
+  - ancient_scroll.png (common)
+  - captains_log.png (legendary)
+  - gold_bar.png (epic)
+  - nebula_wine.png (common)
+  - rare_alloy.png (rare)
+  - singularity_gem.png (legendary)
+  - star_sapphire.png (common)
+  - void_shard.png (legendary)
+
+FACTION/
+----------------------------------------
+  - gravity_dampener.png (epic)
+  - module_engine_booster.png (epic)
+  - module_laser_amp.png (epic)
+  - module_scanner.png (epic)
+  - module_shield.png (epic)
+  - module_targeting.png (epic)
+  - module_thrusters.png (epic)
+  - prototype_engine.png (legendary)
+  - stealth_plating.png (rare)

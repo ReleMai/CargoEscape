@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Sprite Showcase - CargoEscape</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            text-shadow: 0 0 10px #4CAF50;
+        }
+        .rarity-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #16213e;
+            border-radius: 10px;
+        }
+        .rarity-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .rarity-title.common { color: #b4b4b4; }
+        .rarity-title.uncommon { color: #4dcc4d; }
+        .rarity-title.rare { color: #4d80ff; }
+        .rarity-title.epic { color: #b34de6; }
+        .rarity-title.legendary { color: #ffcc33; text-shadow: 0 0 10px #ffcc33; }
+        .sprite-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        .sprite-item {
+            text-align: center;
+            padding: 10px;
+            background: #0f3460;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .sprite-item:hover {
+            transform: scale(1.05);
+        }
+        .sprite-img {
+            width: 64px;
+            height: 64px;
+            image-rendering: pixelated;
+            margin-bottom: 8px;
+        }
+        .sprite-name {
+            font-size: 11px;
+            color: #ccc;
+        }
+        .sprite-category {
+            font-size: 9px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .stats {
+            text-align: center;
+            background: #0f3460;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .stats h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            background: #16213e;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 ITEM SPRITE SHOWCASE - CARGOESCAPE 🚀</h1>
+    
+    <div class="stats">
+        <h2>✨ SPRITE STATISTICS</h2>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <strong>Total Items:</strong> 57
+            </div>
+            <div class="stat-item">
+                <strong>Format:</strong> 64x64 PNG
+            </div>
+            <div class="stat-item">
+                <strong>Categories:</strong> 7
+            </div>
+            <div class="stat-item">
+                <strong>Rarity Levels:</strong> 5
+            </div>
+        </div>
+    </div>
+
+    <div class="rarity-section">
+        <div class="rarity-title legendary">⭐ LEGENDARY - Gold Border + Sparkles</div>
+        <div class="sprite-grid">
+            <div class="sprite-item">
+                <img src="assets/sprites/items/luxury/singularity_gem.png" class="sprite-img" alt="singularity_gem">
+                <div class="sprite-name">Singularity Gem</div>
+                <div class="sprite-category">luxury</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/luxury/alien_artifact.png" class="sprite-img" alt="alien_artifact">
+                <div class="sprite-name">Alien Artifact</div>
+                <div class="sprite-category">luxury</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/faction/prototype_engine.png" class="sprite-img" alt="prototype_engine">
+                <div class="sprite-name">Prototype Engine</div>
+                <div class="sprite-category">faction</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/luxury/void_shard.png" class="sprite-img" alt="void_shard">
+                <div class="sprite-name">Void Shard</div>
+                <div class="sprite-category">luxury</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rarity-section">
+        <div class="rarity-title epic">💜 EPIC - Purple Border + Glow</div>
+        <div class="sprite-grid">
+            <div class="sprite-item">
+                <img src="assets/sprites/items/tech/fusion_cell.png" class="sprite-img" alt="fusion_cell">
+                <div class="sprite-name">Fusion Cell</div>
+                <div class="sprite-category">tech</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/contraband/dark_matter_vial.png" class="sprite-img" alt="dark_matter_vial">
+                <div class="sprite-name">Dark Matter Vial</div>
+                <div class="sprite-category">contraband</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/faction/module_shield.png" class="sprite-img" alt="module_shield">
+                <div class="sprite-name">Shield Module</div>
+                <div class="sprite-category">faction</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/weapons/ion_blade.png" class="sprite-img" alt="ion_blade">
+                <div class="sprite-name">Ion Blade</div>
+                <div class="sprite-category">weapons</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rarity-section">
+        <div class="rarity-title rare">💎 RARE - Blue Border + Glow</div>
+        <div class="sprite-grid">
+            <div class="sprite-item">
+                <img src="assets/sprites/items/tech/encrypted_drive.png" class="sprite-img" alt="encrypted_drive">
+                <div class="sprite-name">Encrypted Drive</div>
+                <div class="sprite-category">tech</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/weapons/weapon_core.png" class="sprite-img" alt="weapon_core">
+                <div class="sprite-name">Weapon Core</div>
+                <div class="sprite-category">weapons</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/medical/cryo_sample.png" class="sprite-img" alt="cryo_sample">
+                <div class="sprite-name">Cryo Sample</div>
+                <div class="sprite-category">medical</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/luxury/nebula_wine.png" class="sprite-img" alt="nebula_wine">
+                <div class="sprite-name">Nebula Wine</div>
+                <div class="sprite-category">luxury</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rarity-section">
+        <div class="rarity-title uncommon">💚 UNCOMMON - Green Glow</div>
+        <div class="sprite-grid">
+            <div class="sprite-item">
+                <img src="assets/sprites/items/tech/data_chip.png" class="sprite-img" alt="data_chip">
+                <div class="sprite-name">Data Chip</div>
+                <div class="sprite-category">tech</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/medical/med_kit.png" class="sprite-img" alt="med_kit">
+                <div class="sprite-name">Med Kit</div>
+                <div class="sprite-category">medical</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/cargo/copper_wire.png" class="sprite-img" alt="copper_wire">
+                <div class="sprite-name">Copper Wire</div>
+                <div class="sprite-category">cargo</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/weapons/plasma_pistol.png" class="sprite-img" alt="plasma_pistol">
+                <div class="sprite-name">Plasma Pistol</div>
+                <div class="sprite-category">weapons</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rarity-section">
+        <div class="rarity-title common">⚪ COMMON - No Border</div>
+        <div class="sprite-grid">
+            <div class="sprite-item">
+                <img src="assets/sprites/items/cargo/scrap_metal.png" class="sprite-img" alt="scrap_metal">
+                <div class="sprite-name">Scrap Metal</div>
+                <div class="sprite-category">cargo</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/cargo/scrap_electronics.png" class="sprite-img" alt="scrap_electronics">
+                <div class="sprite-name">Scrap Electronics</div>
+                <div class="sprite-category">cargo</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/cargo/supply_crate.png" class="sprite-img" alt="supply_crate">
+                <div class="sprite-name">Supply Crate</div>
+                <div class="sprite-category">cargo</div>
+            </div>
+            <div class="sprite-item">
+                <img src="assets/sprites/items/cargo/cargo_barrel.png" class="sprite-img" alt="cargo_barrel">
+                <div class="sprite-name">Cargo Barrel</div>
+                <div class="sprite-category">cargo</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

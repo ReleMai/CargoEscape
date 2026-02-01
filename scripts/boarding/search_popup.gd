@@ -37,7 +37,7 @@ signal search_closed
 # ==============================================================================
 
 var current_container: ShipContainer = null
-var loot_items: Array = []  # LootItem nodes
+var loot_items: Array[LootItem] = []
 
 # ==============================================================================
 # LIFECYCLE
@@ -173,7 +173,7 @@ func _on_take_all_pressed() -> void:
 		return
 	
 	# Take all revealed items
-	var items_to_take: Array = []
+	var items_to_take: Array[LootItem] = []
 	for loot_item in loot_items:
 		if loot_item.current_state == LootItem.ItemState.REVEALED:
 			items_to_take.append(loot_item)

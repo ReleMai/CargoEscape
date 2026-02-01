@@ -79,6 +79,8 @@ enum ContainerState {
 @onready var items_container: Control = $ContainerPanel/ItemsContainer
 @onready var closed_overlay: ColorRect = $ContainerPanel/ClosedOverlay
 @onready var open_button: Button = $ContainerPanel/OpenButton
+@onready var hover_highlight: ColorRect = $ContainerPanel/HoverHighlight
+@onready var search_animation: ColorRect = $ContainerPanel/SearchAnimation
 
 
 # ==============================================================================
@@ -92,6 +94,11 @@ var contained_items: Array[LootItem] = []
 
 ## Reference to loot item scene for instantiation
 var loot_item_scene: PackedScene
+
+## Animation state
+var animation_time: float = 0.0
+var is_searching: bool = false
+var pulse_time: float = 0.0
 
 
 # ==============================================================================
@@ -112,6 +119,76 @@ func _ready() -> void:
 	# Set container name
 	if container_label:
 		container_label.text = container_name
+	
+	# Setup hover effects
+	_setup_hover_effects()
+	
+	# Setup search animation
+	_setup_search_animation()
+
+
+func _process(delta: float) -> void:
+	# Update search animation
+	if is_searching and search_animation:
+		animation_time += delta
+		var pulse = (sin(animation_time * 3.0) + 1.0) / 2.0
+		search_animation.color.a = 0.1 + pulse * 0.15
+		search_animation.visible = true
+	elif search_animation:
+		search_animation.visible = false
+
+
+# ==============================================================================
+# HOVER & ANIMATION SETUP
+# ==============================================================================
+
+func _setup_hover_effects() -> void:
+	# Connect hover events to container panel
+	if container_panel:
+		container_panel.mouse_entered.connect(_on_container_mouse_entered)
+		container_panel.mouse_exited.connect(_on_container_mouse_exited)
+	
+	# Initialize hover highlight if it doesn't exist
+	if not hover_highlight and container_panel:
+		hover_highlight = ColorRect.new()
+		hover_highlight.name = "HoverHighlight"
+		hover_highlight.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hover_highlight.color = Color(1.0, 1.0, 1.0, 0.0)
+		hover_highlight.z_index = 1
+		container_panel.add_child(hover_highlight)
+		container_panel.move_child(hover_highlight, 0)
+		
+		# Make it cover the whole panel
+		hover_highlight.set_anchors_preset(Control.PRESET_FULL_RECT)
+
+
+func _setup_search_animation() -> void:
+	# Initialize search animation overlay if it doesn't exist
+	if not search_animation and container_panel:
+		search_animation = ColorRect.new()
+		search_animation.name = "SearchAnimation"
+		search_animation.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		search_animation.color = Color(0.4, 0.6, 1.0, 0.0)
+		search_animation.visible = false
+		search_animation.z_index = 2
+		container_panel.add_child(search_animation)
+		
+		# Make it cover the whole panel
+		search_animation.set_anchors_preset(Control.PRESET_FULL_RECT)
+
+
+func _on_container_mouse_entered() -> void:
+	# Show hover highlight only when container can be interacted with
+	if hover_highlight and current_state in [ContainerState.CLOSED, ContainerState.OPEN]:
+		var tween = create_tween()
+		tween.tween_property(hover_highlight, "color:a", 0.08, 0.15)
+
+
+func _on_container_mouse_exited() -> void:
+	# Hide hover highlight
+	if hover_highlight:
+		var tween = create_tween()
+		tween.tween_property(hover_highlight, "color:a", 0.0, 0.15)
 
 
 # ==============================================================================
@@ -195,6 +272,7 @@ func add_item(data: ItemData) -> LootItem:
 	loot_item.initialize(data)
 	
 	# Connect signals - using correct signal names from loot_item.gd
+	loot_item.search_started.connect(_on_item_search_started.bind(loot_item))
 	loot_item.search_completed.connect(_on_item_revealed.bind(loot_item))
 	# Note: drag_started(item) signal is handled by LootManager, not container
 	
@@ -261,8 +339,25 @@ func _on_open_button_pressed() -> void:
 	open_container()
 
 
+func _on_item_search_started(_item: LootItem) -> void:
+	# Update container state to show searching animation
+	_update_searching_state()
+
+
 func _on_item_revealed(_item: LootItem) -> void:
 	emit_signal("item_searched", _item)
+	# Update searching state in case all items are now revealed
+	_update_searching_state()
+
+
+func _update_searching_state() -> void:
+	# Check if any items are currently being searched
+	var any_searching = false
+	for item in contained_items:
+		if item.is_searching():
+			any_searching = true
+			break
+	is_searching = any_searching
 
 
 # ==============================================================================
