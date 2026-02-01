@@ -432,6 +432,391 @@ const LEGENDARY_ITEMS = {
 
 
 # ==============================================================================
+# ITEM DEFINITIONS - TRADE GOODS (Raw Materials, Processed Goods, Luxury Items)
+# ==============================================================================
+
+const TRADE_GOODS_ITEMS = {
+	# Raw Materials (Common)
+	"iron_ore": {
+		"name": "Iron Ore",
+		"description": "Raw iron ore chunks. Essential for manufacturing and construction.",
+		"width": 2, "height": 1,
+		"base_value": 50,
+		"black_market_value": 40,
+		"weight": 5.0,
+		"tags": ["raw", "metal"],
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/iron_ore.svg"
+	},
+	"copper_wire_spool": {
+		"name": "Copper Wire Spool",
+		"description": "High-grade copper wiring for electrical systems.",
+		"width": 1, "height": 1,
+		"base_value": 75,
+		"black_market_value": 60,
+		"weight": 1.0,
+		"tags": ["raw", "electronics"],
+		"rarity": 0,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/copper_wire_spool.svg"
+	},
+	"plastic_polymers": {
+		"name": "Plastic Polymers",
+		"description": "Industrial-grade plastic resins for fabrication.",
+		"width": 1, "height": 2,
+		"base_value": 40,
+		"black_market_value": 30,
+		"weight": 2.0,
+		"tags": ["raw", "industrial"],
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/plastic_polymers.svg"
+	},
+	"water_barrels": {
+		"name": "Water Barrels",
+		"description": "Purified water supplies. Life's most essential commodity.",
+		"width": 2, "height": 2,
+		"base_value": 30,
+		"black_market_value": 25,
+		"weight": 10.0,
+		"tags": ["raw", "essential"],
+		"rarity": 0,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/water_barrels.svg"
+	},
+	"fuel_cells_crate": {
+		"name": "Fuel Cells Crate",
+		"description": "Portable energy cells. Powers everything from tools to ships.",
+		"width": 1, "height": 2,
+		"base_value": 100,
+		"black_market_value": 120,
+		"weight": 3.0,
+		"tags": ["raw", "fuel", "regulated"],
+		"rarity": 0,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/fuel_cells_crate.svg"
+	},
+	"titanium_ingots": {
+		"name": "Titanium Ingots",
+		"description": "Refined titanium bars. Lightweight and incredibly strong.",
+		"width": 2, "height": 1,
+		"base_value": 120,
+		"black_market_value": 100,
+		"weight": 3.5,
+		"tags": ["raw", "metal"],
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/titanium_ingots.svg"
+	},
+	"raw_textiles": {
+		"name": "Raw Textiles",
+		"description": "Synthetic fabric rolls for uniforms and ship interiors.",
+		"width": 2, "height": 1,
+		"base_value": 45,
+		"black_market_value": 35,
+		"weight": 2.5,
+		"tags": ["raw", "industrial"],
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/raw_textiles.svg"
+	},
+	"chemical_reagents": {
+		"name": "Chemical Reagents",
+		"description": "Basic industrial chemicals for processing and manufacturing.",
+		"width": 1, "height": 2,
+		"base_value": 65,
+		"black_market_value": 80,
+		"weight": 4.0,
+		"tags": ["raw", "industrial", "regulated"],
+		"rarity": 0,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/chemical_reagents.svg"
+	},
+	"silicon_wafers": {
+		"name": "Silicon Wafers",
+		"description": "High-purity silicon sheets for electronics manufacturing.",
+		"width": 1, "height": 1,
+		"base_value": 90,
+		"black_market_value": 75,
+		"weight": 0.5,
+		"tags": ["raw", "electronics"],
+		"rarity": 0,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/silicon_wafers.svg"
+	},
+	"rubber_compounds": {
+		"name": "Rubber Compounds",
+		"description": "Synthetic rubber for seals, gaskets, and insulation.",
+		"width": 1, "height": 1,
+		"base_value": 35,
+		"black_market_value": 28,
+		"weight": 1.5,
+		"tags": ["raw", "industrial"],
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/rubber_compounds.svg"
+	},
+	
+	# Processed Goods (Uncommon)
+	"circuit_boards": {
+		"name": "Circuit Boards",
+		"description": "Pre-assembled electronic circuit boards ready for integration.",
+		"width": 1, "height": 1,
+		"base_value": 200,
+		"black_market_value": 180,
+		"weight": 0.5,
+		"tags": ["tech", "electronics"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/circuit_boards.svg"
+	},
+	"medi_gel": {
+		"name": "Medi-Gel",
+		"description": "Advanced medical gel for rapid wound treatment.",
+		"width": 1, "height": 1,
+		"base_value": 300,
+		"black_market_value": 400,
+		"weight": 0.3,
+		"tags": ["medical", "regulated"],
+		"rarity": 1,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/medi_gel.svg"
+	},
+	"ship_parts_crate": {
+		"name": "Ship Parts Crate",
+		"description": "Assorted replacement parts for ship maintenance.",
+		"width": 2, "height": 2,
+		"base_value": 250,
+		"black_market_value": 200,
+		"weight": 4.0,
+		"tags": ["tech", "mechanical"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/ship_parts_crate.svg"
+	},
+	"ration_packs": {
+		"name": "Ration Packs",
+		"description": "Long-shelf-life food supplies for extended voyages.",
+		"width": 1, "height": 2,
+		"base_value": 80,
+		"black_market_value": 60,
+		"weight": 1.0,
+		"tags": ["food", "essential"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/ration_packs.svg"
+	},
+	"power_converters": {
+		"name": "Power Converters",
+		"description": "Energy regulation units for stabilizing power systems.",
+		"width": 1, "height": 2,
+		"base_value": 220,
+		"black_market_value": 190,
+		"weight": 2.5,
+		"tags": ["tech", "electronics"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/power_converters.svg"
+	},
+	"hydroponic_supplies": {
+		"name": "Hydroponic Supplies",
+		"description": "Growing systems and nutrients for onboard agriculture.",
+		"width": 2, "height": 1,
+		"base_value": 180,
+		"black_market_value": 150,
+		"weight": 3.0,
+		"tags": ["food", "tech"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/hydroponic_supplies.svg"
+	},
+	"armor_plating": {
+		"name": "Armor Plating",
+		"description": "Reinforced hull plating for ship defense upgrades.",
+		"width": 2, "height": 2,
+		"base_value": 280,
+		"black_market_value": 240,
+		"weight": 8.0,
+		"tags": ["tech", "mechanical", "military"],
+		"rarity": 1,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/armor_plating.svg"
+	},
+	"sensor_arrays": {
+		"name": "Sensor Arrays",
+		"description": "Advanced detection systems for navigation and scanning.",
+		"width": 1, "height": 2,
+		"base_value": 260,
+		"black_market_value": 220,
+		"weight": 1.5,
+		"tags": ["tech", "electronics"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/sensor_arrays.svg"
+	},
+	"life_support_filters": {
+		"name": "Life Support Filters",
+		"description": "Air and water purification systems for habitats.",
+		"width": 1, "height": 1,
+		"base_value": 150,
+		"black_market_value": 130,
+		"weight": 1.2,
+		"tags": ["tech", "essential"],
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/life_support_filters.svg"
+	},
+	"ammunition_crates": {
+		"name": "Ammunition Crates",
+		"description": "Projectile ammunition for ship-mounted weapons.",
+		"width": 2, "height": 1,
+		"base_value": 200,
+		"black_market_value": 280,
+		"weight": 5.0,
+		"tags": ["military", "regulated"],
+		"rarity": 1,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/ammunition_crates.svg"
+	},
+	
+	# Luxury Goods (Rare)
+	"vintage_wine": {
+		"name": "Vintage Wine",
+		"description": "Rare aged wine from Earth's last vineyards. A collector's item.",
+		"width": 1, "height": 2,
+		"base_value": 500,
+		"black_market_value": 600,
+		"weight": 2.0,
+		"tags": ["luxury", "fragile"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/vintage_wine.svg"
+	},
+	"rare_spices": {
+		"name": "Rare Spices",
+		"description": "Exotic spices from distant colonies. Worth their weight in gold.",
+		"width": 1, "height": 1,
+		"base_value": 800,
+		"black_market_value": 700,
+		"weight": 0.2,
+		"tags": ["luxury", "food"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/rare_spices.svg"
+	},
+	"art_pieces": {
+		"name": "Art Pieces",
+		"description": "Priceless artwork from renowned galactic artists.",
+		"width": 2, "height": 2,
+		"base_value": 1000,
+		"black_market_value": 1200,
+		"weight": 3.0,
+		"tags": ["luxury", "fragile"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/art_pieces.svg"
+	},
+	"designer_clothing": {
+		"name": "Designer Clothing",
+		"description": "High-fashion garments from exclusive designers.",
+		"width": 1, "height": 2,
+		"base_value": 600,
+		"black_market_value": 500,
+		"weight": 0.5,
+		"tags": ["luxury", "fashion"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/designer_clothing.svg"
+	},
+	"premium_tobacco": {
+		"name": "Premium Tobacco",
+		"description": "Rare cigars and tobacco from pre-war plantations.",
+		"width": 1, "height": 1,
+		"base_value": 450,
+		"black_market_value": 550,
+		"weight": 0.3,
+		"tags": ["luxury", "regulated"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/premium_tobacco.svg"
+	},
+	"exotic_pets": {
+		"name": "Exotic Pets",
+		"description": "Rare alien creatures kept as luxury companions.",
+		"width": 1, "height": 1,
+		"base_value": 900,
+		"black_market_value": 1100,
+		"weight": 1.0,
+		"tags": ["luxury", "living", "regulated"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/exotic_pets.svg"
+	},
+	"jewelry_collection": {
+		"name": "Jewelry Collection",
+		"description": "Precious gems and metals crafted into exquisite pieces.",
+		"width": 1, "height": 1,
+		"base_value": 1200,
+		"black_market_value": 1000,
+		"weight": 0.5,
+		"tags": ["luxury", "valuable"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/jewelry_collection.svg"
+	},
+	"antique_books": {
+		"name": "Antique Books",
+		"description": "Rare first editions from Old Earth's great authors.",
+		"width": 1, "height": 1,
+		"base_value": 700,
+		"black_market_value": 650,
+		"weight": 1.5,
+		"tags": ["luxury", "fragile", "culture"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/antique_books.svg"
+	},
+	"musical_instruments": {
+		"name": "Musical Instruments",
+		"description": "Handcrafted instruments from master artisans.",
+		"width": 2, "height": 2,
+		"base_value": 850,
+		"black_market_value": 750,
+		"weight": 4.0,
+		"tags": ["luxury", "fragile", "culture"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/musical_instruments.svg"
+	},
+	"perfume_collection": {
+		"name": "Perfume Collection",
+		"description": "Exclusive fragrances from the finest perfumeries.",
+		"width": 1, "height": 1,
+		"base_value": 550,
+		"black_market_value": 620,
+		"weight": 0.4,
+		"tags": ["luxury", "fragile"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/perfume_collection.svg"
+	},
+	"holographic_art": {
+		"name": "Holographic Art",
+		"description": "State-of-the-art holographic displays showing animated masterpieces.",
+		"width": 1, "height": 2,
+		"base_value": 950,
+		"black_market_value": 1100,
+		"weight": 2.0,
+		"tags": ["luxury", "tech"],
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/holographic_art.svg"
+	}
+}
+
+
+# ==============================================================================
 # ITEM DEFINITIONS - MODULES (Equipment)
 # ==============================================================================
 
@@ -621,6 +1006,7 @@ static func get_all_items() -> Dictionary:
 	all_items.merge(VALUABLE_ITEMS)
 	all_items.merge(EPIC_ITEMS)
 	all_items.merge(LEGENDARY_ITEMS)
+	all_items.merge(TRADE_GOODS_ITEMS)
 	all_items.merge(MODULE_ITEMS)
 	return all_items
 
@@ -679,6 +1065,11 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	var weight = def.get("weight", 1.0)
 	# Value bonus for weight: +2% per kg
 	item.value = int(base_value * (1.0 + weight * 0.02))
+	
+	# Set weight, black market value, and tags
+	item.weight = weight
+	item.black_market_value = def.get("black_market_value", item.value)
+	item.tags = def.get("tags", [])
 	
 	# Search time based on size and rarity
 	var size = item.grid_width * item.grid_height
