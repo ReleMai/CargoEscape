@@ -34,6 +34,12 @@
 # We don't need Node2D features since this is just for data management
 extends Node
 
+# ==============================================================================
+# PRELOADS
+# ==============================================================================
+
+const ComboSystem = preload("res://scripts/combo_system.gd")
+
 
 # ==============================================================================
 # SIGNALS
@@ -76,6 +82,14 @@ const POINTS_PER_SECOND: int = 10
 
 ## Base laser damage (can be upgraded)
 const BASE_LASER_DAMAGE: float = 25.0
+
+
+# ==============================================================================
+# COMBO SYSTEM
+# ==============================================================================
+
+## Combo system instance
+var combo_system: ComboSystem = null
 
 
 # ==============================================================================
@@ -221,6 +235,10 @@ var survival_time: float = 0.0
 # This is like a constructor - use it for initialization
 # The scene tree is Godot's hierarchy of all active nodes
 func _ready() -> void:
+	# Initialize combo system
+	combo_system = ComboSystem.new()
+	add_child(combo_system)
+	
 	# Calculate initial max health with upgrades
 	_calculate_max_health()
 	current_health = max_health
@@ -259,6 +277,10 @@ func _process(delta: float) -> void:
 func take_damage(amount: float) -> bool:
 	current_health -= amount
 	current_health = maxf(current_health, 0.0)
+	
+	# Break combo when taking damage
+	if combo_system:
+		combo_system.break_combo()
 	
 	# Debugging output
 	print("Damage taken: ", amount, " | Health: ", current_health, "/", max_health)
@@ -431,6 +453,10 @@ func reset_game() -> void:
 	score = 0
 	survival_time = 0.0
 	is_game_active = false
+	
+	# Reset combo system
+	if combo_system:
+		combo_system.reset_combo()
 	
 	# Notify other nodes that game was reset
 	emit_signal("game_reset")

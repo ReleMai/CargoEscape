@@ -344,6 +344,10 @@ func _spawn_container(pos: Vector2, container_type: int) -> void:
 	if container.has_method("generate_loot"):
 		container.generate_loot(current_ship_tier, container_type)
 	
+	# Connect item_revealed signal to combo system
+	if container.has_signal("item_revealed"):
+		container.item_revealed.connect(_on_item_revealed)
+	
 	containers_parent.add_child(container)
 
 
@@ -502,6 +506,20 @@ func _on_item_transferred(item_data: ItemData) -> void:
 	_update_ui()
 
 
+## Called when an item is revealed in a container
+func _on_item_revealed(item_data: ItemData) -> void:
+	# Increase combo in GameManager's combo system
+	if GameManager and GameManager.combo_system:
+		GameManager.combo_system.increase_combo()
+
+
+## Called when search is cancelled (player moved away)
+func _on_search_cancelled() -> void:
+	# Intentionally does not break combo - allows player to move between containers
+	# Combo only breaks on damage or timer expiry to encourage fast looting
+	pass
+
+
 func _on_item_destroyed(item: LootItem) -> void:
 	# Item was destroyed from inventory
 	if item and item.item_data:
@@ -578,9 +596,17 @@ func _end_boarding(success: bool) -> void:
 	if success and inventory:
 		_transfer_inventory_to_game_manager()
 	
-	# Add to global score
+	# Add to global score with combo multiplier
 	if success and GameManager:
-		GameManager.add_score(total_loot_value)
+		var score_to_add = total_loot_value
+		if GameManager.combo_system:
+			score_to_add = GameManager.combo_system.apply_multiplier(total_loot_value)
+			print("[BoardingManager] Score: %d (base) x %.1fx (combo) = %d (total)" % [
+				total_loot_value, 
+				GameManager.combo_system.get_multiplier(),
+				score_to_add
+			])
+		GameManager.add_score(score_to_add)
 	
 	# Transition to results or next scene
 	await get_tree().create_timer(1.0).timeout

@@ -55,6 +55,10 @@ extends CanvasLayer
 ## Distance label
 @onready var distance_label: Label = $DistanceBarContainer/VBox/DistanceLabel
 
+## Combo UI elements
+@onready var combo_label: Label = $MarginContainer/VBoxContainer/ComboContainer/ComboLabel
+@onready var combo_timer_bar: ProgressBar = $MarginContainer/VBoxContainer/ComboContainer/ComboTimerBar
+
 
 # ==============================================================================
 # REGULAR VARIABLES
@@ -68,6 +72,9 @@ var player_ref: Node2D
 
 ## Animation tween for effects
 var tween: Tween
+
+## Combo animation tween
+var combo_tween: Tween
 
 
 # ==============================================================================
@@ -85,6 +92,13 @@ func _ready() -> void:
 		# Connect to GameManager signals
 		game_manager.health_changed.connect(_on_health_changed)
 		game_manager.game_reset.connect(_on_game_reset)
+		
+		# Connect to ComboSystem signals
+		if game_manager.combo_system:
+			game_manager.combo_system.combo_changed.connect(_on_combo_changed)
+			game_manager.combo_system.combo_timer_updated.connect(_on_combo_timer_updated)
+			game_manager.combo_system.combo_broken.connect(_on_combo_broken)
+			game_manager.combo_system.combo_threshold_reached.connect(_on_combo_threshold_reached)
 		
 		# Initial update
 		update_display()
@@ -263,6 +277,123 @@ func animate_score_popup(amount: int, world_position: Vector2) -> void:
 	# This could show "+100" floating up from where points were earned
 	# For now, just a placeholder for future implementation
 	pass
+
+
+# ==============================================================================
+# COMBO SYSTEM
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# update_combo() - Update combo display
+# ------------------------------------------------------------------------------
+func update_combo() -> void:
+	if not game_manager or not game_manager.combo_system:
+		return
+	
+	var combo_count = game_manager.combo_system.get_combo_count()
+	var multiplier = game_manager.combo_system.get_multiplier()
+	
+	if combo_count > 0:
+		if combo_label:
+			combo_label.text = "COMBO: %dx (%.1fx)" % [combo_count, multiplier]
+			combo_label.visible = true
+		if combo_timer_bar:
+			combo_timer_bar.visible = true
+	else:
+		if combo_label:
+			combo_label.visible = false
+		if combo_timer_bar:
+			combo_timer_bar.visible = false
+
+
+# ------------------------------------------------------------------------------
+# _on_combo_changed(count, multiplier) - Called when combo changes
+# ------------------------------------------------------------------------------
+func _on_combo_changed(combo_count: int, multiplier: float) -> void:
+	update_combo()
+	
+	# Animate combo label when it increases
+	if combo_count > 0:
+		_animate_combo_pulse()
+
+
+# ------------------------------------------------------------------------------
+# _on_combo_timer_updated(time_remaining, max_time) - Update combo timer bar
+# ------------------------------------------------------------------------------
+func _on_combo_timer_updated(time_remaining: float, max_time: float) -> void:
+	if not combo_timer_bar:
+		return
+	
+	var progress = time_remaining / max_time
+	combo_timer_bar.value = progress
+	
+	# Change color based on time remaining (red when low)
+	if progress < 0.3:
+		combo_timer_bar.modulate = Color(1.0, 0.3, 0.3)  # Red
+	elif progress < 0.6:
+		combo_timer_bar.modulate = Color(1.0, 0.8, 0.2)  # Yellow
+	else:
+		combo_timer_bar.modulate = Color(0.4, 1.0, 0.5)  # Green
+
+
+# ------------------------------------------------------------------------------
+# _on_combo_broken() - Called when combo is broken
+# ------------------------------------------------------------------------------
+func _on_combo_broken() -> void:
+	update_combo()
+	
+	# Flash combo label red
+	if combo_label:
+		_animate_combo_break()
+
+
+# ------------------------------------------------------------------------------
+# _on_combo_threshold_reached(threshold, multiplier) - Called on milestone
+# ------------------------------------------------------------------------------
+func _on_combo_threshold_reached(threshold: int, multiplier: float) -> void:
+	print("[HUD] Combo threshold reached! ", threshold, "x - Multiplier: ", multiplier)
+	# Could show a special visual effect here
+	_animate_combo_pulse()
+
+
+# ------------------------------------------------------------------------------
+# _animate_combo_pulse() - Pulse animation for combo label
+# ------------------------------------------------------------------------------
+func _animate_combo_pulse() -> void:
+	if not combo_label:
+		return
+	
+	# Kill existing combo tween
+	if combo_tween:
+		combo_tween.kill()
+	
+	# Create pulse animation
+	combo_tween = create_tween()
+	combo_tween.set_ease(Tween.EASE_OUT)
+	combo_tween.set_trans(Tween.TRANS_ELASTIC)
+	
+	# Scale up then back to normal
+	combo_label.scale = Vector2(1.3, 1.3)
+	combo_tween.tween_property(combo_label, "scale", Vector2(1.0, 1.0), 0.5)
+
+
+# ------------------------------------------------------------------------------
+# _animate_combo_break() - Break animation for combo label
+# ------------------------------------------------------------------------------
+func _animate_combo_break() -> void:
+	if not combo_label:
+		return
+	
+	# Kill existing combo tween
+	if combo_tween:
+		combo_tween.kill()
+	
+	# Create shake animation
+	combo_tween = create_tween()
+	
+	var original_color = combo_label.modulate
+	combo_label.modulate = Color.RED
+	combo_tween.tween_property(combo_label, "modulate", original_color, 0.3)
 
 
 # ==============================================================================
