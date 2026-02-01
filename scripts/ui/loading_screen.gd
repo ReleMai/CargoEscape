@@ -63,6 +63,17 @@ const GAMEPLAY_TIPS: Array[String] = [
 
 
 # ==============================================================================
+# CONSTANTS
+# ==============================================================================
+
+## Delay after scene change before hiding loading screen
+const SCENE_CHANGE_DELAY: float = 0.1
+
+## Duration to display 100% progress before transitioning
+const PROGRESS_COMPLETE_DISPLAY_DURATION: float = 0.3
+
+
+# ==============================================================================
 # STATE
 # ==============================================================================
 
@@ -71,7 +82,6 @@ var target_scene: String = ""
 var fade_alpha: float = 0.0
 var spinner_rotation: float = 0.0
 var progress: float = 0.0
-var loading_thread: Thread = null
 
 
 # ==============================================================================
@@ -166,7 +176,7 @@ func finish_transition() -> void:
 		get_tree().change_scene_to_file(target_scene)
 	
 	# Hide loading screen after scene change
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(SCENE_CHANGE_DELAY).timeout
 	visible = false
 	
 	# Emit signal
@@ -247,7 +257,7 @@ func _wait_for_scene_load() -> void:
 					await get_tree().process_frame
 				
 				# Add a small delay to show 100%
-				await get_tree().create_timer(0.3).timeout
+				await get_tree().create_timer(PROGRESS_COMPLETE_DISPLAY_DURATION).timeout
 				
 				# Finish transition
 				finish_transition()
