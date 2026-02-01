@@ -32,6 +32,10 @@ const SCENE_SETTING_DURATION: float = 5.0
 const TITLE_CARD_DURATION: float = 2.0
 const TRANSITION_DURATION: float = 3.0
 
+## Particle system constants
+const PARTICLE_SPAWN_PROBABILITY: float = 0.3
+const MIN_GLOW_FOR_PARTICLES: float = 0.3
+
 ## Text crawl content
 const CRAWL_TEXT: Array[String] = [
 	"In the lawless sectors of space...",
@@ -264,7 +268,7 @@ func _update_logo_phase(delta: float) -> void:
 		logo_glow.scale = Vector2(glow_scale, glow_scale)
 	
 	# Spawn particles around logo
-	if randf() < 0.3 and glow_intensity > 0.3:
+	if randf() < PARTICLE_SPAWN_PROBABILITY and glow_intensity > MIN_GLOW_FOR_PARTICLES:
 		_spawn_logo_particle()
 	
 	# Update particles
@@ -453,7 +457,9 @@ func _complete_sequence() -> void:
 	# Mark as viewed
 	if not has_been_viewed:
 		ProjectSettings.set_setting("intro/has_been_viewed", true)
-		ProjectSettings.save()
+		var err = ProjectSettings.save()
+		if err != OK:
+			push_warning("Failed to save intro viewed state: " + str(err))
 	
 	# Transition to main menu (intro_scene.tscn with menu)
 	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
@@ -463,7 +469,9 @@ func _skip_to_menu() -> void:
 	# Mark as viewed and go to menu
 	if not has_been_viewed:
 		ProjectSettings.set_setting("intro/has_been_viewed", true)
-		ProjectSettings.save()
+		var err = ProjectSettings.save()
+		if err != OK:
+			push_warning("Failed to save intro viewed state: " + str(err))
 	
 	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
 
