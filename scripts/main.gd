@@ -219,7 +219,16 @@ func _update_camera_shake(delta: float) -> void:
 			enemy_container.position = Vector2.ZERO
 
 
-## Trigger camera shake (with cooldown to prevent infinite loops)
+## Trigger camera shake using the configurable screen shake system
+## 
+## The screen shake system provides:
+## - Configurable intensity (0.0-1.0) scaled to pixels
+## - Configurable duration with smooth decay curves
+## - Multiple shake modes (Random, Perlin, Trauma)
+## - Cooldown system to prevent shake spam
+## 
+## @param intensity: Legacy pixel-based intensity (converted to 0-1 range)
+## @param bypass_cooldown: Set true for critical events like damage
 func shake_camera(intensity: float = 0.5, bypass_cooldown: bool = false) -> void:
 	if screen_shake:
 		# Convert legacy intensity (pixel-based) to normalized 0-1 range
