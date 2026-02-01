@@ -1,14 +1,19 @@
 # ==============================================================================
-# ENEMY SCRIPT - VARIED MOVEMENT PATTERNS
+# ENEMY SCRIPT - VARIED MOVEMENT PATTERNS & AI BEHAVIOR TREES
 # ==============================================================================
 # 
 # FILE: scripts/enemy.gd
-# PURPOSE: Controls enemy movement with multiple path patterns
+# PURPOSE: Controls enemy movement with multiple path patterns and AI behaviors
 #
 # ATTACHED TO: Enemy scene (Area2D)
 #
-# MOVEMENT PATTERNS AVAILABLE:
-# ----------------------------
+# MOVEMENT MODES:
+# ---------------
+# 1. PATTERN MODE: Classic movement patterns (STRAIGHT, SINE_WAVE, etc.)
+# 2. AI MODE: Behavior tree-driven intelligent AI
+#
+# MOVEMENT PATTERNS AVAILABLE (Pattern Mode):
+# --------------------------------------------
 # 1. STRAIGHT: Classic left-moving enemy
 # 2. SINE_WAVE: Moves in a wavy pattern (up and down while going left)
 # 3. DIAGONAL_DOWN: Moves diagonally from top-right to bottom-left
@@ -16,6 +21,14 @@
 # 5. ZIGZAG: Sharp direction changes
 # 6. HOMING: Slowly tracks toward the player (advanced)
 # 7. CIRCULAR: Spiral/circular approach pattern
+#
+# AI BEHAVIORS AVAILABLE (AI Mode):
+# ----------------------------------
+# - Patrol: Move between waypoints
+# - Chase: Follow player when spotted
+# - Attack: Engage when in range
+# - Flee: Retreat when low health
+# - Alert: Notify nearby enemies
 #
 # HOW PATTERNS WORK:
 # ------------------
@@ -42,6 +55,11 @@ enum MovementPattern {
 	ZIGZAG,        # 4 - Sharp direction changes
 	HOMING,        # 5 - Tracks toward player
 	CIRCULAR       # 6 - Spiral pattern
+}
+
+enum AIMode {
+	PATTERN,       # Use classic movement patterns
+	BEHAVIOR_TREE  # Use AI behavior tree
 }
 
 
@@ -85,6 +103,17 @@ signal destroyed
 @export_group("Difficulty")
 ## Should speed increase over time?
 @export var use_difficulty_scaling: bool = true
+
+
+@export_group("AI Mode")
+## AI mode: PATTERN for classic patterns, BEHAVIOR_TREE for intelligent AI
+@export var ai_mode: AIMode = AIMode.PATTERN
+
+## Patrol waypoints for AI mode (relative to spawn position)
+@export var patrol_waypoints: Array[Vector2] = []
+
+## AI behavior type preset
+@export_enum("Basic", "Aggressive", "Defensive") var ai_behavior_preset: String = "Basic"
 
 
 @export_group("Health")
@@ -135,6 +164,12 @@ var screen_height: float
 ## Whether to use world scroll (horizontal movement handled by main scene)
 var use_world_scroll: bool = false
 
+## AI Behavior Tree (when using AI mode)
+var behavior_tree: BehaviorTree = null
+
+## Absolute patrol waypoints (calculated from relative positions)
+var absolute_waypoints: Array[Vector2] = []
+
 
 # ==============================================================================
 # BUILT-IN FUNCTIONS
@@ -178,8 +213,12 @@ func _ready() -> void:
 	# We use call_deferred to ensure the scene tree is ready
 	call_deferred("_find_player")
 	
-	# Initialize velocity based on pattern
-	initialize_pattern()
+	# Initialize AI or pattern mode
+	if ai_mode == AIMode.BEHAVIOR_TREE:
+		call_deferred("_setup_behavior_tree")
+	else:
+		# Initialize velocity based on pattern
+		initialize_pattern()
 
 
 func _find_player() -> void:
@@ -192,8 +231,13 @@ func _process(delta: float) -> void:
 	# Track time alive (for wave calculations)
 	time_alive += delta
 	
-	# Update velocity based on movement pattern
-	update_pattern_movement(delta)
+	# Update movement based on AI mode
+	if ai_mode == AIMode.BEHAVIOR_TREE and behavior_tree:
+		# AI behavior tree handles movement
+		behavior_tree.tick(delta)
+	else:
+		# Classic pattern movement
+		update_pattern_movement(delta)
 	
 	# Apply the velocity
 	# If using world scroll, only apply vertical movement (horizontal handled by main)
@@ -208,6 +252,64 @@ func _process(delta: float) -> void:
 	# Check for cleanup (only if not using world scroll - main handles cleanup)
 	if not use_world_scroll:
 		check_cleanup()
+
+
+# ==============================================================================
+# AI BEHAVIOR TREE SYSTEM
+# ==============================================================================
+
+func _setup_behavior_tree() -> void:
+	# Calculate absolute waypoints from relative positions
+	if patrol_waypoints.is_empty():
+		# Create default patrol waypoints if none specified
+		absolute_waypoints = [
+			global_position,
+			global_position + Vector2(-200, -100),
+			global_position + Vector2(-200, 100),
+		]
+	else:
+		# Convert relative waypoints to absolute positions
+		for waypoint in patrol_waypoints:
+			absolute_waypoints.append(global_position + waypoint)
+	
+	# Create behavior tree based on preset
+	behavior_tree = BehaviorTree.new()
+	
+	match ai_behavior_preset:
+		"Aggressive":
+			behavior_tree.set_root(BTBuilder.create_aggressive_tree())
+		"Defensive":
+			behavior_tree.set_root(BTBuilder.create_defensive_tree(absolute_waypoints))
+		_: # "Basic" or default
+			behavior_tree.set_root(BTBuilder.create_basic_enemy_tree(absolute_waypoints))
+	
+	# Initialize the tree
+	behavior_tree.initialize(self, {})
+
+
+## Called by BTAlert node to receive alerts from other enemies
+func receive_alert(target: Node2D, alert_position: Vector2) -> void:
+	if behavior_tree and behavior_tree.blackboard:
+		behavior_tree.blackboard["target"] = target
+		behavior_tree.blackboard["alert_received"] = true
+
+
+## Called by other AI nodes to set target
+func set_target(target: Node2D) -> void:
+	if behavior_tree and behavior_tree.blackboard:
+		behavior_tree.blackboard["target"] = target
+
+
+## Optional: Play alert visual effect
+func play_alert_effect() -> void:
+	# Could add visual effect here (exclamation mark, color change, etc.)
+	pass
+
+
+## Optional: Play attack animation
+func play_attack_animation() -> void:
+	# Could add attack animation here
+	pass
 
 
 # ==============================================================================
