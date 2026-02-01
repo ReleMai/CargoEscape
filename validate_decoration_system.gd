@@ -1,4 +1,4 @@
-#!/usr/bin/env -S godot --headless --script
+#!/usr/bin/env godot
 # ==============================================================================
 # DECORATION SYSTEM VALIDATION TEST
 # ==============================================================================
@@ -8,6 +8,9 @@
 # 2. Testing ShipDecorator with different room types
 # 3. Generating a sample ship with decorations
 # 4. Verifying decoration placement logic
+#
+# USAGE: Run with Godot headless mode
+#   godot --headless --script validate_decoration_system.gd
 #
 # ==============================================================================
 

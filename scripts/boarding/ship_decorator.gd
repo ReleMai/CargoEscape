@@ -273,6 +273,8 @@ func _get_available_decorations(
 		# Check faction-specific decorations
 		if deco.faction_specific:
 			# Map faction type to poster type
+			# NOTE: This assumes faction poster types are consecutive in the enum
+			# (POSTER_FACTION_CCG, POSTER_FACTION_NEX, POSTER_FACTION_GDF, POSTER_FACTION_SYN, POSTER_FACTION_IND)
 			var faction_poster_offset = _faction_type
 			var expected_type = DecorationDataClass.Type.POSTER_FACTION_CCG + faction_poster_offset
 			if deco.type != expected_type:

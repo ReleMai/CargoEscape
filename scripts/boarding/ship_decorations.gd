@@ -151,7 +151,12 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_animation_time += delta
 	# Only redraw if we have animated decorations
-	if not _enhanced_decorations.is_empty():
+	var has_animated = false
+	for deco in _enhanced_decorations:
+		if deco.flicker_enabled:
+			has_animated = true
+			break
+	if has_animated:
 		queue_redraw()
 
 
