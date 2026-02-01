@@ -126,6 +126,9 @@ func _ready() -> void:
 	
 	# Start entrance animation
 	_start_entrance_animation()
+	
+	# Start tutorial if needed
+	_check_and_start_tutorial()
 
 
 func _process(delta: float) -> void:
@@ -425,6 +428,9 @@ func _on_player_interact(target: Node2D) -> void:
 
 
 func _interact_with_container(container: Node2D) -> void:
+	# Notify tutorial
+	_on_container_interacted()
+	
 	# Always open loot menu immediately - the visual reveal happens in the menu
 	if container is ShipContainer:
 		# Move all hidden items to revealed for the loot menu
@@ -507,6 +513,10 @@ func _on_item_destroyed(item: LootItem) -> void:
 func _toggle_inventory() -> void:
 	inventory_open = not inventory_open
 	
+	# Notify tutorial when inventory is opened
+	if inventory_open:
+		_on_inventory_opened()
+	
 	if inventory_panel:
 		inventory_panel.visible = inventory_open
 		
@@ -542,6 +552,9 @@ func _on_player_reached_exit(_exit: Node2D) -> void:
 func _trigger_escape() -> void:
 	if not is_active:
 		return
+	
+	# Notify tutorial
+	_on_exit_interacted()
 	
 	_end_boarding(true)
 
@@ -760,3 +773,50 @@ func _create_entrance_fade() -> void:
 func _update_ui() -> void:
 	if loot_value_label:
 		loot_value_label.text = "$%d" % total_loot_value
+
+
+# ==============================================================================
+# TUTORIAL INTEGRATION
+# ==============================================================================
+
+func _check_and_start_tutorial() -> void:
+	# Wait for entrance animation to finish
+	await get_tree().create_timer(entrance_duration + 0.5).timeout
+	
+	# Check if TutorialManager exists
+	if not has_node("/root/TutorialManager"):
+		return
+	
+	var tutorial_manager = get_node("/root/TutorialManager")
+	
+	# Start tutorial if needed
+	tutorial_manager.start_tutorial()
+
+
+func _on_player_moved() -> void:
+	# Notify tutorial that player moved
+	if has_node("/root/TutorialManager"):
+		var tutorial_manager = get_node("/root/TutorialManager")
+		tutorial_manager.on_player_action("movement")
+
+
+func _on_container_interacted() -> void:
+	# Notify tutorial that container was interacted with
+	if has_node("/root/TutorialManager"):
+		var tutorial_manager = get_node("/root/TutorialManager")
+		tutorial_manager.on_player_action("container_search")
+
+
+func _on_inventory_opened() -> void:
+	# Notify tutorial that inventory was opened
+	if has_node("/root/TutorialManager"):
+		var tutorial_manager = get_node("/root/TutorialManager")
+		tutorial_manager.on_player_action("inventory_open")
+
+
+func _on_exit_interacted() -> void:
+	# Notify tutorial that exit was reached
+	if has_node("/root/TutorialManager"):
+		var tutorial_manager = get_node("/root/TutorialManager")
+		tutorial_manager.on_player_action("exit_reached")
+

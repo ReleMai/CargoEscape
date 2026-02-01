@@ -266,6 +266,11 @@ func _process_moving_state(delta: float) -> void:
 		_transition_to_state(State.IDLE)
 		return
 	
+	# Notify tutorial on first movement (one-shot)
+	if not get_meta("tutorial_moved", false):
+		set_meta("tutorial_moved", true)
+		_notify_tutorial_movement()
+	
 	# Apply movement physics
 	_apply_movement(delta)
 
@@ -571,3 +576,15 @@ func teleport_to(pos: Vector2) -> void:
 	global_position = pos
 	velocity = Vector2.ZERO
 	smoothed_direction = Vector2.ZERO
+
+
+# ==============================================================================
+# TUTORIAL INTEGRATION
+# ==============================================================================
+
+func _notify_tutorial_movement() -> void:
+	# Find boarding manager and notify it
+	var boarding_manager = get_parent()
+	if boarding_manager and boarding_manager.has_method("_on_player_moved"):
+		boarding_manager._on_player_moved()
+
