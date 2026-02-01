@@ -11,6 +11,7 @@ A side-scrolling space escape game built in Godot 4.5
 
 ## Controls
 
+### Movement
 | Key | Action |
 |-----|--------|
 | W / ↑ | Move Up |
@@ -50,6 +51,14 @@ Cargo Escape includes comprehensive accessibility options to ensure everyone can
 ### How to Access
 
 From the main menu, click **ACCESSIBILITY** to configure all settings. Your preferences are automatically saved and will persist across game sessions.
+### Inventory (Loot Phase)
+| Key | Action |
+|-----|--------|
+| 1-9 | Quick select inventory slot |
+| Q | Drop selected item |
+| E | Use/equip selected item |
+| Tab / I | Toggle inventory view |
+| Escape | Close menus |
 
 ## Game Rules
 

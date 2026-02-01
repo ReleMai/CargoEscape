@@ -363,3 +363,17 @@ func get_current_speed() -> float:
 	if use_external_speed:
 		return external_scroll_speed
 	return base_scroll_speed
+
+
+## Apply sector theme colors (for sector-themed backgrounds)
+func set_theme_colors(theme) -> void:
+	if not theme:
+		return
+	
+	# Update star colors if available
+	if theme.has("star_colors") and not theme.star_colors.is_empty():
+		star_colors = theme.star_colors.duplicate()
+	
+	# Regenerate stars with new colors
+	_generate_all_stars()
+	queue_redraw()

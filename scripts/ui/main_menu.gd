@@ -125,8 +125,8 @@ func _start_game() -> void:
 	if GameManager:
 		GameManager.reset_game()
 	
-	# Go to intro scene
-	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
+	# Go to intro scene with loading screen
+	LoadingScreen.start_transition("res://scenes/intro/intro_scene.tscn")
 
 
 func _on_quit_pressed() -> void:
