@@ -808,8 +808,8 @@ func _update_minimap() -> void:
 		return
 	
 	# Update player position (account for layout offset)
-	var player_pos = player.position - layout_offset
-	renderer.update_player_position(player_pos)
+	var player_position_relative_to_layout = player.position - layout_offset
+	renderer.update_player_position(player_position_relative_to_layout)
 
 
 ## Update minimap container states

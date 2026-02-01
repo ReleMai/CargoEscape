@@ -46,6 +46,16 @@ class_name MinimapRenderer
 ## Wall thickness on minimap
 @export var wall_thickness: float = 2.0
 
+@export_group("Visual Details")
+## Number of segments for drawing circles and arcs
+@export_range(8, 64) var circle_segments: int = 16
+## Border width for containers
+@export var container_border_width: float = 1.0
+## Exit point pulse animation frequency
+@export var exit_pulse_frequency: float = 0.005
+## Exit point pulse animation amplitude
+@export var exit_pulse_amplitude: float = 0.2
+
 
 # ==============================================================================
 # STATE
@@ -102,8 +112,14 @@ func set_layout(layout: RefCounted) -> void:
 func update_player_position(pos: Vector2) -> void:
 	player_position = pos
 	
-	# Add to explored areas
-	explored_areas.append(pos)
+	# Add to explored areas (with deduplication to prevent infinite growth)
+	# Only add if significantly different from last position
+	if explored_areas.is_empty() or explored_areas[-1].distance_to(pos) > 20.0:
+		explored_areas.append(pos)
+		
+		# Limit array size to prevent memory issues
+		if explored_areas.size() > 1000:
+			explored_areas.remove_at(0)
 	
 	queue_redraw()
 
@@ -188,7 +204,7 @@ func _draw_containers() -> void:
 		draw_circle(scaled_pos, container_size, color)
 		
 		# Draw border for better visibility
-		draw_arc(scaled_pos, container_size, 0, TAU, 16, Color.BLACK, 1.0)
+		draw_arc(scaled_pos, container_size, 0, TAU, circle_segments, Color.BLACK, container_border_width)
 
 
 ## Draw exit point marker
@@ -204,7 +220,7 @@ func _draw_exit() -> void:
 	var size = 6.0
 	
 	# Draw as a pulsing diamond/square
-	var pulse = 1.0 + sin(Time.get_ticks_msec() * 0.005) * 0.2
+	var pulse = 1.0 + sin(Time.get_ticks_msec() * exit_pulse_frequency) * exit_pulse_amplitude
 	var current_size = size * pulse
 	
 	# Draw diamond shape
