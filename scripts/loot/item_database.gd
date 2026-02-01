@@ -908,7 +908,7 @@ const MODULE_ITEMS = {
 # LOOT TABLES BY TIER/DEPTH
 # ==============================================================================
 
-# Tier 0: Near space - mostly scrap, basic components
+# Tier 0: Near space - mostly scrap, basic components, raw materials
 const LOOT_TABLE_NEAR = {
 	"scrap_metal": 20,
 	"scrap_plastics": 20,
@@ -919,10 +919,16 @@ const LOOT_TABLE_NEAR = {
 	"corroded_pipe": 6,
 	"broken_lens": 5,
 	"copper_wire": 3,
-	"nav_beacon": 1
+	"nav_beacon": 1,
+	# Trade goods - raw materials
+	"iron_ore": 10,
+	"plastic_polymers": 8,
+	"rubber_compounds": 6,
+	"raw_textiles": 5,
+	"water_barrels": 4
 }
 
-# Tier 1: Middle space - components more common, some valuables
+# Tier 1: Middle space - components more common, some valuables, processed goods
 const LOOT_TABLE_MIDDLE = {
 	"scrap_metal": 8,
 	"scrap_plastics": 8,
@@ -939,10 +945,21 @@ const LOOT_TABLE_MIDDLE = {
 	"coolant_tube": 4,
 	"nav_beacon": 3,
 	"module_thrusters": 1,
-	"module_scanner": 1
+	"module_scanner": 1,
+	# Trade goods - raw materials and processed
+	"copper_wire_spool": 8,
+	"fuel_cells_crate": 7,
+	"titanium_ingots": 6,
+	"silicon_wafers": 5,
+	"chemical_reagents": 4,
+	"circuit_boards": 6,
+	"ration_packs": 8,
+	"power_converters": 5,
+	"life_support_filters": 6,
+	"hydroponic_supplies": 4
 }
 
-# Tier 2: Far space - valuables appear, rare modules
+# Tier 2: Far space - valuables appear, rare modules, luxury goods
 const LOOT_TABLE_FAR = {
 	"scrap_electronics": 5,
 	"scrap_mechanical": 5,
@@ -963,10 +980,21 @@ const LOOT_TABLE_FAR = {
 	"module_scanner": 2,
 	"module_engine_booster": 2,
 	"module_laser_amp": 2,
-	"module_targeting": 2
+	"module_targeting": 2,
+	# Trade goods - processed and luxury
+	"medi_gel": 6,
+	"ship_parts_crate": 7,
+	"sensor_arrays": 5,
+	"armor_plating": 4,
+	"ammunition_crates": 3,
+	"vintage_wine": 4,
+	"rare_spices": 5,
+	"designer_clothing": 3,
+	"premium_tobacco": 3,
+	"perfume_collection": 2
 }
 
-# Tier 3: Deepest space - epics, legendaries, best modules
+# Tier 3: Deepest space - epics, legendaries, best modules, rare luxuries
 const LOOT_TABLE_DEEPEST = {
 	"gold_bar": 8,
 	"rare_alloy": 8,
@@ -990,7 +1018,14 @@ const LOOT_TABLE_DEEPEST = {
 	"module_targeting": 5,
 	"module_shield": 4,
 	"module_scanner": 3,
-	"module_thrusters": 2
+	"module_thrusters": 2,
+	# Trade goods - luxury items
+	"art_pieces": 5,
+	"exotic_pets": 4,
+	"jewelry_collection": 6,
+	"antique_books": 3,
+	"musical_instruments": 3,
+	"holographic_art": 4
 }
 
 
