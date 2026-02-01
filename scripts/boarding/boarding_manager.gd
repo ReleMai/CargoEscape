@@ -115,7 +115,7 @@ const ENTRANCE_FINAL_ZOOM: float = 0.8
 const EXIT_ZOOM: float = 0.5
 
 # Animation layer tracking for cleanup
-var _active_animation_layers: Array[CanvasLayer] = []
+var active_animation_layers: Array[CanvasLayer] = []
 
 # ==============================================================================
 # LIFECYCLE
@@ -814,10 +814,10 @@ func shake_camera(intensity: float = 5.0) -> void:
 
 ## Clean up all active animation layers
 func _cleanup_animation_layers() -> void:
-	for layer in _active_animation_layers:
+	for layer in active_animation_layers:
 		if is_instance_valid(layer):
 			layer.queue_free()
-	_active_animation_layers.clear()
+	active_animation_layers.clear()
 
 
 ## Helper to create and track a canvas layer for animations
@@ -826,13 +826,13 @@ func _create_tracked_canvas_layer(layer_name: String, layer_level: int) -> Canva
 	canvas_layer.name = layer_name
 	canvas_layer.layer = layer_level
 	add_child(canvas_layer)
-	_active_animation_layers.append(canvas_layer)
+	active_animation_layers.append(canvas_layer)
 	return canvas_layer
 
 
 ## Helper to remove a tracked layer
 func _remove_tracked_layer(layer: CanvasLayer) -> void:
-	_active_animation_layers.erase(layer)
+	active_animation_layers.erase(layer)
 	if is_instance_valid(layer):
 		layer.queue_free()
 
@@ -959,10 +959,8 @@ func _create_boarding_text_overlay() -> void:
 	
 	var label = Label.new()
 	label.name = "BoardingLabel"
-	# Safe ship name handling
-	var ship_name = "UNKNOWN"
-	if current_ship_data and "display_name" in current_ship_data:
-		ship_name = current_ship_data.display_name.to_upper()
+	# Safe ship name handling with simplified fallback
+	var ship_name = current_ship_data.get("display_name", "UNKNOWN").to_upper() if current_ship_data else "UNKNOWN"
 	label.text = "BOARDING %s..." % ship_name
 	label.add_theme_font_size_override("font_size", 24)
 	label.add_theme_color_override("font_color", Color(0.3, 0.8, 1.0, 0.0))
