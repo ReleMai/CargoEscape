@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://bg_with_ambient_001"]
+
+[ext_resource type="Script" path="res://scripts/background.gd" id="1_background"]
+[ext_resource type="PackedScene" uid="uid://ambient_spawner_001" path="res://scenes/background/ambient_spawner.tscn" id="2_ambient"]
+
+[node name="Background" type="Node2D"]
+script = ExtResource("1_background")
+base_scroll_speed = 50.0
+
+[node name="BaseColor" type="ColorRect" parent="."]
+z_index = -100
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.05, 0.05, 0.15, 1)
+
+[node name="Layer1" type="Sprite2D" parent="."]
+z_index = -90
+position = Vector2(960, 540)
+
+[node name="Layer2" type="Sprite2D" parent="."]
+z_index = -80
+position = Vector2(960, 540)
+
+[node name="Layer3" type="Sprite2D" parent="."]
+z_index = -70
+position = Vector2(960, 540)
+
+[node name="AmbientSpawner" parent="." instance=ExtResource("2_ambient")]
+screen_size = Vector2(1280, 720)
+max_concurrent_objects = 12
+spawning_enabled = true
+static_object_interval = 12.0
+moving_object_interval = 7.0
+rare_event_interval = 40.0

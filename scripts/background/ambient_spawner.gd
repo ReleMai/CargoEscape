@@ -259,7 +259,7 @@ func _spawn_procedural_planet() -> void:
 
 
 func _create_planet_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(40, 120)
 	
 	# Planet colors
@@ -276,7 +276,7 @@ func _create_planet_sprite() -> Node2D:
 	# Store drawing info in metadata
 	visual.set_meta("planet_size", size)
 	visual.set_meta("planet_color", color)
-	visual.draw.connect(_draw_planet.bind(visual))
+	visual.set_draw_callback(_draw_planet.bind(visual))
 	
 	return visual
 
@@ -312,14 +312,14 @@ func _spawn_moon() -> void:
 
 
 func _create_moon_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(20, 50)
 	var gray := _rng.randf_range(0.5, 0.8)
 	var color := Color(gray, gray, gray)
 	
 	visual.set_meta("moon_size", size)
 	visual.set_meta("moon_color", color)
-	visual.draw.connect(_draw_moon.bind(visual))
+	visual.set_draw_callback(_draw_moon.bind(visual))
 	
 	return visual
 
@@ -352,11 +352,11 @@ func _spawn_space_station() -> void:
 
 
 func _create_station_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(30, 80)
 	
 	visual.set_meta("station_size", size)
-	visual.draw.connect(_draw_station.bind(visual))
+	visual.set_draw_callback(_draw_station.bind(visual))
 	
 	return visual
 
@@ -400,11 +400,11 @@ func _spawn_asteroid_cluster() -> void:
 
 
 func _create_asteroid_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(10, 25)
 	
 	visual.set_meta("asteroid_size", size)
-	visual.draw.connect(_draw_asteroid.bind(visual))
+	visual.set_draw_callback(_draw_asteroid.bind(visual))
 	
 	return visual
 
@@ -460,11 +460,11 @@ func _spawn_ship() -> void:
 
 
 func _create_ship_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var length := _rng.randf_range(30, 60)
 	
 	visual.set_meta("ship_length", length)
-	visual.draw.connect(_draw_ship.bind(visual))
+	visual.set_draw_callback(_draw_ship.bind(visual))
 	
 	return visual
 
@@ -503,11 +503,11 @@ func _spawn_comet() -> void:
 
 
 func _create_comet_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(15, 30)
 	
 	visual.set_meta("comet_size", size)
-	visual.draw.connect(_draw_comet.bind(visual))
+	visual.set_draw_callback(_draw_comet.bind(visual))
 	
 	return visual
 
@@ -539,11 +539,11 @@ func _spawn_satellite() -> void:
 
 
 func _create_satellite_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(15, 25)
 	
 	visual.set_meta("satellite_size", size)
-	visual.draw.connect(_draw_satellite.bind(visual))
+	visual.set_draw_callback(_draw_satellite.bind(visual))
 	
 	return visual
 
@@ -572,11 +572,11 @@ func _spawn_escape_pod() -> void:
 
 
 func _create_pod_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(12, 20)
 	
 	visual.set_meta("pod_size", size)
-	visual.draw.connect(_draw_pod.bind(visual))
+	visual.set_draw_callback(_draw_pod.bind(visual))
 	
 	return visual
 
@@ -643,10 +643,10 @@ func _spawn_explosion() -> void:
 
 
 func _create_explosion_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	visual.set_meta("explosion_radius", 0.0)
 	visual.set_meta("explosion_max", _rng.randf_range(40, 80))
-	visual.draw.connect(_draw_explosion.bind(visual))
+	visual.set_draw_callback(_draw_explosion.bind(visual))
 	
 	# Animate expansion
 	var tween := visual.create_tween()
@@ -704,9 +704,9 @@ func _spawn_jump_gate() -> void:
 
 
 func _create_jump_gate_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	visual.set_meta("gate_intensity", 0.0)
-	visual.draw.connect(_draw_jump_gate.bind(visual))
+	visual.set_draw_callback(_draw_jump_gate.bind(visual))
 	
 	# Flash animation
 	var tween := visual.create_tween()
@@ -768,9 +768,9 @@ func _spawn_solar_flare() -> void:
 
 
 func _create_solar_flare_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	visual.set_meta("flare_intensity", 0.0)
-	visual.draw.connect(_draw_solar_flare.bind(visual))
+	visual.set_draw_callback(_draw_solar_flare.bind(visual))
 	
 	# Pulse animation
 	var tween := visual.create_tween()
@@ -830,11 +830,11 @@ func _spawn_meteor_shower() -> void:
 
 
 func _create_meteor_sprite() -> Node2D:
-	var visual := Node2D.new()
+	var visual := ProceduralSprite.new()
 	var size := _rng.randf_range(5, 12)
 	
 	visual.set_meta("meteor_size", size)
-	visual.draw.connect(_draw_meteor.bind(visual))
+	visual.set_draw_callback(_draw_meteor.bind(visual))
 	
 	return visual
 
