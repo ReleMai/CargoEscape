@@ -19,6 +19,38 @@ A side-scrolling space escape game built in Godot 4.5
 | A / ← | Move Left |
 | D / → | Move Right |
 
+**Note:** All controls can be customized through the Accessibility menu!
+
+## Accessibility Features
+
+Cargo Escape includes comprehensive accessibility options to ensure everyone can enjoy the game:
+
+### Visual Accessibility
+- **Colorblind Modes**: Support for deuteranopia, protanopia, and tritanopia
+  - Simulates how colorblind players see the game
+  - Uses scientifically-based color transformation matrices
+- **High Contrast Mode**: Enhances UI visibility with increased contrast
+- **Text Size Options**: Choose from Normal, Large, or Extra Large text
+  - Applies to all in-game menus and HUD elements
+
+### Motion Accessibility
+- **Reduce Motion**: Disables animations and transitions
+  - Helpful for players sensitive to motion
+  - Improves performance on lower-end systems
+
+### Input Accessibility
+- **Custom Control Remapping**: Remap any game action to your preferred keys
+  - All movement, combat, and menu actions can be customized
+  - Settings persist across game sessions
+
+### Screen Reader Support
+- **Screen Reader Mode**: Announces important UI changes
+  - Currently outputs to console log
+  - Can be extended for OS-level screen reader integration
+
+### How to Access
+
+From the main menu, click **ACCESSIBILITY** to configure all settings. Your preferences are automatically saved and will persist across game sessions.
 ### Inventory (Loot Phase)
 | Key | Action |
 |-----|--------|
@@ -52,3 +84,4 @@ Every script file contains detailed comments explaining:
 - How to modify it
 
 Start by reading `scripts/player.gd` - it's the most commented!
+
