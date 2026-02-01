@@ -141,6 +141,10 @@ func _ready() -> void:
 		mission_button.pressed.connect(_on_new_mission_pressed)
 	if end_button:
 		end_button.pressed.connect(_on_end_run_pressed)
+	
+	# Add sell button to tutorial group
+	if sell_button:
+		sell_button.name = "SellButton"
 
 
 # ==============================================================================
@@ -164,6 +168,9 @@ func show_station(inventory: GridInventory, stats: Dictionary = {}) -> void:
 	# Show with animation
 	visible = true
 	_animate_show()
+	
+	# Start selling tutorial step if needed
+	_check_and_start_selling_tutorial()
 
 
 ## Hide the station UI
@@ -247,6 +254,9 @@ func _on_sell_pressed() -> void:
 		# Nothing to sell
 		return
 	
+	# Notify tutorial
+	_on_item_sold()
+	
 	# Add to total credits
 	total_credits += sell_value
 	
@@ -311,3 +321,31 @@ func _animate_hide() -> void:
 		tween.tween_property(station_panel, "modulate:a", 0.0, 0.2)
 		tween.tween_property(station_panel, "scale", Vector2(0.8, 0.8), 0.2)
 		tween.chain().tween_callback(func(): visible = false)
+
+
+# ==============================================================================
+# TUTORIAL INTEGRATION
+# ==============================================================================
+
+func _check_and_start_selling_tutorial() -> void:
+	# Wait for animation
+	await get_tree().create_timer(0.5).timeout
+	
+	# Check if TutorialManager exists
+	if not has_node("/root/TutorialManager"):
+		return
+	
+	var tutorial_manager = get_node("/root/TutorialManager")
+	
+	# Check if we need to show selling tutorial
+	if tutorial_manager.is_tutorial_active():
+		# Start selling step
+		tutorial_manager.start_step(tutorial_manager.TutorialStep.SELLING)
+
+
+func _on_item_sold() -> void:
+	# Notify tutorial that item was sold
+	if has_node("/root/TutorialManager"):
+		var tutorial_manager = get_node("/root/TutorialManager")
+		tutorial_manager.on_player_action("item_sold")
+
