@@ -436,6 +436,9 @@ func _interact_with_container(container: Node2D) -> void:
 		if container.current_state == ShipContainer.ContainerState.CLOSED:
 			container.set_state(ShipContainer.ContainerState.OPEN)
 			container.emit_signal("container_opened")
+			
+			# Add subtle container open effect
+			_create_container_open_effect(container)
 		
 		# Open loot menu if container has items
 		if not container.item_data_list.is_empty():
@@ -537,7 +540,21 @@ func _toggle_inventory() -> void:
 
 func _on_player_reached_exit(_exit: Node2D) -> void:
 	if escape_prompt:
+		# Animate the prompt appearing
 		escape_prompt.visible = true
+		escape_prompt.modulate.a = 0.0
+		escape_prompt.scale = Vector2(0.8, 0.8)
+		
+		var tween = create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(escape_prompt, "modulate:a", 1.0, 0.2)
+		tween.tween_property(escape_prompt, "scale", Vector2.ONE, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		
+		# Subtle pulse to draw attention
+		tween.set_parallel(false)
+		var pulse_tween = create_tween().set_loops()
+		pulse_tween.tween_property(escape_prompt, "scale", Vector2(1.05, 1.05), 0.5).set_ease(Tween.EASE_IN_OUT)
+		pulse_tween.tween_property(escape_prompt, "scale", Vector2.ONE, 0.5).set_ease(Tween.EASE_IN_OUT)
 
 
 func _trigger_escape() -> void:
@@ -561,6 +578,12 @@ func _end_boarding(success: bool) -> void:
 	
 	if player:
 		player.set_movement_enabled(false)
+	
+	# Hide escape prompt with animation if visible
+	if escape_prompt and escape_prompt.visible:
+		var hide_tween = create_tween()
+		hide_tween.tween_property(escape_prompt, "modulate:a", 0.0, 0.2)
+		hide_tween.tween_callback(func(): escape_prompt.visible = false)
 	
 	emit_signal("boarding_ended", success, total_loot_value)
 	
@@ -623,23 +646,75 @@ func _show_results(success: bool) -> void:
 
 
 func _play_escape_success_effects() -> void:
-	# Camera shake as you board
+	# Initial camera shake as you reach exit
 	shake_camera(8.0)
 	
-	# Flash of green/success
+	# Bright flash of success with cyan/green
 	var flash_layer = CanvasLayer.new()
 	flash_layer.layer = 90
 	add_child(flash_layer)
 	
 	var flash = ColorRect.new()
-	flash.color = Color(0.2, 0.8, 0.4, 0.4)
+	flash.color = Color(0.2, 0.9, 0.6, 0.5)  # Brighter success flash
 	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	flash_layer.add_child(flash)
 	
 	var tween = create_tween()
-	tween.tween_property(flash, "color:a", 0.0, 0.4)
+	tween.tween_property(flash, "color:a", 0.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(flash_layer.queue_free)
+	
+	# Success text overlay
+	_create_escape_text_overlay()
+	
+	# Player fade out effect
+	if player:
+		var player_tween = create_tween()
+		player_tween.set_delay(0.2)
+		player_tween.tween_property(player, "modulate:a", 0.0, 0.3)
+
+
+## Creates "ESCAPE SUCCESSFUL" text overlay
+func _create_escape_text_overlay() -> void:
+	var text_layer = CanvasLayer.new()
+	text_layer.name = "EscapeText"
+	text_layer.layer = 91
+	add_child(text_layer)
+	
+	var label = Label.new()
+	label.name = "EscapeLabel"
+	label.text = "ESCAPE SUCCESSFUL"
+	label.add_theme_font_size_override("font_size", 32)
+	label.add_theme_color_override("font_color", Color(0.2, 0.9, 0.6, 0.0))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.set_anchors_preset(Control.PRESET_CENTER)
+	text_layer.add_child(label)
+	
+	# Fade in quickly
+	var tween = create_tween()
+	tween.tween_property(label, "theme_override_colors/font_color:a", 1.0, 0.2)
+	# Stay visible briefly
+	tween.tween_interval(0.2)
+	# Fade out
+	tween.tween_property(label, "theme_override_colors/font_color:a", 0.0, 0.3)
+	tween.tween_callback(text_layer.queue_free)
+
+
+## Creates a subtle visual effect when a container is opened
+func _create_container_open_effect(container: Node2D) -> void:
+	if not container:
+		return
+	
+	# Small camera shake
+	shake_camera(1.5)
+	
+	# Brief highlight flash on container
+	var original_modulate = container.modulate
+	container.modulate = Color(1.2, 1.2, 1.0, 1.0)  # Slight yellow tint
+	
+	var tween = create_tween()
+	tween.tween_property(container, "modulate", original_modulate, 0.2).set_ease(Tween.EASE_OUT)
 
 
 ## Creates a smooth fade transition to the undocking scene
@@ -654,19 +729,54 @@ func _fade_to_undocking() -> void:
 	fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fade_layer.add_child(fade_rect)
 	
-	# Quick zoom out effect on camera
+	# Add scan line effect during transition
+	_create_exit_scan_effect(fade_layer)
+	
+	# Smooth zoom out effect on camera for cinematic transition
 	if camera:
 		var zoom_tween = create_tween()
-		zoom_tween.tween_property(camera, "zoom", Vector2(0.7, 0.7), 0.5).set_ease(Tween.EASE_IN)
+		zoom_tween.tween_property(camera, "zoom", Vector2(0.5, 0.5), 0.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	
-	# Create fade tween
+	# Fade UI elements out
+	_fade_ui_elements()
+	
+	# Create fade tween with improved easing
 	var tween = create_tween()
-	tween.tween_property(fade_rect, "color:a", 1.0, 0.5).set_ease(Tween.EASE_IN)
+	tween.set_delay(0.1)  # Small delay for better flow
+	tween.tween_property(fade_rect, "color:a", 1.0, 0.6).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	
 	await tween.finished
 	
 	# Change scene - the undocking scene will fade in
 	get_tree().change_scene_to_file("res://scenes/undocking/undocking_scene.tscn")
+
+
+## Creates exit scan line effect
+func _create_exit_scan_effect(parent_layer: CanvasLayer) -> void:
+	var scan_line = ColorRect.new()
+	scan_line.name = "ExitScan"
+	scan_line.color = Color(0.2, 0.9, 0.6, 0.5)  # Green scan matching success
+	scan_line.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	scan_line.size.y = 4
+	scan_line.position.y = 0
+	parent_layer.add_child(scan_line)
+	
+	var screen_height = get_viewport_rect().size.y
+	
+	# Sweep down faster for snappy exit
+	var tween = create_tween()
+	tween.tween_property(scan_line, "position:y", screen_height, 0.5).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(scan_line, "color:a", 0.0, 0.5).set_ease(Tween.EASE_IN)
+
+
+## Fades out UI elements smoothly
+func _fade_ui_elements() -> void:
+	var ui_elements = [timer_label, loot_value_label, ship_tier_label, inventory_panel]
+	
+	for element in ui_elements:
+		if element and element.visible:
+			var tween = create_tween()
+			tween.tween_property(element, "modulate:a", 0.0, 0.3)
 
 
 # ==============================================================================
