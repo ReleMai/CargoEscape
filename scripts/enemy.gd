@@ -425,7 +425,7 @@ func check_cleanup() -> void:
 
 func destroy() -> void:
 	emit_signal("destroyed")
-	queue_free()
+	ObjectPool.release(self)
 
 
 ## Take damage from projectiles or other sources
@@ -521,3 +521,34 @@ func set_weighted_random_pattern() -> void:
 ## Set whether to use world scroll (horizontal movement handled externally)
 func set_use_world_scroll(enabled: bool) -> void:
 	use_world_scroll = enabled
+
+
+## Reset the enemy for object pooling
+func reset() -> void:
+	# Reset health
+	current_health = max_health
+	
+	# Reset state
+	time_alive = 0.0
+	zigzag_timer = randf() * zigzag_interval
+	zigzag_direction = 1.0 if randf() > 0.5 else -1.0
+	
+	# Reset velocity
+	current_velocity = Vector2.ZERO
+	
+	# Reset visual
+	modulate = Color.WHITE
+	rotation = randf() * TAU
+	
+	# Randomize rotation direction
+	if randf() > 0.5:
+		rotation_speed = -abs(rotation_speed)
+	else:
+		rotation_speed = abs(rotation_speed)
+	
+	# Update health bar
+	if health_bar and health_bar.has_method("update_health"):
+		health_bar.update_health(current_health)
+	
+	# Re-initialize pattern
+	initialize_pattern()

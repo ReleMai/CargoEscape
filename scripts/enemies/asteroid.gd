@@ -140,7 +140,7 @@ func _process(delta: float) -> void:
 	# Movement is handled by main.gd scroll system
 	# We just need to handle cleanup
 	if position.x < -radius * 2:
-		queue_free()
+		ObjectPool.release(self)
 
 
 func _draw() -> void:
@@ -279,7 +279,7 @@ func _die() -> void:
 	elif asteroid_size == AsteroidSize.MEDIUM:
 		_spawn_debris(2, AsteroidSize.SMALL)
 	
-	queue_free()
+	ObjectPool.release(self)
 
 
 func _spawn_debris(count: int, size: AsteroidSize) -> void:
@@ -287,17 +287,19 @@ func _spawn_debris(count: int, size: AsteroidSize) -> void:
 	if not parent:
 		return
 	
+	# Use asteroid scene for pooling
+	var asteroid_scene := preload("res://scenes/enemies/asteroid.tscn")
+	
 	for i in count:
-		var debris := Asteroid.new()
+		var debris: Asteroid = ObjectPool.acquire(asteroid_scene)
 		debris.asteroid_size = size
 		debris.position = position + Vector2(randf_range(-20, 20), randf_range(-20, 20))
 		
-		# Add collision shape node
-		var col_shape := CollisionShape2D.new()
-		col_shape.name = "CollisionShape2D"
-		debris.add_child(col_shape)
-		
-		parent.call_deferred("add_child", debris)
+		# Re-parent to scene if needed
+		if debris.get_parent() != parent:
+			if debris.get_parent() != null:
+				debris.get_parent().remove_child(debris)
+			parent.call_deferred("add_child", debris)
 
 
 # ==============================================================================
@@ -324,3 +326,33 @@ func set_size(size: AsteroidSize) -> void:
 		_configure_by_size()
 		_generate_shape()
 		queue_redraw()
+
+
+## Reset the asteroid for object pooling
+func reset() -> void:
+	# Reset health based on current size
+	_configure_by_size()
+	
+	# Regenerate shape with new seed
+	shape_seed = randi()
+	_generate_shape()
+	
+	# Reset visual
+	rotation = randf() * TAU
+	modulate = Color.WHITE
+	
+	# Randomize rotation direction
+	if randf() > 0.5:
+		rotation_speed = -abs(rotation_speed)
+	else:
+		rotation_speed = abs(rotation_speed)
+	
+	# Recalculate speed
+	actual_speed = base_speed + randf_range(-speed_variation, speed_variation)
+	
+	# Reconnect signal if needed
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
+	
+	# Request redraw
+	queue_redraw()
