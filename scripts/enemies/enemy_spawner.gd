@@ -73,6 +73,21 @@ func _ready() -> void:
 	spawn_timer.one_shot = false
 	spawn_timer.timeout.connect(_on_spawn_timeout)
 	add_child(spawn_timer)
+	
+	# Initialize object pools
+	_initialize_pools()
+
+
+func _initialize_pools() -> void:
+	# Create pool for asteroids
+	var asteroid_scene := preload("res://scenes/enemies/asteroid.tscn")
+	ObjectPool.create_pool(asteroid_scene, 30)
+	
+	# Create pool for regular enemies
+	var enemy_scene := preload("res://scenes/enemy.tscn")
+	ObjectPool.create_pool(enemy_scene, 20)
+	
+	print("[EnemySpawner] Object pools initialized")
 
 
 func _process(delta: float) -> void:
@@ -137,7 +152,8 @@ func _spawn_single() -> void:
 	var enemy := _create_enemy()
 	if enemy:
 		_position_enemy(enemy)
-		enemy_container.add_child(enemy)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(enemy, enemy_container)
 		enemy_spawned.emit(enemy)
 
 
@@ -155,7 +171,9 @@ func _spawn_wave() -> void:
 			# Position in a line formation
 			var y_pos := spawn_margin + spacing * (i + 1)
 			enemy.position = Vector2(screen_size.x + 50 + (i * 30), y_pos)
-			enemy_container.add_child(enemy)
+			
+			# Reparent to container
+			ObjectPool.reparent_pooled_object(enemy, enemy_container)
 			enemies.append(enemy)
 	
 	wave_spawned.emit(enemies)
@@ -168,14 +186,15 @@ func _create_enemy() -> Node2D:
 		_:
 			# Default to primary enemy scene
 			if station_data.primary_enemy_scene:
-				return station_data.primary_enemy_scene.instantiate()
+				# Try to use pool if available
+				return ObjectPool.acquire(station_data.primary_enemy_scene)
 	
 	return null
 
 
 func _create_asteroid() -> Node2D:
 	var asteroid_scene := preload("res://scenes/enemies/asteroid.tscn")
-	var asteroid: Asteroid = asteroid_scene.instantiate()
+	var asteroid: Asteroid = ObjectPool.acquire(asteroid_scene)
 	
 	# Set random size based on weights
 	var size_index := station_data.get_random_asteroid_size()
@@ -220,7 +239,7 @@ func spawn_asteroid_cluster(center: Vector2, count: int, spread: float) -> void:
 	var asteroid_scene := preload("res://scenes/enemies/asteroid.tscn")
 	
 	for i in count:
-		var asteroid: Asteroid = asteroid_scene.instantiate()
+		var asteroid: Asteroid = ObjectPool.acquire(asteroid_scene)
 		asteroid.asteroid_size = Asteroid.AsteroidSize.SMALL
 		
 		var offset := Vector2(
@@ -229,7 +248,8 @@ func spawn_asteroid_cluster(center: Vector2, count: int, spread: float) -> void:
 		)
 		asteroid.position = center + offset
 		
-		enemy_container.add_child(asteroid)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(asteroid, enemy_container)
 
 
 ## Spawn enemies in a V formation
@@ -238,11 +258,12 @@ func spawn_v_formation(tip_position: Vector2, count: int, spacing: float) -> voi
 		return
 	
 	for i in count:
-		var enemy := station_data.primary_enemy_scene.instantiate()
+		var enemy := ObjectPool.acquire(station_data.primary_enemy_scene)
 		var row := i / 2
 		var side := 1 if i % 2 == 0 else -1
 		
 		var offset := Vector2(row * spacing, row * spacing * side * 0.5)
 		enemy.position = tip_position + offset
 		
-		enemy_container.add_child(enemy)
+		# Reparent to container
+		ObjectPool.reparent_pooled_object(enemy, enemy_container)

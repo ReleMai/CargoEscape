@@ -63,14 +63,17 @@ func _process(delta: float) -> void:
 	# Track lifetime
 	time_alive += delta
 	if time_alive >= lifetime:
-		queue_free()
+		ObjectPool.release(self)
+		return
 	
 	# Cleanup if off screen
 	var screen_size = get_viewport_rect().size
 	if position.x < -50 or position.x > screen_size.x + 50:
-		queue_free()
+		ObjectPool.release(self)
+		return
 	if position.y < -50 or position.y > screen_size.y + 50:
-		queue_free()
+		ObjectPool.release(self)
+		return
 
 
 # ==============================================================================
@@ -98,8 +101,8 @@ func _hit_enemy(enemy: Node2D) -> void:
 	
 	hit_target.emit(enemy)
 	
-	# Destroy laser on hit
-	queue_free()
+	# Return laser to pool on hit
+	ObjectPool.release(self)
 
 
 # ==============================================================================
@@ -116,3 +119,14 @@ func set_direction(dir: Vector2) -> void:
 ## Set damage (for upgrades)
 func set_damage(new_damage: float) -> void:
 	damage = new_damage
+
+
+## Reset the laser for object pooling
+func reset() -> void:
+	# Reset state
+	time_alive = 0.0
+	direction = Vector2.RIGHT
+	
+	# Reset visual
+	rotation = 0
+	modulate = Color.WHITE
