@@ -68,6 +68,12 @@ signal drag_ended(item: LootItem, drop_position: Vector2)
 ## Emitted when user requests item destruction (right-click)
 signal destroy_requested(item: LootItem)
 
+## Emitted when item search is completed (for containers)
+signal search_completed(item: LootItem)
+
+## Emitted when item search is started (for containers)
+signal search_started(item: LootItem)
+
 
 # ==============================================================================
 # EXPORTS
@@ -130,6 +136,12 @@ var original_parent: Node = null
 ## Original scale (before drag scaling)
 var original_scale: Vector2 = Vector2.ONE
 
+## Search state
+var search_time: float = 0.0
+var search_duration: float = 1.5  # Default search time
+var is_being_searched: bool = false
+var pulse_time: float = 0.0
+
 
 # ==============================================================================
 # NODE REFERENCES (created dynamically)
@@ -140,6 +152,7 @@ var silhouette: ColorRect = null
 var rarity_glow: ColorRect = null
 var value_label: Label = null
 var question_mark: Label = null
+var search_progress_overlay: ColorRect = null
 
 
 # ==============================================================================
@@ -159,10 +172,20 @@ func _ready() -> void:
 	set_state(ItemState.HIDDEN)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	# Follow mouse while dragging
 	if is_dragging:
 		global_position = get_global_mouse_position() + drag_offset
+	
+	# Update search progress
+	if is_being_searched and current_state == ItemState.HIDDEN:
+		search_time += delta
+		pulse_time += delta
+		_update_search_progress_visual()
+		if search_time >= search_duration:
+			_complete_search()
+	else:
+		pulse_time = 0.0
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -172,9 +195,12 @@ func _gui_input(event: InputEvent) -> void:
 	
 	var mouse_event := event as InputEventMouseButton
 	
-	# Left click - drag handling
+	# Left click - drag handling for revealed items, search for hidden items
 	if mouse_event.button_index == MOUSE_BUTTON_LEFT:
-		_handle_left_click(mouse_event)
+		if current_state == ItemState.HIDDEN:
+			_handle_search_click(mouse_event)
+		else:
+			_handle_left_click(mouse_event)
 	
 	# Right click - destroy request (only in inventory)
 	elif mouse_event.button_index == MOUSE_BUTTON_RIGHT:
@@ -265,6 +291,9 @@ func _create_silhouette(w: float, h: float) -> void:
 	question_mark.size = Vector2(w, h)
 	question_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	silhouette.add_child(question_mark)
+	
+	# Create search progress overlay
+	_create_search_progress_overlay(w, h)
 
 
 ## Create the item visual using ItemVisuals system
@@ -299,6 +328,32 @@ func _create_value_label(_w: float, h: float) -> void:
 	value_label.visible = false
 	value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(value_label)
+
+
+## Create the search progress overlay (simpler approach using ColorRect)
+func _create_search_progress_overlay(w: float, h: float) -> void:
+	search_progress_overlay = ColorRect.new()
+	search_progress_overlay.name = "SearchProgressOverlay"
+	search_progress_overlay.position = Vector2(0, h - 4)
+	search_progress_overlay.size = Vector2(0, 4)
+	search_progress_overlay.color = Color(0.4, 0.8, 1.0, 0.9)
+	search_progress_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	search_progress_overlay.visible = false
+	silhouette.add_child(search_progress_overlay)
+
+
+## Update search progress visual
+func _update_search_progress_visual() -> void:
+	if search_progress_overlay:
+		search_progress_overlay.visible = is_being_searched
+		if is_being_searched:
+			var progress = get_search_progress()
+			var max_width = silhouette.size.x if silhouette else size.x
+			search_progress_overlay.size.x = progress * max_width
+			
+			# Add pulsing effect to the overlay
+			var pulse = (sin(pulse_time * 5.0) + 1.0) / 2.0
+			search_progress_overlay.color.a = 0.7 + pulse * 0.2
 
 
 # ==============================================================================
@@ -352,10 +407,67 @@ func _handle_left_click(event: InputEventMouseButton) -> void:
 			_end_drag()
 
 
+## Handle search click (for hidden items)
+func _handle_search_click(event: InputEventMouseButton) -> void:
+	if event.pressed:
+		# Start searching
+		start_search()
+	else:
+		# Cancel search on release
+		cancel_search()
+
+
 ## Handle right mouse button
 func _handle_right_click(event: InputEventMouseButton) -> void:
 	if event.pressed and current_state == ItemState.IN_INVENTORY:
 		destroy_requested.emit(self)
+
+
+# ==============================================================================
+# SEARCH SYSTEM
+# ==============================================================================
+
+## Start searching this item (for hidden items)
+func start_search() -> void:
+	if current_state != ItemState.HIDDEN or is_being_searched:
+		return
+	
+	is_being_searched = true
+	search_time = 0.0
+	search_started.emit(self)
+
+
+## Cancel searching this item
+func cancel_search() -> void:
+	if not is_being_searched:
+		return
+	
+	is_being_searched = false
+	search_time = 0.0
+
+
+## Complete the search and reveal the item
+func _complete_search() -> void:
+	is_being_searched = false
+	set_state(ItemState.REVEALED)
+	search_completed.emit(self)
+
+
+## Check if item is currently being searched
+func is_searching() -> bool:
+	return is_being_searched
+
+
+## Get search progress (0.0 to 1.0)
+func get_search_progress() -> float:
+	if search_duration <= 0:
+		return 0.0
+	return clampf(search_time / search_duration, 0.0, 1.0)
+
+
+## Check if item is revealed
+func is_revealed() -> bool:
+	return current_state in [ItemState.REVEALED, ItemState.IN_INVENTORY]
 
 
 # ==============================================================================
