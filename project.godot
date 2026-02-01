@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameManager="*res://scripts/game_manager.gd"
+ObjectPool="*res://scripts/object_pool.gd"
 SaveManager="*res://scripts/core/save_manager.gd"
 TutorialManager="*res://scripts/core/tutorial_manager.gd"
 AchievementManager="*res://scripts/achievement_manager.gd"
