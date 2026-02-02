@@ -65,6 +65,9 @@ class ShipData:
 	var interior_color: Color = Color(0.2, 0.2, 0.22)
 	var lighting_tint: Color = Color.WHITE
 	
+	# Hull variants for visual variety
+	var hull_variants: Array = []  # Array of {hull_color, accent_color, variant_name}
+	
 	# Layout scene path (optional - for custom layouts)
 	var layout_scene: String = ""
 	
@@ -75,6 +78,16 @@ class ShipData:
 		tier = p_tier
 		display_name = p_name
 		description = p_desc
+	
+	## Get a random hull variant or return base colors if no variants
+	func get_random_variant() -> Dictionary:
+		if hull_variants.is_empty():
+			return {
+				"hull_color": hull_color,
+				"accent_color": accent_color,
+				"variant_name": "Standard"
+			}
+		return hull_variants[randi() % hull_variants.size()]
 
 
 # ==============================================================================
@@ -117,6 +130,24 @@ static func _define_ships() -> void:
 	shuttle.interior_color = Color(0.25, 0.22, 0.2)
 	shuttle.lighting_tint = Color(1.0, 0.95, 0.85)  # Warm
 	shuttle.danger_level = 1
+	# Hull variants for Tier 1
+	shuttle.hull_variants = [
+		{
+			"hull_color": Color(0.55, 0.42, 0.32),  # Rusty freighter
+			"accent_color": Color(0.75, 0.65, 0.25),
+			"variant_name": "Rusty Freighter"
+		},
+		{
+			"hull_color": Color(0.65, 0.65, 0.68),  # Clean transport
+			"accent_color": Color(0.8, 0.8, 0.85),
+			"variant_name": "Clean Transport"
+		},
+		{
+			"hull_color": Color(0.45, 0.38, 0.35),  # Mining vessel
+			"accent_color": Color(0.7, 0.5, 0.2),
+			"variant_name": "Mining Vessel"
+		}
+	]
 	_ships[Tier.CARGO_SHUTTLE] = shuttle
 	
 	# -------------------------------------------------------------------------
@@ -143,6 +174,24 @@ static func _define_ships() -> void:
 	hauler.interior_color = Color(0.22, 0.24, 0.28)
 	hauler.lighting_tint = Color(0.95, 0.95, 1.0)  # Neutral
 	hauler.danger_level = 2
+	# Hull variants for Tier 2
+	hauler.hull_variants = [
+		{
+			"hull_color": Color(0.45, 0.42, 0.38),  # Bulk carrier
+			"accent_color": Color(0.65, 0.6, 0.5),
+			"variant_name": "Bulk Carrier"
+		},
+		{
+			"hull_color": Color(0.35, 0.4, 0.5),  # Container ship
+			"accent_color": Color(0.5, 0.7, 0.9),
+			"variant_name": "Container Ship"
+		},
+		{
+			"hull_color": Color(0.42, 0.38, 0.35),  # Tanker
+			"accent_color": Color(0.7, 0.5, 0.3),
+			"variant_name": "Tanker"
+		}
+	]
 	_ships[Tier.FREIGHT_HAULER] = hauler
 	
 	# -------------------------------------------------------------------------
@@ -169,6 +218,24 @@ static func _define_ships() -> void:
 	corporate.interior_color = Color(0.28, 0.28, 0.3)
 	corporate.lighting_tint = Color(1.0, 1.0, 1.0)  # Bright
 	corporate.danger_level = 3
+	# Hull variants for Tier 3
+	corporate.hull_variants = [
+		{
+			"hull_color": Color(0.95, 0.95, 0.97),  # Luxury yacht
+			"accent_color": Color(0.85, 0.7, 0.3),
+			"variant_name": "Luxury Yacht"
+		},
+		{
+			"hull_color": Color(0.75, 0.75, 0.8),  # Executive shuttle
+			"accent_color": Color(0.6, 0.65, 0.75),
+			"variant_name": "Executive Shuttle"
+		},
+		{
+			"hull_color": Color(0.85, 0.85, 0.9),  # VIP transport
+			"accent_color": Color(0.7, 0.6, 0.9),
+			"variant_name": "VIP Transport"
+		}
+	]
 	_ships[Tier.CORPORATE_TRANSPORT] = corporate
 	
 	# -------------------------------------------------------------------------
@@ -195,6 +262,24 @@ static func _define_ships() -> void:
 	frigate.interior_color = Color(0.18, 0.18, 0.2)
 	frigate.lighting_tint = Color(1.0, 0.85, 0.85)  # Red tint
 	frigate.danger_level = 4
+	# Hull variants for Tier 4
+	frigate.hull_variants = [
+		{
+			"hull_color": Color(0.28, 0.3, 0.35),  # Patrol vessel
+			"accent_color": Color(0.6, 0.7, 0.8),
+			"variant_name": "Patrol Vessel"
+		},
+		{
+			"hull_color": Color(0.25, 0.27, 0.3),  # Escort ship
+			"accent_color": Color(0.8, 0.2, 0.15),
+			"variant_name": "Escort Ship"
+		},
+		{
+			"hull_color": Color(0.22, 0.24, 0.28),  # Assault frigate
+			"accent_color": Color(0.9, 0.5, 0.1),
+			"variant_name": "Assault Frigate"
+		}
+	]
 	_ships[Tier.MILITARY_FRIGATE] = frigate
 	
 	# -------------------------------------------------------------------------
@@ -221,6 +306,24 @@ static func _define_ships() -> void:
 	blackops.interior_color = Color(0.1, 0.1, 0.12)
 	blackops.lighting_tint = Color(0.8, 0.9, 1.0)  # Blue tint
 	blackops.danger_level = 5
+	# Hull variants for Tier 5
+	blackops.hull_variants = [
+		{
+			"hull_color": Color(0.08, 0.08, 0.1),  # Stealth infiltrator
+			"accent_color": Color(0.0, 0.85, 0.9),
+			"variant_name": "Stealth Infiltrator"
+		},
+		{
+			"hull_color": Color(0.12, 0.1, 0.15),  # Research vessel
+			"accent_color": Color(0.6, 0.4, 0.9),
+			"variant_name": "Research Vessel"
+		},
+		{
+			"hull_color": Color(0.05, 0.06, 0.08),  # Ghost ship
+			"accent_color": Color(0.3, 0.9, 0.5),
+			"variant_name": "Ghost Ship"
+		}
+	]
 	_ships[Tier.BLACK_OPS_VESSEL] = blackops
 
 
