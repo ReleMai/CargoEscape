@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ShipModule" load_steps=2 format=3 uid="uid://missile_launcher_module"]
+
+[ext_resource type="Script" path="res://scripts/data/ship_module.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+module_id = "missile_launcher"
+module_name = "Missile Launcher"
+description = "Guided missile system with target lock capability. Fires slower but projectiles track enemies. High damage on impact."
+slot_type = 1
+rarity = 2
+base_value = 600
+primary_color = Color(0.7, 0.7, 0.2, 1)
+secondary_color = Color(0.5, 0.5, 0.1, 1)
+glow_color = Color(1.0, 1.0, 0.3, 0.85)
+visual_scale = 1.2
+damage = 45.0
+fire_rate = 1.5
+projectile_speed = 500.0
+energy_cost = 10.0
+thrust_bonus = 0.0
+speed_bonus = 0.0
+drag_reduction = 0.0
+shield_bonus = 0.0
+scanner_bonus = 0.0
+cargo_bonus = 0
