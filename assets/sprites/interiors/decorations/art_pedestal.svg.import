@@ -2,13 +2,13 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://$(uuidgen | tr -d '-' | head -c 16)"
-path="res://.godot/imported/${file}-$(uuidgen | tr -d '-').ctex"
+uid="uid://dv8z9n3o6qrst"
+path="res://.godot/imported/art_pedestal.svg-b2c3d4e5f6g7h8i9.ctex"
 
 [deps]
 
-source_file="res://assets/sprites/interiors/decorations/${file}"
-dest_files=["res://.godot/imported/${file}-$(uuidgen | tr -d '-').ctex"]
+source_file="res://assets/sprites/interiors/decorations/art_pedestal.svg"
+dest_files=["res://.godot/imported/art_pedestal.svg-b2c3d4e5f6g7h8i9.ctex"]
 
 [params]
 

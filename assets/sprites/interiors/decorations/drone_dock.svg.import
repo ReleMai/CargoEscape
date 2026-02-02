@@ -2,13 +2,13 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://$(uuidgen | tr -d '-' | head -c 16)"
-path="res://.godot/imported/${file}-$(uuidgen | tr -d '-').ctex"
+uid="uid://fx0b1p5q8stuv"
+path="res://.godot/imported/drone_dock.svg-d4e5f6g7h8i9j0k1.ctex"
 
 [deps]
 
-source_file="res://assets/sprites/interiors/decorations/${file}"
-dest_files=["res://.godot/imported/${file}-$(uuidgen | tr -d '-').ctex"]
+source_file="res://assets/sprites/interiors/decorations/drone_dock.svg"
+dest_files=["res://.godot/imported/drone_dock.svg-d4e5f6g7h8i9j0k1.ctex"]
 
 [params]
 

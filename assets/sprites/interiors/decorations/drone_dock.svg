@@ -24,7 +24,7 @@
   
   <!-- Drone (simple quadcopter design) -->
   <ellipse cx="30" cy="12" rx="8" ry="4" fill="#505560"/>
-  <circle cx="30" cy="12" r="3" fill="#60708" opacity="0.8"/>
+  <circle cx="30" cy="12" r="3" fill="#607080" opacity="0.8"/>
   
   <!-- Propeller arms -->
   <rect x="22" y="10" width="16" height="1" fill="#6a7580"/>

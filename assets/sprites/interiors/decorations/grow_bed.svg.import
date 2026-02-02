@@ -2,13 +2,13 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://$(uuidgen | tr -d '-' | head -c 16)"
-path="res://.godot/imported/${file}-$(uuidgen | tr -d '-').ctex"
+uid="uid://gy1c2q6r9tuvw"
+path="res://.godot/imported/grow_bed.svg-e5f6g7h8i9j0k1l2.ctex"
 
 [deps]
 
-source_file="res://assets/sprites/interiors/decorations/${file}"
-dest_files=["res://.godot/imported/${file}-$(uuidgen | tr -d '-').ctex"]
+source_file="res://assets/sprites/interiors/decorations/grow_bed.svg"
+dest_files=["res://.godot/imported/grow_bed.svg-e5f6g7h8i9j0k1l2.ctex"]
 
 [params]
 
