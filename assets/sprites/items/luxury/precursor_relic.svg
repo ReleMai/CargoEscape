@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Precursor Relic - Ancient alien technology -->
+  <defs>
+    <linearGradient id="relicGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37"/>
+      <stop offset="50%" style="stop-color:#b8860b"/>
+      <stop offset="100%" style="stop-color:#8b6914"/>
+    </linearGradient>
+    <radialGradient id="ancientGlow">
+      <stop offset="0%" style="stop-color:#ffdd66;stop-opacity:0.7"/>
+      <stop offset="100%" style="stop-color:#d4af37;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Central disc -->
+  <circle cx="32" cy="32" r="20" fill="url(#relicGrad)" stroke="#6b5a0f" stroke-width="2"/>
+  
+  <!-- Ancient glow -->
+  <circle cx="32" cy="32" r="16" fill="url(#ancientGlow)" opacity="0.5"/>
+  
+  <!-- Inner ring with alien symbols -->
+  <circle cx="32" cy="32" r="14" fill="none" stroke="#9d7e1f" stroke-width="2"/>
+  
+  <!-- Alien symbols around edge -->
+  <path d="M 32 14 L 34 18 L 30 18 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 46 22 L 48 26 L 42 24 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 50 32 L 48 36 L 46 30 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 46 42 L 42 44 L 44 38 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 32 50 L 30 46 L 34 46 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 18 42 L 16 38 L 22 40 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 14 32 L 18 30 L 16 36 Z" fill="#6b5a0f" opacity="0.8"/>
+  <path d="M 18 22 L 22 24 L 16 26 Z" fill="#6b5a0f" opacity="0.8"/>
+  
+  <!-- Central artifact core -->
+  <circle cx="32" cy="32" r="6" fill="#2a4a6a" stroke="#4a6a8a" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="4" fill="#66aacc" opacity="0.8"/>
+  
+  <!-- Mysterious energy patterns -->
+  <circle cx="32" cy="32" r="2" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Rotating energy lines -->
+  <path d="M 32 18 L 32 22" stroke="#ffdd66" stroke-width="1.5" opacity="0.6"/>
+  <path d="M 46 32 L 42 32" stroke="#ffdd66" stroke-width="1.5" opacity="0.6"/>
+  <path d="M 32 46 L 32 42" stroke="#ffdd66" stroke-width="1.5" opacity="0.6"/>
+  <path d="M 18 32 L 22 32" stroke="#ffdd66" stroke-width="1.5" opacity="0.6"/>
+  
+  <!-- Decorative ancient patterns -->
+  <circle cx="26" cy="26" r="1.5" fill="#9d7e1f" opacity="0.7"/>
+  <circle cx="38" cy="26" r="1.5" fill="#9d7e1f" opacity="0.7"/>
+  <circle cx="26" cy="38" r="1.5" fill="#9d7e1f" opacity="0.7"/>
+  <circle cx="38" cy="38" r="1.5" fill="#9d7e1f" opacity="0.7"/>
+  
+  <!-- Weathering and age marks -->
+  <path d="M 24 16 Q 26 18 24 20" stroke="#8b6914" stroke-width="0.8" fill="none" opacity="0.5"/>
+  <path d="M 40 44 Q 42 46 40 48" stroke="#8b6914" stroke-width="0.8" fill="none" opacity="0.5"/>
+  
+  <!-- Strange inscriptions -->
+  <text x="32" y="34" font-family="serif" font-size="8" fill="#2a4a6a" text-anchor="middle" opacity="0.6">⟨⟩</text>
+</svg>

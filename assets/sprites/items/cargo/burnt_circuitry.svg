@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Burnt Circuitry - Fire-damaged electronics -->
+  <defs>
+    <radialGradient id="burnGrad">
+      <stop offset="0%" style="stop-color:#2a2a2a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Circuit board base (charred) -->
+  <rect x="12" y="12" width="40" height="40" fill="#1a3a1a" stroke="#0a0a0a" stroke-width="2" rx="2"/>
+  
+  <!-- Burn marks -->
+  <ellipse cx="25" cy="25" rx="8" ry="6" fill="url(#burnGrad)" opacity="0.8"/>
+  <ellipse cx="40" cy="38" rx="10" ry="8" fill="url(#burnGrad)" opacity="0.7"/>
+  
+  <!-- Damaged circuit traces -->
+  <path d="M 15 20 L 30 20" stroke="#8b7355" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 30 20 L 30 35" stroke="#8b7355" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 30 35 L 45 35" stroke="#3a3a3a" stroke-width="1.5" opacity="0.4" stroke-dasharray="3,2"/>
+  <path d="M 20 30 L 35 30" stroke="#3a3a3a" stroke-width="1" opacity="0.4" stroke-dasharray="2,2"/>
+  <path d="M 35 30 L 35 45" stroke="#8b7355" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Burnt components -->
+  <rect x="18" y="18" width="4" height="4" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="1"/>
+  <rect x="38" y="28" width="5" height="3" fill="#2a2a2a" stroke="#0a0a0a" stroke-width="1"/>
+  <circle cx="28" cy="40" r="2.5" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="1"/>
+  
+  <!-- Gold traces (still visible) -->
+  <path d="M 15 40 L 20 40" stroke="#d4af37" stroke-width="1" opacity="0.6"/>
+  <path d="M 40 20 L 48 20" stroke="#d4af37" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Scorch marks -->
+  <circle cx="32" cy="30" r="6" fill="#0a0a0a" opacity="0.4"/>
+  <circle cx="22" cy="45" r="3" fill="#1a1a1a" opacity="0.5"/>
+</svg>

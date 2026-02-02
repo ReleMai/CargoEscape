@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Singularity Core - Contained micro black hole -->
+  <defs>
+    <radialGradient id="singularityGrad">
+      <stop offset="0%" style="stop-color:#000000"/>
+      <stop offset="40%" style="stop-color:#1a1a2a"/>
+      <stop offset="70%" style="stop-color:#4a2a6a"/>
+      <stop offset="100%" style="stop-color:#8a4aaa"/>
+    </radialGradient>
+    <radialGradient id="accretionGrad">
+      <stop offset="0%" style="stop-color:#ff6644;stop-opacity:0"/>
+      <stop offset="50%" style="stop-color:#ff8844;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#ffaa44;stop-opacity:0.4"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Containment field (outer) -->
+  <rect x="12" y="12" width="40" height="40" fill="#1a2a3a" stroke="#2a4a6a" stroke-width="3" rx="4"/>
+  
+  <!-- Energy containment rings -->
+  <circle cx="32" cy="32" r="16" fill="none" stroke="#6688ff" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#4466dd" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Singularity (black hole) -->
+  <circle cx="32" cy="32" r="8" fill="url(#singularityGrad)"/>
+  
+  <!-- Event horizon -->
+  <circle cx="32" cy="32" r="8" fill="none" stroke="#aa88ff" stroke-width="2" opacity="0.7"/>
+  
+  <!-- Accretion disk -->
+  <ellipse cx="32" cy="32" rx="14" ry="4" fill="url(#accretionGrad)" opacity="0.8"/>
+  <ellipse cx="32" cy="32" rx="14" ry="4" fill="none" stroke="#ffaa44" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Matter being pulled in (spirals) -->
+  <path d="M 20 24 Q 24 28 20 32" stroke="#ff8844" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M 44 24 Q 40 28 44 32" stroke="#ff8844" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M 20 40 Q 26 36 32 36" stroke="#ffaa44" stroke-width="1" fill="none" opacity="0.6"/>
+  <path d="M 44 40 Q 38 36 32 36" stroke="#ffaa44" stroke-width="1" fill="none" opacity="0.6"/>
+  
+  <!-- Hawking radiation -->
+  <circle cx="26" cy="20" r="1.5" fill="#88ccff" opacity="0.9"/>
+  <circle cx="38" cy="22" r="1" fill="#aaddff" opacity="0.8"/>
+  <circle cx="22" cy="38" r="1.5" fill="#66aaee" opacity="0.9"/>
+  <circle cx="42" cy="42" r="1" fill="#88ccff" opacity="0.8"/>
+  
+  <!-- Containment field corners -->
+  <rect x="10" y="10" width="6" height="6" fill="#4466dd" opacity="0.6" rx="1"/>
+  <rect x="48" y="10" width="6" height="6" fill="#4466dd" opacity="0.6" rx="1"/>
+  <rect x="10" y="48" width="6" height="6" fill="#4466dd" opacity="0.6" rx="1"/>
+  <rect x="48" y="48" width="6" height="6" fill="#4466dd" opacity="0.6" rx="1"/>
+  
+  <!-- Warning indicators -->
+  <circle cx="12" cy="12" r="2" fill="#ff4444" opacity="0.8"/>
+  <circle cx="52" cy="12" r="2" fill="#ff4444" opacity="0.8"/>
+  <circle cx="12" cy="52" r="2" fill="#ff4444" opacity="0.8"/>
+  <circle cx="52" cy="52" r="2" fill="#ff4444" opacity="0.8"/>
+  
+  <!-- Gravitational lensing effect -->
+  <ellipse cx="32" cy="32" rx="12" ry="10" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.3"/>
+</svg>

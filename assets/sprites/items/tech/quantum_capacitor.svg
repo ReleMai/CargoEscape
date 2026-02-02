@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Quantum Capacitor - Energy storage device -->
+  <defs>
+    <linearGradient id="quantumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a88ff"/>
+      <stop offset="50%" style="stop-color:#2a58cc"/>
+      <stop offset="100%" style="stop-color:#1a38aa"/>
+    </linearGradient>
+    <radialGradient id="energyGlow">
+      <stop offset="0%" style="stop-color:#88ccff;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#2a58cc;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Main capacitor body -->
+  <rect x="18" y="10" width="28" height="44" fill="url(#quantumGrad)" stroke="#1a2a6a" stroke-width="2" rx="4"/>
+  
+  <!-- Energy glow effect -->
+  <ellipse cx="32" cy="32" rx="12" ry="18" fill="url(#energyGlow)" opacity="0.6"/>
+  
+  <!-- Quantum flux lines -->
+  <path d="M 25 15 Q 32 25 25 35" stroke="#88ccff" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <path d="M 39 15 Q 32 25 39 35" stroke="#88ccff" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <path d="M 25 30 Q 32 40 25 50" stroke="#66aaee" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M 39 30 Q 32 40 39 50" stroke="#66aaee" stroke-width="1.5" fill="none" opacity="0.7"/>
+  
+  <!-- Terminal caps -->
+  <rect x="18" y="8" width="28" height="4" fill="#6a6a8a" stroke="#3a3a5a" stroke-width="1.5" rx="2"/>
+  <rect x="18" y="52" width="28" height="4" fill="#6a6a8a" stroke="#3a3a5a" stroke-width="1.5" rx="2"/>
+  
+  <!-- Connectors -->
+  <circle cx="32" cy="10" r="2" fill="#cccccc" stroke="#8a8a8a" stroke-width="1"/>
+  <circle cx="32" cy="54" r="2" fill="#cccccc" stroke="#8a8a8a" stroke-width="1"/>
+  
+  <!-- Energy indicators -->
+  <rect x="22" y="20" width="3" height="6" fill="#66aaee" opacity="0.8" rx="1"/>
+  <rect x="39" y="20" width="3" height="6" fill="#66aaee" opacity="0.8" rx="1"/>
+  <rect x="22" y="38" width="3" height="6" fill="#66aaee" opacity="0.6" rx="1"/>
+  <rect x="39" y="38" width="3" height="6" fill="#66aaee" opacity="0.6" rx="1"/>
+  
+  <!-- Quantum particles -->
+  <circle cx="28" cy="28" r="1.5" fill="#ffffff" opacity="0.9"/>
+  <circle cx="36" cy="32" r="1.5" fill="#ffffff" opacity="0.9"/>
+  <circle cx="30" cy="42" r="1.5" fill="#ffffff" opacity="0.8"/>
+</svg>

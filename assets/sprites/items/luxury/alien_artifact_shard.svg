@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Alien Artifact Shard - Fragment of unknown tech -->
+  <defs>
+    <linearGradient id="alienGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#44ffaa"/>
+      <stop offset="50%" style="stop-color:#22cc88"/>
+      <stop offset="100%" style="stop-color:#008866"/>
+    </linearGradient>
+    <radialGradient id="pulseGrad">
+      <stop offset="0%" style="stop-color:#88ffcc;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#44ffaa;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Shard main body (irregular crystal) -->
+  <path d="M 20 30 L 15 25 L 20 18 L 32 12 L 44 18 L 50 25 L 48 35 L 40 42 L 28 42 L 22 38 Z" 
+        fill="url(#alienGrad)" stroke="#004433" stroke-width="2" opacity="0.9"/>
+  
+  <!-- Energy pulse -->
+  <ellipse cx="32" cy="28" rx="14" ry="12" fill="url(#pulseGrad)" opacity="0.4"/>
+  
+  <!-- Crystalline facets -->
+  <path d="M 20 30 L 32 25 L 44 30" stroke="#66ffcc" stroke-width="1.5" opacity="0.6" fill="none"/>
+  <path d="M 32 25 L 32 12" stroke="#66ffcc" stroke-width="1.5" opacity="0.6" fill="none"/>
+  <path d="M 20 30 L 28 42" stroke="#44ddaa" stroke-width="1" opacity="0.5" fill="none"/>
+  <path d="M 44 30 L 40 42" stroke="#44ddaa" stroke-width="1" opacity="0.5" fill="none"/>
+  
+  <!-- Internal glow patterns -->
+  <circle cx="28" cy="24" r="2" fill="#aaffdd" opacity="0.8"/>
+  <circle cx="36" cy="26" r="2" fill="#aaffdd" opacity="0.8"/>
+  <circle cx="32" cy="32" r="2.5" fill="#ccffee" opacity="0.9"/>
+  
+  <!-- Strange energy lines -->
+  <path d="M 25 20 Q 28 22 26 25" stroke="#88ffcc" stroke-width="1" fill="none" opacity="0.7"/>
+  <path d="M 38 22 Q 35 24 37 27" stroke="#88ffcc" stroke-width="1" fill="none" opacity="0.7"/>
+  <path d="M 30 35 Q 32 37 34 35" stroke="#66ddaa" stroke-width="1" fill="none" opacity="0.6"/>
+  
+  <!-- Unknown symbols -->
+  <circle cx="22" cy="28" r="1.5" fill="#00ff88" opacity="0.7"/>
+  <circle cx="42" cy="28" r="1.5" fill="#00ff88" opacity="0.7"/>
+  <path d="M 32 30 L 34 32 L 30 32 Z" fill="#00ffaa" opacity="0.8"/>
+  
+  <!-- Edge highlights -->
+  <path d="M 22 20 L 32 14" stroke="#aaffdd" stroke-width="1" opacity="0.5"/>
+  <path d="M 42 20 L 32 14" stroke="#aaffdd" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Mysterious particles -->
+  <circle cx="18" cy="26" r="1" fill="#88ffcc" opacity="0.9"/>
+  <circle cx="46" cy="32" r="1" fill="#66ffaa" opacity="0.8"/>
+  <circle cx="35" cy="40" r="1" fill="#44ff88" opacity="0.7"/>
+</svg>
