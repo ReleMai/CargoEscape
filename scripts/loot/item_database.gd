@@ -115,6 +115,56 @@ const SCRAP_ITEMS = {
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
 		"icon": "res://assets/sprites/items/cargo/broken_lens.png"
+	},
+	"rusted_grate": {
+		"name": "Rusted Grate",
+		"description": "Corroded floor grating. Heavy oxidation but still salvageable.",
+		"width": 1, "height": 1,
+		"base_value": 8,
+		"weight": 6.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/cargo/rusted_grate.png"
+	},
+	"broken_console": {
+		"name": "Broken Console",
+		"description": "Damaged control interface. Circuit boards might have value.",
+		"width": 2, "height": 2,
+		"base_value": 45,
+		"weight": 12.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/cargo/broken_console.png"
+	},
+	"burnt_circuitry": {
+		"name": "Burnt Circuitry",
+		"description": "Fire-damaged electronics. Trace amounts of precious metals remain.",
+		"width": 1, "height": 1,
+		"base_value": 14,
+		"weight": 1.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/cargo/burnt_circuitry.png"
+	},
+	"cracked_viewport": {
+		"name": "Cracked Viewport",
+		"description": "Salvaged window glass from observation deck. Still has reinforcing layer.",
+		"width": 2, "height": 1,
+		"base_value": 22,
+		"weight": 7.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/cargo/cracked_viewport.png"
+	},
+	"worn_gasket": {
+		"name": "Worn Gasket",
+		"description": "Used sealing material. Better than nothing in an emergency.",
+		"width": 1, "height": 1,
+		"base_value": 6,
+		"weight": 0.3,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/cargo/worn_gasket.png"
 	}
 }
 
@@ -213,6 +263,76 @@ const COMPONENT_ITEMS = {
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
 		"icon": "res://assets/sprites/items/tech/nav_beacon.png"
+	},
+	"quantum_capacitor": {
+		"name": "Quantum Capacitor",
+		"description": "Energy storage device utilizing quantum tunneling. Powers advanced systems.",
+		"width": 1, "height": 2,
+		"base_value": 145,
+		"weight": 3.5,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/quantum_capacitor.png"
+	},
+	"holographic_emitter": {
+		"name": "Holographic Emitter",
+		"description": "Projection hardware for 3D displays. Used in command centers.",
+		"width": 2, "height": 1,
+		"base_value": 130,
+		"weight": 2.5,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/holographic_emitter.png"
+	},
+	"cryo_injector": {
+		"name": "Cryo Injector",
+		"description": "Coolant delivery system for cryogenic storage. Medical grade.",
+		"width": 1, "height": 2,
+		"base_value": 115,
+		"weight": 4.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/medical/cryo_injector.png"
+	},
+	"magnetic_bearing": {
+		"name": "Magnetic Bearing",
+		"description": "Frictionless mechanical component. Essential for gyroscope systems.",
+		"width": 1, "height": 1,
+		"base_value": 90,
+		"weight": 2.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/magnetic_bearing.png"
+	},
+	"neural_interface": {
+		"name": "Neural Interface",
+		"description": "Bio-tech connector for direct brain-computer link. Highly regulated.",
+		"width": 1, "height": 1,
+		"base_value": 160,
+		"weight": 0.5,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/neural_interface.png"
+	},
+	"power_regulator": {
+		"name": "Power Regulator",
+		"description": "Voltage control unit. Prevents power surges in ship systems.",
+		"width": 2, "height": 1,
+		"base_value": 105,
+		"weight": 3.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/power_regulator.png"
+	},
+	"shield_capacitor": {
+		"name": "Shield Capacitor",
+		"description": "Energy buffer for shield generators. Extends shield uptime.",
+		"width": 2, "height": 2,
+		"base_value": 175,
+		"weight": 6.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/shield_capacitor.png"
 	}
 }
 
@@ -301,6 +421,56 @@ const VALUABLE_ITEMS = {
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/tech/encrypted_drive.png"
+	},
+	"platinum_ingot": {
+		"name": "Platinum Ingot",
+		"description": "Precious metal bar of exceptional purity. Rare and valuable.",
+		"width": 2, "height": 1,
+		"base_value": 520,
+		"weight": 10.0,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/luxury/platinum_ingot.png"
+	},
+	"prototype_chip": {
+		"name": "Prototype Chip",
+		"description": "Experimental processor design. Tech corporations would pay handsomely.",
+		"width": 1, "height": 1,
+		"base_value": 340,
+		"weight": 0.2,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/tech/prototype_chip.png"
+	},
+	"antimatter_vial": {
+		"name": "Antimatter Vial",
+		"description": "Magnetically contained antimatter. Extremely dangerous but invaluable.",
+		"width": 1, "height": 2,
+		"base_value": 480,
+		"weight": 0.5,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/tech/antimatter_vial.png"
+	},
+	"executive_datapad": {
+		"name": "Executive Datapad",
+		"description": "Corporate executive's personal device. Contains sensitive business data.",
+		"width": 1, "height": 2,
+		"base_value": 360,
+		"weight": 0.8,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/tech/executive_datapad.png"
+	},
+	"alien_artifact_shard": {
+		"name": "Alien Artifact Shard",
+		"description": "Fragment of unknown origin technology. Pulses with strange energy.",
+		"width": 2, "height": 1,
+		"base_value": 420,
+		"weight": 2.0,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/luxury/alien_artifact_shard.png"
 	}
 }
 
@@ -369,6 +539,26 @@ const EPIC_ITEMS = {
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/luxury/captains_log.png"
+	},
+	"void_crystal": {
+		"name": "Void Crystal",
+		"description": "Crystalline formation from deep space anomaly. Defies known physics.",
+		"width": 1, "height": 2,
+		"base_value": 800,
+		"weight": 3.0,
+		"rarity": 3,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/luxury/void_crystal.png"
+	},
+	"precursor_relic": {
+		"name": "Precursor Relic",
+		"description": "Ancient alien technology. Predates known civilizations by millennia.",
+		"width": 2, "height": 2,
+		"base_value": 920,
+		"weight": 8.0,
+		"rarity": 3,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/luxury/precursor_relic.png"
 	}
 }
 
@@ -672,6 +862,36 @@ const LEGENDARY_ITEMS = {
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
 		"icon": "res://assets/sprites/items/luxury/singularity_gem.png"
+	},
+	"singularity_core": {
+		"name": "Singularity Core",
+		"description": "Contained micro black hole. Power source beyond comprehension.",
+		"width": 2, "height": 2,
+		"base_value": 4500,
+		"weight": 30.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/tech/singularity_core.png"
+	},
+	"time_fragment": {
+		"name": "Time Fragment",
+		"description": "Temporal anomaly crystallized into matter. Exists in multiple timelines.",
+		"width": 1, "height": 1,
+		"base_value": 3800,
+		"weight": 0.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/luxury/time_fragment.png"
+	},
+	"consciousness_drive": {
+		"name": "Consciousness Drive",
+		"description": "AI core containing a digital personality. Exhibits true sentience.",
+		"width": 2, "height": 1,
+		"base_value": 4200,
+		"weight": 4.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/tech/consciousness_drive.png"
 	}
 }
 
