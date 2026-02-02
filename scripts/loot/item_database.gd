@@ -878,7 +878,7 @@ const LEGENDARY_ITEMS = {
 		"description": "Temporal anomaly crystallized into matter. Exists in multiple timelines.",
 		"width": 1, "height": 1,
 		"base_value": 3800,
-		"weight": 0.0,
+		"weight": 0.01,
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
 		"icon": "res://assets/sprites/items/luxury/time_fragment.png"
