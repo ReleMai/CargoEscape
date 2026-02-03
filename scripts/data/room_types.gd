@@ -48,7 +48,39 @@ enum Type {
 	CONFERENCE,
 	SERVER_ROOM,
 	BARRACKS,
-	CONTRABAND_HOLD
+	CONTRABAND_HOLD,
+	
+	# Tier 1 - Cargo Shuttle additions
+	MAINTENANCE_BAY,
+	PILOT_CABIN,
+	FUEL_STORAGE,
+	
+	# Tier 2 - Freight Hauler additions
+	GALLEY,
+	HYDROPONIC_BAY,
+	COMMUNICATIONS,
+	RECREATION_ROOM,
+	
+	# Tier 3 - Corporate Transport additions
+	BOARDROOM,
+	EXECUTIVE_BEDROOM,
+	PRIVATE_BAR,
+	ART_GALLERY,
+	SPA,
+	
+	# Tier 4 - Military Frigate additions
+	TACTICAL_OPERATIONS,
+	BRIG,
+	TRAINING_ROOM,
+	DRONE_BAY,
+	MESS_HALL,
+	
+	# Tier 5 - Black Ops Vessel additions
+	INTERROGATION,
+	SPECIMEN_LAB,
+	SECURE_COMMS,
+	EXPERIMENTAL_WEAPONS,
+	ESCAPE_PODS
 }
 
 enum Category {
@@ -525,6 +557,475 @@ static func _define_rooms() -> void:
 	contraband.wall_style = "bulkhead"
 	contraband.decoration_tags.assign(["hidden_panels", "concealed_door", "stashed_crates"])
 	_rooms[Type.CONTRABAND_HOLD] = contraband
+	
+	# =========================================================================
+	# TIER 1 - CARGO SHUTTLE ADDITIONS
+	# =========================================================================
+	
+	# MAINTENANCE BAY
+	var maintenance_bay = RoomData.new(
+		Type.MAINTENANCE_BAY,
+		Category.COMMON,
+		"Maintenance Bay",
+		"Small repair area for basic ship maintenance."
+	)
+	maintenance_bay.min_size = Vector2(100, 80)
+	maintenance_bay.max_size = Vector2(140, 120)
+	maintenance_bay.preferred_size = Vector2(120, 100)
+	maintenance_bay.preferred_position = "any"
+	maintenance_bay.min_containers = 1
+	maintenance_bay.max_containers = 3
+	maintenance_bay.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.CARGO_CRATE])
+	maintenance_bay.rarity_modifiers = {0: 1.3, 1: 1.1, 2: 0.7, 3: 0.4, 4: 0.1}
+	maintenance_bay.floor_pattern = "grated"
+	maintenance_bay.decoration_tags.assign(["tool_benches", "repair_equipment", "spare_parts"])
+	_rooms[Type.MAINTENANCE_BAY] = maintenance_bay
+	
+	# PILOT CABIN
+	var pilot_cabin = RoomData.new(
+		Type.PILOT_CABIN,
+		Category.COMMON,
+		"Pilot Cabin",
+		"Basic cockpit area for ship navigation."
+	)
+	pilot_cabin.min_size = Vector2(80, 80)
+	pilot_cabin.max_size = Vector2(120, 100)
+	pilot_cabin.preferred_size = Vector2(100, 90)
+	pilot_cabin.preferred_position = "front"
+	pilot_cabin.min_containers = 0
+	pilot_cabin.max_containers = 1
+	pilot_cabin.container_types.assign([CT.Type.LOCKER])
+	pilot_cabin.rarity_modifiers = {0: 1.0, 1: 1.0, 2: 0.5, 3: 0.3, 4: 0.1}
+	pilot_cabin.floor_pattern = "default"
+	pilot_cabin.decoration_tags.assign(["pilot_seat", "control_panels", "viewport"])
+	_rooms[Type.PILOT_CABIN] = pilot_cabin
+	
+	# FUEL STORAGE
+	var fuel_storage = RoomData.new(
+		Type.FUEL_STORAGE,
+		Category.COMMON,
+		"Fuel Storage",
+		"Dangerous area containing fuel tanks."
+	)
+	fuel_storage.min_size = Vector2(90, 90)
+	fuel_storage.max_size = Vector2(130, 110)
+	fuel_storage.preferred_size = Vector2(110, 100)
+	fuel_storage.preferred_position = "back"
+	fuel_storage.min_containers = 1
+	fuel_storage.max_containers = 2
+	fuel_storage.container_types.assign([CT.Type.CARGO_CRATE, CT.Type.SCRAP_PILE])
+	fuel_storage.rarity_modifiers = {0: 1.2, 1: 0.9, 2: 0.6, 3: 0.3, 4: 0.1}
+	fuel_storage.floor_pattern = "grated"
+	fuel_storage.wall_style = "reinforced"
+	fuel_storage.has_special_lighting = true
+	fuel_storage.lighting_color = Color(1.0, 0.8, 0.3)  # Orange warning
+	fuel_storage.decoration_tags.assign(["fuel_tanks", "warning_signs", "hazard_stripes"])
+	_rooms[Type.FUEL_STORAGE] = fuel_storage
+	
+	# =========================================================================
+	# TIER 2 - FREIGHT HAULER ADDITIONS
+	# =========================================================================
+	
+	# GALLEY
+	var galley = RoomData.new(
+		Type.GALLEY,
+		Category.COMMON,
+		"Galley",
+		"Kitchen and mess area for crew meals."
+	)
+	galley.min_size = Vector2(110, 90)
+	galley.max_size = Vector2(150, 120)
+	galley.preferred_size = Vector2(130, 105)
+	galley.preferred_position = "any"
+	galley.min_containers = 1
+	galley.max_containers = 2
+	galley.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.LOCKER])
+	galley.rarity_modifiers = {0: 1.2, 1: 1.0, 2: 0.6, 3: 0.3, 4: 0.1}
+	galley.floor_pattern = "default"
+	galley.decoration_tags.assign(["food_prep", "tables", "storage_units"])
+	_rooms[Type.GALLEY] = galley
+	
+	# HYDROPONIC BAY
+	var hydroponic = RoomData.new(
+		Type.HYDROPONIC_BAY,
+		Category.COMMON,
+		"Hydroponic Bay",
+		"Food production and plant cultivation."
+	)
+	hydroponic.min_size = Vector2(120, 100)
+	hydroponic.max_size = Vector2(160, 140)
+	hydroponic.preferred_size = Vector2(140, 120)
+	hydroponic.preferred_position = "any"
+	hydroponic.min_containers = 1
+	hydroponic.max_containers = 2
+	hydroponic.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.CARGO_CRATE])
+	hydroponic.rarity_modifiers = {0: 1.0, 1: 1.2, 2: 0.8, 3: 0.4, 4: 0.2}
+	hydroponic.floor_pattern = "grid"
+	hydroponic.has_special_lighting = true
+	hydroponic.lighting_color = Color(0.7, 1.0, 0.7)  # Green grow lights
+	hydroponic.decoration_tags.assign(["grow_beds", "irrigation", "plants"])
+	_rooms[Type.HYDROPONIC_BAY] = hydroponic
+	
+	# COMMUNICATIONS
+	var communications = RoomData.new(
+		Type.COMMUNICATIONS,
+		Category.COMMON,
+		"Communications",
+		"Radio and communications equipment."
+	)
+	communications.min_size = Vector2(90, 80)
+	communications.max_size = Vector2(120, 100)
+	communications.preferred_size = Vector2(105, 90)
+	communications.preferred_position = "any"
+	communications.min_containers = 0
+	communications.max_containers = 2
+	communications.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.SECURE_CACHE])
+	communications.rarity_modifiers = {0: 0.8, 1: 1.2, 2: 1.0, 3: 0.6, 4: 0.3}
+	communications.floor_pattern = "default"
+	communications.has_special_lighting = true
+	communications.lighting_color = Color(0.8, 0.9, 1.0)  # Blue
+	communications.decoration_tags.assign(["comm_stations", "antenna_controls", "monitors"])
+	_rooms[Type.COMMUNICATIONS] = communications
+	
+	# RECREATION ROOM
+	var recreation = RoomData.new(
+		Type.RECREATION_ROOM,
+		Category.COMMON,
+		"Recreation Room",
+		"Crew morale and entertainment area."
+	)
+	recreation.min_size = Vector2(120, 100)
+	recreation.max_size = Vector2(160, 140)
+	recreation.preferred_size = Vector2(140, 120)
+	recreation.preferred_position = "any"
+	recreation.min_containers = 1
+	recreation.max_containers = 2
+	recreation.container_types.assign([CT.Type.LOCKER, CT.Type.SUPPLY_CABINET])
+	recreation.rarity_modifiers = {0: 1.0, 1: 1.1, 2: 0.7, 3: 0.4, 4: 0.2}
+	recreation.floor_pattern = "carpet"
+	recreation.decoration_tags.assign(["gaming_tables", "entertainment", "seating"])
+	_rooms[Type.RECREATION_ROOM] = recreation
+	
+	# =========================================================================
+	# TIER 3 - CORPORATE TRANSPORT ADDITIONS
+	# =========================================================================
+	
+	# BOARDROOM
+	var boardroom = RoomData.new(
+		Type.BOARDROOM,
+		Category.SPECIAL,
+		"Boardroom",
+		"High-value meeting room for executives."
+	)
+	boardroom.min_size = Vector2(140, 120)
+	boardroom.max_size = Vector2(200, 160)
+	boardroom.preferred_size = Vector2(170, 140)
+	boardroom.preferred_position = "center"
+	boardroom.min_containers = 1
+	boardroom.max_containers = 3
+	boardroom.container_types.assign([CT.Type.SECURE_CACHE, CT.Type.LOCKER])
+	boardroom.rarity_modifiers = {0: 0.6, 1: 0.9, 2: 1.3, 3: 1.0, 4: 0.5}
+	boardroom.floor_pattern = "carpet"
+	boardroom.wall_style = "glass"
+	boardroom.decoration_tags.assign(["conference_table", "luxury_chairs", "displays"])
+	_rooms[Type.BOARDROOM] = boardroom
+	
+	# EXECUTIVE BEDROOM
+	var exec_bedroom = RoomData.new(
+		Type.EXECUTIVE_BEDROOM,
+		Category.SPECIAL,
+		"Executive Bedroom",
+		"Personal luxury quarters for VIP passengers."
+	)
+	exec_bedroom.min_size = Vector2(120, 100)
+	exec_bedroom.max_size = Vector2(160, 140)
+	exec_bedroom.preferred_size = Vector2(140, 120)
+	exec_bedroom.preferred_position = "side"
+	exec_bedroom.min_containers = 1
+	exec_bedroom.max_containers = 2
+	exec_bedroom.container_types.assign([CT.Type.LOCKER, CT.Type.SECURE_CACHE])
+	exec_bedroom.rarity_modifiers = {0: 0.5, 1: 0.8, 2: 1.2, 3: 1.0, 4: 0.6}
+	exec_bedroom.floor_pattern = "carpet"
+	exec_bedroom.decoration_tags.assign(["luxury_bed", "personal_safe", "amenities"])
+	_rooms[Type.EXECUTIVE_BEDROOM] = exec_bedroom
+	
+	# PRIVATE BAR
+	var private_bar = RoomData.new(
+		Type.PRIVATE_BAR,
+		Category.SPECIAL,
+		"Private Bar",
+		"Luxury amenity for corporate entertainment."
+	)
+	private_bar.min_size = Vector2(100, 90)
+	private_bar.max_size = Vector2(140, 120)
+	private_bar.preferred_size = Vector2(120, 105)
+	private_bar.preferred_position = "any"
+	private_bar.min_containers = 1
+	private_bar.max_containers = 2
+	private_bar.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.LOCKER])
+	private_bar.rarity_modifiers = {0: 0.7, 1: 1.0, 2: 1.1, 3: 0.7, 4: 0.3}
+	private_bar.floor_pattern = "carpet"
+	private_bar.decoration_tags.assign(["bar_counter", "seating", "bottles"])
+	_rooms[Type.PRIVATE_BAR] = private_bar
+	
+	# ART GALLERY
+	var art_gallery = RoomData.new(
+		Type.ART_GALLERY,
+		Category.SPECIAL,
+		"Art Gallery",
+		"Valuable art collection display."
+	)
+	art_gallery.min_size = Vector2(130, 110)
+	art_gallery.max_size = Vector2(180, 150)
+	art_gallery.preferred_size = Vector2(155, 130)
+	art_gallery.preferred_position = "any"
+	art_gallery.min_containers = 1
+	art_gallery.max_containers = 3
+	art_gallery.container_types.assign([CT.Type.SECURE_CACHE, CT.Type.VAULT])
+	art_gallery.rarity_modifiers = {0: 0.3, 1: 0.6, 2: 1.2, 3: 1.5, 4: 1.0}
+	art_gallery.floor_pattern = "carpet"
+	art_gallery.wall_style = "glass"
+	art_gallery.has_special_lighting = true
+	art_gallery.lighting_color = Color(1.0, 1.0, 0.95)  # Warm white
+	art_gallery.decoration_tags.assign(["art_pieces", "display_cases", "pedestals"])
+	_rooms[Type.ART_GALLERY] = art_gallery
+	
+	# SPA
+	var spa = RoomData.new(
+		Type.SPA,
+		Category.SPECIAL,
+		"Spa",
+		"Corporate luxury relaxation facility."
+	)
+	spa.min_size = Vector2(120, 100)
+	spa.max_size = Vector2(160, 140)
+	spa.preferred_size = Vector2(140, 120)
+	spa.preferred_position = "any"
+	spa.min_containers = 1
+	spa.max_containers = 2
+	spa.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.LOCKER])
+	spa.rarity_modifiers = {0: 0.8, 1: 1.0, 2: 1.0, 3: 0.5, 4: 0.3}
+	spa.floor_pattern = "carpet"
+	spa.has_special_lighting = true
+	spa.lighting_color = Color(0.9, 0.95, 1.0)  # Soft blue
+	spa.decoration_tags.assign(["massage_tables", "relaxation_pods", "plants"])
+	_rooms[Type.SPA] = spa
+	
+	# =========================================================================
+	# TIER 4 - MILITARY FRIGATE ADDITIONS
+	# =========================================================================
+	
+	# TACTICAL OPERATIONS
+	var tactical = RoomData.new(
+		Type.TACTICAL_OPERATIONS,
+		Category.SPECIAL,
+		"Tactical Operations",
+		"Mission planning and coordination center."
+	)
+	tactical.min_size = Vector2(140, 120)
+	tactical.max_size = Vector2(190, 160)
+	tactical.preferred_size = Vector2(165, 140)
+	tactical.preferred_position = "front"
+	tactical.min_containers = 1
+	tactical.max_containers = 3
+	tactical.container_types.assign([CT.Type.SECURE_CACHE, CT.Type.SUPPLY_CABINET])
+	tactical.rarity_modifiers = {0: 0.5, 1: 0.8, 2: 1.0, 3: 1.3, 4: 0.8}
+	tactical.floor_pattern = "grid"
+	tactical.has_special_lighting = true
+	tactical.lighting_color = Color(1.0, 0.85, 0.85)  # Red tint
+	tactical.decoration_tags.assign(["holo_table", "tactical_displays", "command_stations"])
+	_rooms[Type.TACTICAL_OPERATIONS] = tactical
+	
+	# BRIG
+	var brig = RoomData.new(
+		Type.BRIG,
+		Category.SPECIAL,
+		"Brig",
+		"Prisoner holding and detention."
+	)
+	brig.min_size = Vector2(100, 90)
+	brig.max_size = Vector2(140, 120)
+	brig.preferred_size = Vector2(120, 105)
+	brig.preferred_position = "any"
+	brig.min_containers = 0
+	brig.max_containers = 2
+	brig.container_types.assign([CT.Type.LOCKER, CT.Type.SUPPLY_CABINET])
+	brig.rarity_modifiers = {0: 1.0, 1: 0.9, 2: 0.7, 3: 0.8, 4: 0.4}
+	brig.floor_pattern = "reinforced"
+	brig.wall_style = "reinforced"
+	brig.decoration_tags.assign(["holding_cells", "security_panels", "restraints"])
+	_rooms[Type.BRIG] = brig
+	
+	# TRAINING ROOM
+	var training = RoomData.new(
+		Type.TRAINING_ROOM,
+		Category.SPECIAL,
+		"Training Room",
+		"Combat simulation and practice facility."
+	)
+	training.min_size = Vector2(130, 110)
+	training.max_size = Vector2(180, 150)
+	training.preferred_size = Vector2(155, 130)
+	training.preferred_position = "any"
+	training.min_containers = 1
+	training.max_containers = 2
+	training.container_types.assign([CT.Type.ARMORY, CT.Type.SUPPLY_CABINET])
+	training.rarity_modifiers = {0: 0.7, 1: 1.0, 2: 0.9, 3: 1.2, 4: 0.6}
+	training.floor_pattern = "reinforced"
+	training.decoration_tags.assign(["training_dummies", "equipment", "weapon_racks"])
+	_rooms[Type.TRAINING_ROOM] = training
+	
+	# DRONE BAY
+	var drone_bay = RoomData.new(
+		Type.DRONE_BAY,
+		Category.SPECIAL,
+		"Drone Bay",
+		"Unmanned vehicle launch and maintenance."
+	)
+	drone_bay.min_size = Vector2(140, 120)
+	drone_bay.max_size = Vector2(190, 160)
+	drone_bay.preferred_size = Vector2(165, 140)
+	drone_bay.preferred_position = "side"
+	drone_bay.min_containers = 2
+	drone_bay.max_containers = 4
+	drone_bay.container_types.assign([CT.Type.CARGO_CRATE, CT.Type.SUPPLY_CABINET])
+	drone_bay.rarity_modifiers = {0: 0.6, 1: 1.0, 2: 1.1, 3: 1.3, 4: 0.7}
+	drone_bay.floor_pattern = "grated"
+	drone_bay.wall_style = "bulkhead"
+	drone_bay.decoration_tags.assign(["drone_docks", "launch_rails", "control_stations"])
+	_rooms[Type.DRONE_BAY] = drone_bay
+	
+	# MESS HALL
+	var mess_hall = RoomData.new(
+		Type.MESS_HALL,
+		Category.COMMON,
+		"Mess Hall",
+		"Large dining area for military personnel."
+	)
+	mess_hall.min_size = Vector2(150, 120)
+	mess_hall.max_size = Vector2(200, 160)
+	mess_hall.preferred_size = Vector2(175, 140)
+	mess_hall.preferred_position = "any"
+	mess_hall.min_containers = 1
+	mess_hall.max_containers = 3
+	mess_hall.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.LOCKER])
+	mess_hall.rarity_modifiers = {0: 1.1, 1: 1.0, 2: 0.7, 3: 0.5, 4: 0.2}
+	mess_hall.floor_pattern = "default"
+	mess_hall.decoration_tags.assign(["dining_tables", "food_service", "seating_rows"])
+	_rooms[Type.MESS_HALL] = mess_hall
+	
+	# =========================================================================
+	# TIER 5 - BLACK OPS VESSEL ADDITIONS
+	# =========================================================================
+	
+	# INTERROGATION
+	var interrogation = RoomData.new(
+		Type.INTERROGATION,
+		Category.SPECIAL,
+		"Interrogation Room",
+		"Dark secrets and classified information extraction."
+	)
+	interrogation.min_size = Vector2(90, 80)
+	interrogation.max_size = Vector2(130, 110)
+	interrogation.preferred_size = Vector2(110, 95)
+	interrogation.preferred_position = "any"
+	interrogation.min_containers = 0
+	interrogation.max_containers = 2
+	interrogation.container_types.assign([CT.Type.SECURE_CACHE, CT.Type.SUPPLY_CABINET])
+	interrogation.rarity_modifiers = {0: 0.4, 1: 0.7, 2: 1.0, 3: 1.4, 4: 1.2}
+	interrogation.floor_pattern = "reinforced"
+	interrogation.wall_style = "reinforced"
+	interrogation.has_special_lighting = true
+	interrogation.lighting_color = Color(1.0, 0.7, 0.7)  # Harsh red
+	interrogation.decoration_tags.assign(["restraint_chair", "monitoring", "soundproofing"])
+	_rooms[Type.INTERROGATION] = interrogation
+	
+	# SPECIMEN LAB
+	var specimen_lab = RoomData.new(
+		Type.SPECIMEN_LAB,
+		Category.SPECIAL,
+		"Specimen Lab",
+		"Alien research and biological containment."
+	)
+	specimen_lab.min_size = Vector2(130, 110)
+	specimen_lab.max_size = Vector2(180, 150)
+	specimen_lab.preferred_size = Vector2(155, 130)
+	specimen_lab.preferred_position = "any"
+	specimen_lab.min_containers = 2
+	specimen_lab.max_containers = 4
+	specimen_lab.container_types.assign([CT.Type.SECURE_CACHE, CT.Type.VAULT])
+	specimen_lab.rarity_modifiers = {0: 0.3, 1: 0.6, 2: 1.0, 3: 1.5, 4: 2.0}
+	specimen_lab.floor_pattern = "grated"
+	specimen_lab.wall_style = "reinforced"
+	specimen_lab.has_special_lighting = true
+	specimen_lab.lighting_color = Color(0.7, 1.0, 0.8)  # Eerie green
+	specimen_lab.decoration_tags.assign(["containment_pods", "research_stations", "biohazard"])
+	_rooms[Type.SPECIMEN_LAB] = specimen_lab
+	
+	# SECURE COMMS
+	var secure_comms = RoomData.new(
+		Type.SECURE_COMMS,
+		Category.SPECIAL,
+		"Secure Communications",
+		"Encrypted transmission and intelligence gathering."
+	)
+	secure_comms.min_size = Vector2(100, 90)
+	secure_comms.max_size = Vector2(140, 120)
+	secure_comms.preferred_size = Vector2(120, 105)
+	secure_comms.preferred_position = "any"
+	secure_comms.min_containers = 1
+	secure_comms.max_containers = 3
+	secure_comms.container_types.assign([CT.Type.SECURE_CACHE, CT.Type.SUPPLY_CABINET])
+	secure_comms.rarity_modifiers = {0: 0.4, 1: 0.7, 2: 1.2, 3: 1.4, 4: 1.0}
+	secure_comms.floor_pattern = "default"
+	secure_comms.has_special_lighting = true
+	secure_comms.lighting_color = Color(0.7, 0.85, 1.0)  # Blue
+	secure_comms.decoration_tags.assign(["encryption_stations", "signal_arrays", "monitors"])
+	_rooms[Type.SECURE_COMMS] = secure_comms
+	
+	# EXPERIMENTAL WEAPONS
+	var exp_weapons = RoomData.new(
+		Type.EXPERIMENTAL_WEAPONS,
+		Category.SPECIAL,
+		"Experimental Weapons",
+		"Prototype weapon storage and testing."
+	)
+	exp_weapons.min_size = Vector2(140, 120)
+	exp_weapons.max_size = Vector2(190, 160)
+	exp_weapons.preferred_size = Vector2(165, 140)
+	exp_weapons.preferred_position = "any"
+	exp_weapons.min_containers = 2
+	exp_weapons.max_containers = 5
+	exp_weapons.container_types.assign([CT.Type.VAULT, CT.Type.ARMORY, CT.Type.SECURE_CACHE])
+	exp_weapons.rarity_modifiers = {0: 0.2, 1: 0.4, 2: 0.8, 3: 1.5, 4: 2.5}
+	exp_weapons.floor_pattern = "reinforced"
+	exp_weapons.wall_style = "reinforced"
+	exp_weapons.has_special_lighting = true
+	exp_weapons.lighting_color = Color(1.0, 0.9, 0.7)  # Amber warning
+	exp_weapons.decoration_tags.assign(["weapon_racks", "test_equipment", "containment"])
+	_rooms[Type.EXPERIMENTAL_WEAPONS] = exp_weapons
+	
+	# ESCAPE PODS
+	var escape_pods = RoomData.new(
+		Type.ESCAPE_PODS,
+		Category.ESSENTIAL,
+		"Escape Pods",
+		"Emergency evacuation system."
+	)
+	escape_pods.min_size = Vector2(100, 90)
+	escape_pods.max_size = Vector2(140, 120)
+	escape_pods.preferred_size = Vector2(120, 105)
+	escape_pods.preferred_position = "side"
+	escape_pods.min_containers = 0
+	escape_pods.max_containers = 1
+	escape_pods.container_types.assign([CT.Type.SUPPLY_CABINET])
+	escape_pods.rarity_modifiers = {0: 0.9, 1: 1.0, 2: 0.6, 3: 0.4, 4: 0.2}
+	escape_pods.floor_pattern = "grated"
+	escape_pods.wall_style = "bulkhead"
+	escape_pods.has_special_lighting = true
+	escape_pods.lighting_color = Color(1.0, 0.5, 0.2)  # Emergency orange
+	escape_pods.decoration_tags.assign(["pod_bays", "emergency_equipment", "launch_controls"])
+	_rooms[Type.ESCAPE_PODS] = escape_pods
 
 
 # ==============================================================================
