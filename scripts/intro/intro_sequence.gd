@@ -323,7 +323,7 @@ func _update_scene_setting_phase(delta: float) -> void:
 # TITLE CARD PHASE
 # ==============================================================================
 
-func _update_title_card_phase(delta: float) -> void:
+func _update_title_card_phase(_delta: float) -> void:
 	# Fade in and scale up
 	var t = minf(phase_timer / (TITLE_CARD_DURATION * 0.5), 1.0)
 	title_alpha = ease(t, 0.5)
@@ -347,7 +347,7 @@ func _update_title_card_phase(delta: float) -> void:
 # TRANSITION PHASE
 # ==============================================================================
 
-func _update_transition_phase(delta: float) -> void:
+func _update_transition_phase(_delta: float) -> void:
 	# Ship flies in from left
 	var t = minf(phase_timer / TRANSITION_DURATION, 1.0)
 	var eased = ease(t, 0.4)

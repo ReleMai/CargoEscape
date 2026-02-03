@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Ship Parts Crate - Container with mechanical parts -->
+  <defs>
+    <linearGradient id="crateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6a6a6a"/>
+      <stop offset="100%" style="stop-color:#3a3a3a"/>
+    </linearGradient>
+    <linearGradient id="metalPart" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8899aa"/>
+      <stop offset="100%" style="stop-color:#556677"/>
+    </linearGradient>
+  </defs>
+  <!-- Crate body -->
+  <rect x="8" y="14" width="48" height="40" rx="3" fill="url(#crateGrad)" stroke="#222" stroke-width="2"/>
+  <!-- Crate straps -->
+  <rect x="6" y="22" width="52" height="4" fill="#444" stroke="#333" stroke-width="1"/>
+  <rect x="6" y="42" width="52" height="4" fill="#444" stroke="#333" stroke-width="1"/>
+  <!-- Parts visible on top -->
+  <circle cx="22" cy="30" r="6" fill="url(#metalPart)" stroke="#445566" stroke-width="1"/>
+  <circle cx="22" cy="30" r="2" fill="#334455"/>
+  <rect x="34" y="26" width="14" height="8" rx="1" fill="url(#metalPart)" stroke="#445566" stroke-width="1"/>
+  <!-- Bolts -->
+  <circle cx="38" cy="30" r="1.5" fill="#667788"/>
+  <circle cx="44" cy="30" r="1.5" fill="#667788"/>
+  <!-- Label -->
+  <rect x="20" y="48" width="24" height="4" fill="#ff6600" opacity="0.8"/>
+</svg>

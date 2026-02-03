@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ShipModule" load_steps=2 format=3 uid="uid://gatling_laser_module"]
+
+[ext_resource type="Script" path="res://scripts/data/ship_module.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+module_id = "gatling_laser"
+module_name = "Gatling Laser Array"
+description = "Multi-barrel rotary laser system. Fires in devastating bursts with a brief spin-up time."
+slot_type = 1
+rarity = 3
+base_value = 780
+primary_color = Color(0.9, 0.8, 0.2, 1)
+secondary_color = Color(1.0, 0.9, 0.4, 1)
+glow_color = Color(1.0, 0.95, 0.3, 0.85)
+visual_scale = 1.4
+damage = 12.0
+fire_rate = 15.0
+projectile_speed = 1000.0
+energy_cost = 2.0
+thrust_bonus = 0.0
+speed_bonus = 0.0
+drag_reduction = 0.0
+shield_bonus = 0.0
+scanner_bonus = 0.0
+cargo_bonus = 0

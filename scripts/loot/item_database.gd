@@ -115,6 +115,56 @@ const SCRAP_ITEMS = {
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
 		"icon": "res://assets/sprites/items/cargo/broken_lens.png"
+	},
+	"rusted_grate": {
+		"name": "Rusted Grate",
+		"description": "Corroded floor grating. The metal still has some value.",
+		"width": 1, "height": 1,
+		"base_value": 8,
+		"weight": 3.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/scrap_metal.svg"
+	},
+	"broken_console": {
+		"name": "Broken Console",
+		"description": "Damaged control interface. Salvageable components inside.",
+		"width": 2, "height": 2,
+		"base_value": 45,
+		"weight": 12.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/scrap_electronics.svg"
+	},
+	"burnt_circuitry": {
+		"name": "Burnt Circuitry",
+		"description": "Fire-damaged electronics. Some trace metals remain.",
+		"width": 1, "height": 1,
+		"base_value": 14,
+		"weight": 0.8,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/scrap_electronics.svg"
+	},
+	"cracked_viewport": {
+		"name": "Cracked Viewport",
+		"description": "Salvaged window glass from an observation deck. Heavy but recyclable.",
+		"width": 2, "height": 1,
+		"base_value": 22,
+		"weight": 6.0,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/broken_lens.svg"
+	},
+	"worn_gasket": {
+		"name": "Worn Gasket",
+		"description": "Used sealing material from airlocks. Rubber compounds are always needed.",
+		"width": 1, "height": 1,
+		"base_value": 6,
+		"weight": 0.3,
+		"rarity": 0,
+		"category": ItemCategory.SCRAP,
+		"icon": "res://assets/sprites/items/scrap_plastics.svg"
 	}
 }
 
@@ -213,6 +263,76 @@ const COMPONENT_ITEMS = {
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
 		"icon": "res://assets/sprites/items/tech/nav_beacon.png"
+	},
+	"quantum_capacitor": {
+		"name": "Quantum Capacitor",
+		"description": "Energy storage using quantum effects. Powers advanced ship systems.",
+		"width": 1, "height": 2,
+		"base_value": 140,
+		"weight": 2.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/quantum_core.svg"
+	},
+	"holographic_emitter": {
+		"name": "Holographic Emitter",
+		"description": "Projection hardware for displays and decoys. Versatile tech.",
+		"width": 2, "height": 1,
+		"base_value": 125,
+		"weight": 1.8,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/holographic_projector.svg"
+	},
+	"cryo_injector": {
+		"name": "Cryo Injector",
+		"description": "Coolant delivery system for reactors and weapons. Essential for heat management.",
+		"width": 1, "height": 2,
+		"base_value": 95,
+		"weight": 3.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/coolant_tube.svg"
+	},
+	"magnetic_bearing": {
+		"name": "Magnetic Bearing",
+		"description": "Frictionless mechanical component. Used in gyroscopes and turbines.",
+		"width": 1, "height": 1,
+		"base_value": 85,
+		"weight": 1.2,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/scrap_mechanical.svg"
+	},
+	"neural_interface_chip": {
+		"name": "Neural Interface Chip",
+		"description": "Bio-tech connector for direct neural link. Gray market item.",
+		"width": 1, "height": 1,
+		"base_value": 160,
+		"weight": 0.1,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/data_chip.svg"
+	},
+	"power_regulator": {
+		"name": "Power Regulator",
+		"description": "Voltage control unit preventing power surges. Every ship needs spares.",
+		"width": 2, "height": 1,
+		"base_value": 75,
+		"weight": 2.5,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/fuel_cell.svg"
+	},
+	"shield_capacitor": {
+		"name": "Shield Capacitor",
+		"description": "Energy buffer for defensive shields. High demand on military markets.",
+		"width": 2, "height": 2,
+		"base_value": 180,
+		"weight": 5.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/gravity_dampener.svg"
 	}
 }
 
@@ -301,6 +421,56 @@ const VALUABLE_ITEMS = {
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/tech/encrypted_drive.png"
+	},
+	"platinum_ingot": {
+		"name": "Platinum Ingot",
+		"description": "Precious metal bar. Rarer than gold and twice as valuable.",
+		"width": 2, "height": 1,
+		"base_value": 650,
+		"weight": 14.0,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/gold_bar.svg"
+	},
+	"prototype_chip": {
+		"name": "Prototype Chip",
+		"description": "Experimental processor from a research lab. Cutting-edge tech.",
+		"width": 1, "height": 1,
+		"base_value": 420,
+		"weight": 0.2,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/prototype_chip.svg"
+	},
+	"antimatter_vial": {
+		"name": "Antimatter Vial",
+		"description": "Contained antimatter particles. Extremely dangerous, extremely valuable.",
+		"width": 1, "height": 2,
+		"base_value": 580,
+		"weight": 0.5,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/dark_matter_vial.svg"
+	},
+	"executive_datapad": {
+		"name": "Executive Datapad",
+		"description": "Corporate executive's personal device. Full of trade secrets and blackmail.",
+		"width": 1, "height": 2,
+		"base_value": 380,
+		"weight": 0.4,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/encrypted_drive.svg"
+	},
+	"alien_artifact_shard": {
+		"name": "Alien Artifact Shard",
+		"description": "Fragment of unknown origin technology. Collectors pay handsomely.",
+		"width": 2, "height": 1,
+		"base_value": 450,
+		"weight": 1.5,
+		"rarity": 2,
+		"category": ItemCategory.VALUABLE,
+		"icon": "res://assets/sprites/items/alien_artifact.svg"
 	}
 }
 
@@ -355,7 +525,7 @@ const EPIC_ITEMS = {
 		"description": "Fragment of collapsed star matter. Impossibly dense.",
 		"width": 1, "height": 1,
 		"base_value": 700,
-		"weight": 50.0,
+		"weight": 5.0,
 		"rarity": 3,
 		"category": ItemCategory.ARTIFACT,
 		"icon": "res://assets/sprites/items/luxury/void_shard.png"
@@ -369,6 +539,56 @@ const EPIC_ITEMS = {
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
 		"icon": "res://assets/sprites/items/luxury/captains_log.png"
+	},
+	"void_crystal": {
+		"name": "Void Crystal",
+		"description": "Crystallized space anomaly. Pulses with otherworldly energy.",
+		"width": 1, "height": 2,
+		"base_value": 1100,
+		"weight": 2.0,
+		"rarity": 3,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/void_shard.svg"
+	},
+	"precursor_relic": {
+		"name": "Precursor Relic",
+		"description": "Ancient alien technology. Scientists would kill for this.",
+		"width": 2, "height": 2,
+		"base_value": 1500,
+		"weight": 4.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/ancient_relic.svg"
+	},
+	"singularity_core": {
+		"name": "Singularity Core",
+		"description": "Miniature black hole power source. Handle with extreme caution.",
+		"width": 2, "height": 2,
+		"base_value": 2000,
+		"weight": 100.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/singularity_gem.svg"
+	},
+	"time_fragment": {
+		"name": "Time Fragment",
+		"description": "Shard of frozen time from a temporal anomaly. Defies physics.",
+		"width": 1, "height": 1,
+		"base_value": 1800,
+		"weight": 0.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/quantum_core.svg"
+	},
+	"consciousness_drive": {
+		"name": "Consciousness Drive",
+		"description": "AI core containing a digital personality. May still be aware.",
+		"width": 2, "height": 1,
+		"base_value": 1200,
+		"weight": 3.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/ai_core_fragment.svg"
 	}
 }
 
@@ -387,7 +607,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 1.5,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/plasma_pistol.svg"
+		"icon": "res://assets/sprites/items/weapons/plasma_pistol.png"
 	},
 	"assault_rifle": {
 		"name": "Assault Rifle",
@@ -397,7 +617,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 3.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/assault_rifle.svg"
+		"icon": "res://assets/sprites/items/weapons/laser_rifle.png"
 	},
 	"vibro_blade": {
 		"name": "Vibro-Blade",
@@ -407,7 +627,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.8,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/vibro_blade.svg"
+		"icon": "res://assets/sprites/items/weapons/ion_blade.png"
 	},
 	"emp_grenade": {
 		"name": "EMP Grenade",
@@ -417,7 +637,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.5,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/emp_grenade.svg"
+		"icon": "res://assets/sprites/items/scrap_electronics.svg"
 	},
 	"plasma_cannon": {
 		"name": "Plasma Cannon",
@@ -427,7 +647,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 8.0,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/plasma_cannon.svg"
+		"icon": "res://assets/sprites/items/weapon_core.svg"
 	},
 	"neural_disruptor": {
 		"name": "Neural Disruptor",
@@ -437,7 +657,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 1.0,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/neural_disruptor.svg"
+		"icon": "res://assets/sprites/items/nanobot_swarm.svg"
 	},
 	
 	# ===== DRUGS & CHEMICALS =====
@@ -449,7 +669,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.1,
 		"rarity": 1,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/stim_packs.svg"
+		"icon": "res://assets/sprites/items/medical/stim_pack.png"
 	},
 	"neural_boosters": {
 		"name": "Neural Boosters",
@@ -459,7 +679,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.2,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/neural_boosters.svg"
+		"icon": "res://assets/sprites/items/contraband/neural_stims.png"
 	},
 	"toxic_waste": {
 		"name": "Toxic Waste",
@@ -469,7 +689,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 5.0,
 		"rarity": 1,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/toxic_waste.svg"
+		"icon": "res://assets/sprites/items/scrap_plastics.svg"
 	},
 	"synth_narcotics": {
 		"name": "Synthetic Narcotics",
@@ -479,7 +699,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.3,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/synth_narcotics.svg"
+		"icon": "res://assets/sprites/items/contraband/neural_stims.png"
 	},
 	"combat_serum": {
 		"name": "Combat Serum",
@@ -489,7 +709,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.5,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/combat_serum.svg"
+		"icon": "res://assets/sprites/items/cryo_sample.svg"
 	},
 	
 	# ===== STOLEN/RESTRICTED DATA & ARTIFACTS =====
@@ -501,7 +721,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.1,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/classified_data.svg"
+		"icon": "res://assets/sprites/items/encrypted_drive.svg"
 	},
 	"military_codes": {
 		"name": "Military Codes",
@@ -511,7 +731,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.1,
 		"rarity": 4,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/military_codes.svg"
+		"icon": "res://assets/sprites/items/data_chip.svg"
 	},
 	"stolen_artifacts": {
 		"name": "Stolen Artifacts",
@@ -521,7 +741,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 2.0,
 		"rarity": 3,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/stolen_artifacts.svg"
+		"icon": "res://assets/sprites/items/ancient_relic.svg"
 	},
 	"corporate_secrets": {
 		"name": "Corporate Secrets",
@@ -531,7 +751,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.1,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/corporate_secrets.svg"
+		"icon": "res://assets/sprites/items/encrypted_drive.svg"
 	},
 	"banned_ai_core": {
 		"name": "Banned AI Core",
@@ -541,7 +761,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 5.0,
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/banned_ai_core.svg"
+		"icon": "res://assets/sprites/items/ai_core_fragment.svg"
 	},
 	
 	# ===== ADDITIONAL CONTRABAND =====
@@ -553,7 +773,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.2,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/counterfeit_credits.svg"
+		"icon": "res://assets/sprites/items/gold_bar.svg"
 	},
 	"slave_collar": {
 		"name": "Slave Collar",
@@ -563,7 +783,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.5,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/slave_collar.svg"
+		"icon": "res://assets/sprites/items/scrap_mechanical.svg"
 	},
 	"pirate_beacon": {
 		"name": "Pirate Beacon",
@@ -573,7 +793,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 2.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/pirate_beacon.svg"
+		"icon": "res://assets/sprites/items/nav_beacon.svg"
 	},
 	"cloning_sample": {
 		"name": "Cloning Sample",
@@ -583,7 +803,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.1,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/cloning_sample.svg"
+		"icon": "res://assets/sprites/items/cryo_sample.svg"
 	},
 	"bioweapon_vial": {
 		"name": "Bioweapon Vial",
@@ -593,7 +813,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.2,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/bioweapon_vial.svg"
+		"icon": "res://assets/sprites/items/dark_matter_vial.svg"
 	},
 	"quantum_jammer": {
 		"name": "Quantum Jammer",
@@ -603,7 +823,7 @@ const CONTRABAND_ITEMS = {
 		"weight": 3.0,
 		"rarity": 3,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/quantum_jammer.svg"
+		"icon": "res://assets/sprites/items/quantum_processor.svg"
 	},
 	"black_market_pass": {
 		"name": "Black Market Pass",
@@ -613,7 +833,48 @@ const CONTRABAND_ITEMS = {
 		"weight": 0.1,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/black_market_pass.svg"
+		"icon": "res://assets/sprites/items/contraband/black_market_chip.png"
+	}
+}
+
+
+# ==============================================================================
+# ITEM DEFINITIONS - KEYCARDS (Security access tools)
+# ==============================================================================
+
+const KEYCARD_ITEMS = {
+	"keycard_tier1": {
+		"name": "Security Keycard (Green)",
+		"description": "Standard security clearance card. Grants access to basic locked areas.",
+		"width": 1, "height": 1,
+		"base_value": 25,
+		"weight": 0.05,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"tags": ["keycard", "tool", "key", "security", "tier1"],
+		"icon": "res://assets/sprites/items/keycard_green.svg"
+	},
+	"keycard_tier2": {
+		"name": "Security Keycard (Blue)",
+		"description": "Enhanced clearance card. Opens medium-security doors.",
+		"width": 1, "height": 1,
+		"base_value": 75,
+		"weight": 0.05,
+		"rarity": 2,
+		"category": ItemCategory.COMPONENT,
+		"tags": ["keycard", "tool", "key", "security", "tier2"],
+		"icon": "res://assets/sprites/items/keycard_blue.svg"
+	},
+	"keycard_tier3": {
+		"name": "Security Keycard (Red)",
+		"description": "High-security clearance card. Opens restricted areas.",
+		"width": 1, "height": 1,
+		"base_value": 200,
+		"weight": 0.05,
+		"rarity": 3,
+		"category": ItemCategory.COMPONENT,
+		"tags": ["keycard", "tool", "key", "security", "tier3"],
+		"icon": "res://assets/sprites/items/keycard_red.svg"
 	}
 }
 
@@ -1617,6 +1878,7 @@ static func get_all_items() -> Dictionary:
 	all_items.merge(VALUABLE_ITEMS)
 	all_items.merge(EPIC_ITEMS)
 	all_items.merge(CONTRABAND_ITEMS)
+	all_items.merge(KEYCARD_ITEMS)
 	all_items.merge(LEGENDARY_ITEMS)
 	all_items.merge(TRADE_GOODS_ITEMS)
 	all_items.merge(MODULE_ITEMS)
@@ -1679,12 +1941,18 @@ static func _create_basic_item(item_id: String, def: Dictionary) -> ItemData:
 	item.faction_exclusive = def.get("faction_exclusive", "")
 	
 	# New metadata properties
-	item.tags = def.get("tags", [])
+	var raw_tags: Array = def.get("tags", [])
+	item.tags.clear()
+	for tag in raw_tags:
+		item.tags.append(str(tag))
 	item.weight = def.get("weight", 1.0)
 	item.base_value = def.get("base_value", 50)
 	item.black_market_value = def.get("black_market_value", item.base_value)
 	item.faction_affinity = def.get("faction_affinity", -1)
-	item.faction_restricted = def.get("faction_restricted", [])
+	var raw_faction_restricted: Array = def.get("faction_restricted", [])
+	item.faction_restricted.clear()
+	for faction_id in raw_faction_restricted:
+		item.faction_restricted.append(int(faction_id))
 	item.spawn_weight = def.get("spawn_weight", 1.0)
 	item.stack_size = def.get("stack_size", 1)
 	item.icon_path = def.get("icon", "")
@@ -1948,6 +2216,13 @@ static func generate_container_loot_with_faction(
 ) -> Array:
 	var ContainerTypesClass = load("res://scripts/data/container_types.gd")
 	
+	# Check if this is a specialized equipment container
+	# Equipment containers use their own databases, ignoring faction for item selection
+	if container_type == ContainerTypesClass.Type.WEAPONS_CACHE:
+		return _generate_weapons_loot(ship_tier, item_count)
+	elif container_type == ContainerTypesClass.Type.GEAR_LOCKER:
+		return _generate_gear_loot(ship_tier, item_count)
+	
 	# Get category weights from container
 	var category_weights: Dictionary = {}
 	if ContainerTypesClass:
@@ -2047,6 +2322,12 @@ static func generate_container_loot(
 ) -> Array:
 	var ContainerTypesClass = load("res://scripts/data/container_types.gd")
 	
+	# Check if this is a specialized equipment container
+	if container_type == ContainerTypesClass.Type.WEAPONS_CACHE:
+		return _generate_weapons_loot(ship_tier, item_count)
+	elif container_type == ContainerTypesClass.Type.GEAR_LOCKER:
+		return _generate_gear_loot(ship_tier, item_count)
+	
 	# Get category weights from container
 	var category_weights: Dictionary = {}
 	if ContainerTypesClass:
@@ -2062,3 +2343,74 @@ static func generate_container_loot(
 	
 	return items
 
+
+# ==============================================================================
+# EQUIPMENT LOOT GENERATION
+# ==============================================================================
+
+## Generate weapon loot from WeaponsDatabase for weapons cache containers
+static func _generate_weapons_loot(ship_tier: int, item_count: int) -> Array:
+	var WeaponsDB = load("res://scripts/loot/weapons_database.gd")
+	if not WeaponsDB:
+		push_warning("[ItemDB] Failed to load WeaponsDatabase")
+		return []
+	
+	# Rarity ranges by ship tier
+	var min_rarity: int = 0
+	var max_rarity: int = 2
+	match ship_tier:
+		1: min_rarity = 0; max_rarity = 1
+		2: min_rarity = 0; max_rarity = 2
+		3: min_rarity = 1; max_rarity = 3
+		4: min_rarity = 1; max_rarity = 4
+		5, _: min_rarity = 2; max_rarity = 4
+	
+	var items: Array = []
+	for i in range(item_count):
+		var weapon_id = WeaponsDB.get_random_weapon(min_rarity, max_rarity, true)
+		if weapon_id != "":
+			var weapon = WeaponsDB.create_weapon_resource(weapon_id)
+			if weapon:
+				items.append(weapon)
+		else:
+			# Fallback to ammo/component
+			var fallback = create_item("ammo_standard")
+			if fallback:
+				items.append(fallback)
+	
+	return items
+
+
+## Generate gear loot from GearDatabase for gear locker containers
+static func _generate_gear_loot(ship_tier: int, item_count: int) -> Array:
+	var GearDB = load("res://scripts/loot/gear_database.gd")
+	if not GearDB:
+		push_warning("[ItemDB] Failed to load GearDatabase")
+		return []
+	
+	# Rarity ranges by ship tier
+	var min_rarity: int = 0
+	var max_rarity: int = 2
+	match ship_tier:
+		1: min_rarity = 0; max_rarity = 1
+		2: min_rarity = 0; max_rarity = 2
+		3: min_rarity = 1; max_rarity = 3
+		4: min_rarity = 1; max_rarity = 4
+		5, _: min_rarity = 2; max_rarity = 4
+	
+	var items: Array = []
+	for i in range(item_count):
+		# Randomly choose gear category
+		var category = randi() % 4  # 0=armor, 1=helmet, 2=accessory, 3=relic
+		var gear_id = GearDB.get_random_gear(min_rarity, max_rarity, category)
+		if gear_id != "":
+			var gear = GearDB.create_gear_resource(gear_id)
+			if gear:
+				items.append(gear)
+		else:
+			# Fallback to medkit or component
+			var fallback = create_item("med_kit_basic")
+			if fallback:
+				items.append(fallback)
+	
+	return items

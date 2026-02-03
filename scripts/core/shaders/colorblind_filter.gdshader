@@ -6,6 +6,7 @@ render_mode unshaded;
 // - Brettel, Viénot and Mollon (1997)
 // - Machado, Oliveira and Fernandes (2009)
 
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
 uniform int mode = 0; // 0=none, 1=deuteranopia, 2=protanopia, 3=tritanopia
 
 // Deuteranopia transformation matrix (red-green, missing green cones)

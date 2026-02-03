@@ -116,6 +116,9 @@ func _ready() -> void:
 	# Generate star field
 	_generate_stars()
 	
+	# Play undocking music
+	AudioManager.play_music("intro_cinematic")
+	
 	# Create ship visual
 	ship_visual = ShipVisual.new()
 	ship_visual.ship_type = ship_type
@@ -205,6 +208,8 @@ func _process_clamps(_delta: float) -> void:
 	clamp_progress = ease(t, 0.5)
 	
 	if phase_timer >= clamp_time:
+		# Play clamp release sound
+		AudioManager.play_sfx("airlock_open")
 		_transition_to(Phase.SEPARATION)
 		status_changed.emit("CLAMPS RELEASED - SEPARATING")
 
@@ -222,6 +227,8 @@ func _process_separation(_delta: float) -> void:
 	ship_visual.rotation = ship_rot
 	
 	if phase_timer >= separation_time:
+		# Play engine ignition sound
+		AudioManager.play_sfx("engine_boost")
 		_transition_to(Phase.ACCELERATION)
 		status_changed.emit("ENGINES ONLINE - FULL THRUST")
 		ship_visual.engines_active = true

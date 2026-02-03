@@ -297,6 +297,9 @@ func _show_menu() -> void:
 	menu_visible = true
 	current_phase = PHASE_MENU
 	
+	# Play hideout music
+	AudioManager.play_music("station_ambient")
+	
 	# Fade out skip hint
 	if skip_hint:
 		var tween = create_tween()
@@ -342,6 +345,7 @@ func skip_to_menu() -> void:
 # ==============================================================================
 
 func _on_stash_pressed() -> void:
+	AudioManager.play_sfx("ui_open")
 	_hide_all_panels()
 	if stash_panel:
 		stash_panel.visible = true
@@ -350,6 +354,7 @@ func _on_stash_pressed() -> void:
 
 
 func _on_market_pressed() -> void:
+	AudioManager.play_sfx("ui_open")
 	_hide_all_panels()
 	if market_panel:
 		market_panel.visible = true
@@ -358,6 +363,7 @@ func _on_market_pressed() -> void:
 
 
 func _on_upgrades_pressed() -> void:
+	AudioManager.play_sfx("ui_open")
 	_hide_all_panels()
 	if upgrades_panel:
 		upgrades_panel.visible = true
@@ -365,6 +371,7 @@ func _on_upgrades_pressed() -> void:
 
 
 func _on_map_pressed() -> void:
+	AudioManager.play_sfx("ui_open")
 	_hide_all_panels()
 	if map_panel:
 		map_panel.visible = true
@@ -372,6 +379,9 @@ func _on_map_pressed() -> void:
 
 
 func _on_depart_pressed() -> void:
+	# Play depart sound
+	AudioManager.play_sfx("ui_confirm")
+	
 	# Flash effect before fade
 	var flash = ColorRect.new()
 	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -452,6 +462,7 @@ func _connect_panel_close_buttons() -> void:
 
 
 func _on_return_pressed() -> void:
+	AudioManager.play_sfx("ui_close")
 	# Fade to black and return to main menu
 	if fade_overlay:
 		fade_overlay.color = Color.BLACK
@@ -475,23 +486,23 @@ func _go_to_menu() -> void:
 ## Show a brief notification message to the player
 func _show_save_notification(message: String) -> void:
 	# Create notification label
-	var notification = Label.new()
-	notification.text = message
-	notification.modulate = Color(1, 1, 1, 0)
-	notification.position = Vector2(20, 20)
+	var notify_label = Label.new()
+	notify_label.text = message
+	notify_label.modulate = Color(1, 1, 1, 0)
+	notify_label.position = Vector2(20, 20)
 	
 	# Style it
-	notification.add_theme_font_size_override("font_size", 24)
-	notification.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3))
+	notify_label.add_theme_font_size_override("font_size", 24)
+	notify_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3))
 	
-	add_child(notification)
+	add_child(notify_label)
 	
 	# Fade in and out
 	var tween = create_tween()
-	tween.tween_property(notification, "modulate:a", 1.0, 0.3)
+	tween.tween_property(notify_label, "modulate:a", 1.0, 0.3)
 	tween.tween_interval(1.5)
-	tween.tween_property(notification, "modulate:a", 0.0, 0.5)
-	tween.tween_callback(notification.queue_free)
+	tween.tween_property(notify_label, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(notify_label.queue_free)
 
 
 # ==============================================================================

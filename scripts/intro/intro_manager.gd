@@ -33,12 +33,16 @@ const ItemDB = preload("res://scripts/loot/item_database.gd")
 @onready var flash_overlay: ColorRect = $FlashOverlay
 @onready var menu_container: Control = $UI/MenuContainer
 @onready var start_button: Button = $UI/MenuContainer/StartButton
+@onready var options_button: Button = $UI/MenuContainer/OptionsButton
 @onready var quit_button: Button = $UI/MenuContainer/QuitButton
 @onready var footer_label: Label = $UI/Footer
 @onready var dev_menu: Control = $UI/DevMenu
 @onready var dev_hideout_button: Button = $UI/DevMenu/HideoutButton
 @onready var dev_escape_button: Button = $UI/DevMenu/EscapeButton
 @onready var dev_boarding_button: Button = $UI/DevMenu/BoardingButton
+
+# Settings menu
+var settings_menu: Control = null
 
 
 # ==============================================================================
@@ -89,6 +93,9 @@ func _ready() -> void:
 	_generate_stars()
 	_setup_ui()
 	_connect_signals()
+	
+	# Play intro/main menu music
+	AudioManager.play_music("main_menu")
 	
 	# Register skip hint (will be shown when transition starts)
 	if skip_hint:
@@ -641,6 +648,8 @@ func _setup_ui() -> void:
 func _connect_signals() -> void:
 	if start_button:
 		start_button.pressed.connect(_on_start_pressed)
+	if options_button:
+		options_button.pressed.connect(_on_options_pressed)
 	if quit_button:
 		quit_button.pressed.connect(_on_quit_pressed)
 	if dev_hideout_button:
@@ -659,6 +668,10 @@ func _on_start_pressed() -> void:
 	if is_transitioning:
 		return
 	
+	# Play confirmation sound and switch to undocking music
+	AudioManager.play_sfx("ui_confirm")
+	AudioManager.play_music("intro_cinematic")
+	
 	# Setup game state
 	if GameManager:
 		GameManager.reset_game()
@@ -671,7 +684,38 @@ func _on_start_pressed() -> void:
 
 
 func _on_quit_pressed() -> void:
+	AudioManager.play_sfx("ui_cancel")
 	get_tree().quit()
+
+
+func _on_options_pressed() -> void:
+	AudioManager.play_sfx("ui_click")
+	_show_settings_menu()
+
+
+func _show_settings_menu() -> void:
+	if settings_menu and is_instance_valid(settings_menu):
+		settings_menu.show()
+		return
+	
+	# Load and instantiate settings menu
+	var settings_scene = preload("res://scenes/ui/settings_menu.tscn")
+	settings_menu = settings_scene.instantiate()
+	add_child(settings_menu)
+	
+	# Connect back signal to hide menu
+	if settings_menu.has_signal("back_requested"):
+		settings_menu.back_requested.connect(_on_settings_back)
+	
+	settings_menu.show()
+
+
+func _on_settings_back() -> void:
+	if settings_menu:
+		settings_menu.hide()
+	# Return focus to options button
+	if options_button:
+		options_button.grab_focus()
 
 
 func _go_to_boarding() -> void:

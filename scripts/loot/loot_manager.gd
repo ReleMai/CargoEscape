@@ -54,7 +54,7 @@ signal time_warning(seconds_left: int)
 # ==============================================================================
 
 @onready var container: CargoContainer = %Container
-@onready var inventory: GridInventory = %Inventory
+@onready var inventory: SlotInventory = %Inventory
 @onready var score_label: Label = %ScoreLabel
 @onready var continue_button: Button = %ContinueButton
 @onready var drag_visual: Control = %DraggedItem
@@ -208,7 +208,7 @@ func _on_item_drag_ended(item: LootItem, _drop_pos: Vector2) -> void:
 	var placed = false
 	
 	# Try to place in inventory if cursor is over it
-	if inventory and inventory.is_cursor_over_grid():
+	if inventory and inventory.is_cursor_over_inventory():
 		placed = inventory.try_place_at_cursor(item)
 		
 		if placed:

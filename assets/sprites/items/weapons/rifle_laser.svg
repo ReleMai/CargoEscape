@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Laser Rifle - Energy Beam Weapon -->
+  <defs>
+    <linearGradient id="laserBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a5a6a"/>
+      <stop offset="50%" style="stop-color:#4a4a5a"/>
+      <stop offset="100%" style="stop-color:#3a3a4a"/>
+    </linearGradient>
+    <linearGradient id="laserGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff0000"/>
+      <stop offset="50%" style="stop-color:#ff3300"/>
+      <stop offset="100%" style="stop-color:#ff0000"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Stock -->
+  <path d="M2 14 L2 19 L8 19 L10 17 L10 15 L8 14 Z" 
+        fill="#3a3a4a" stroke="#2a2a3a" stroke-width="0.5"/>
+  
+  <!-- Receiver -->
+  <rect x="8" y="12" width="14" height="8" rx="1" fill="url(#laserBody)" stroke="#2a2a3a" stroke-width="0.5"/>
+  
+  <!-- Laser Emitter -->
+  <rect x="20" y="14" width="10" height="4" rx="1" fill="#4a4a5a" stroke="#2a2a3a" stroke-width="0.5"/>
+  <ellipse cx="29" cy="16" rx="1" ry="1.5" fill="#ff0000"/>
+  <ellipse cx="29" cy="16" rx="0.5" ry="0.8" fill="#ff6666"/>
+  
+  <!-- Energy Coils -->
+  <rect x="22" y="14.5" width="6" height="3" rx="0.5" fill="#1a1a2a"/>
+  <line x1="23" y1="15" x2="23" y2="17" stroke="#ff3300" stroke-width="0.5" opacity="0.8"/>
+  <line x1="25" y1="15" x2="25" y2="17" stroke="#ff3300" stroke-width="0.5" opacity="0.8"/>
+  <line x1="27" y1="15" x2="27" y2="17" stroke="#ff3300" stroke-width="0.5" opacity="0.8"/>
+  
+  <!-- Energy Cell -->
+  <rect x="12" y="19" width="4" height="6" rx="0.5" fill="#2a2a3a" stroke="#1a1a2a" stroke-width="0.5"/>
+  <rect x="12.5" y="19.5" width="3" height="5" rx="0.3" fill="url(#laserGlow)" opacity="0.6"/>
+  
+  <!-- Trigger Guard -->
+  <path d="M10 19 L10 23 Q10 24 11 24 L14 24 Q15 24 15 23 L15 19" 
+        fill="none" stroke="#4a4a5a" stroke-width="1.5"/>
+  
+  <!-- Trigger -->
+  <rect x="12" y="20" width="1.5" height="2.5" rx="0.3" fill="#3a3a4a"/>
+  
+  <!-- Scope -->
+  <rect x="10" y="10" width="8" height="2.5" rx="1" fill="#3a3a4a" stroke="#2a2a3a" stroke-width="0.3"/>
+  <ellipse cx="14" cy="11.2" rx="3" ry="0.8" fill="#2a2a3a"/>
+  <ellipse cx="14" cy="11.2" rx="2" ry="0.5" fill="#ff3300" opacity="0.3"/>
+  
+  <!-- Status LEDs -->
+  <circle cx="9.5" cy="13.5" r="0.6" fill="#00ff00"/>
+  <circle cx="9.5" cy="15.5" r="0.6" fill="#00ff00"/>
+  
+  <!-- Highlight -->
+  <line x1="8" y1="12.5" x2="20" y2="12.5" stroke="#6a6a7a" stroke-width="0.3" opacity="0.5"/>
+</svg>

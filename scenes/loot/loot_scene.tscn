@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/loot/loot_manager.gd" id="1_manager"]
 [ext_resource type="PackedScene" uid="uid://c2qn8xh5ml8vp" path="res://scenes/loot/container.tscn" id="2_container"]
-[ext_resource type="PackedScene" uid="uid://dmn6xk2rav4qy" path="res://scenes/loot/inventory.tscn" id="3_inventory"]
+[ext_resource type="PackedScene" uid="uid://c6slot1nvent0ry" path="res://scenes/loot/slot_inventory.tscn" id="3_inventory"]
 
 [node name="LootScene" type="Control"]
 layout_mode = 3

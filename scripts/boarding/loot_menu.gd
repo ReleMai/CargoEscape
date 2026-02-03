@@ -58,7 +58,7 @@ signal search_completed
 @onready var header_label: Label = $Panel/VBox/Header
 @onready var container_panel: Control = $Panel/VBox/ContentArea/ContainerSide/ItemsPanel
 @onready var container_items: Control = $Panel/VBox/ContentArea/ContainerSide/ItemsPanel/Items
-@onready var inventory_grid: GridInventory = $Panel/VBox/ContentArea/InventorySide/InventoryGrid
+@onready var inventory_grid: SlotInventory = $Panel/VBox/ContentArea/InventorySide/InventoryGrid
 @onready var close_button: Button = $Panel/VBox/CloseButton
 @onready var value_label: Label = $Panel/VBox/ContentArea/InventorySide/ValueLabel
 
@@ -70,6 +70,7 @@ var current_container: Node = null
 var loot_items: Array[LootItem] = []
 var dragging_item: LootItem = null
 var tooltip: PanelContainer = null
+var tooltip_layer: CanvasLayer = null  # Canvas layer for tooltip
 
 # Search reveal state
 var is_searching: bool = false
@@ -103,9 +104,9 @@ func _process(delta: float) -> void:
 	if not visible:
 		return
 	
-	# Update value display
-	if value_label and inventory_grid:
-		value_label.text = "Inventory Value: $%d" % inventory_grid.get_total_value()
+	# Hide the redundant value label - value is shown in inventory grid
+	if value_label:
+		value_label.visible = false
 	
 	# Update search progress
 	if is_searching:
@@ -122,7 +123,19 @@ func _input(event: InputEvent) -> void:
 
 func _create_tooltip() -> void:
 	tooltip = ItemTooltipClass.new()
-	add_child(tooltip)
+	# Add tooltip to a CanvasLayer so it's always visible (even when loot_menu is hidden)
+	# This allows tooltips to work in the standalone TAB inventory panel
+	tooltip_layer = CanvasLayer.new()
+	tooltip_layer.name = "TooltipLayer"
+	tooltip_layer.layer = 100  # High layer to stay on top
+	get_tree().root.add_child(tooltip_layer)
+	tooltip_layer.add_child(tooltip)
+
+
+func _exit_tree() -> void:
+	# Clean up the tooltip layer when this node is freed
+	if tooltip_layer and is_instance_valid(tooltip_layer):
+		tooltip_layer.queue_free()
 
 
 ## Create the dark overlay that hides items during search
@@ -160,6 +173,9 @@ func _create_search_overlay() -> void:
 func open_with_container(container: Node) -> void:
 	current_container = container
 	
+	# Play container open sound
+	AudioManager.play_sfx("container_open", -2.0)
+	
 	if header_label and container.has_method("get") and container.get("container_name"):
 		header_label.text = "LOOTING: %s" % container.container_name
 	elif header_label:
@@ -170,11 +186,24 @@ func open_with_container(container: Node) -> void:
 	if container.has_method("get") and container.get("item_data_list"):
 		items = container.item_data_list
 	
+	# Log container opened
+	if DebugLogger:
+		var total_value = 0
+		for item in items:
+			total_value += item.value if item else 0
+		var container_name = container.container_name if container.has_method("get") and container.get("container_name") else "Unknown"
+		DebugLogger.log_container_opened(container_name, items.size(), total_value)
+	
 	# Calculate search time based on container type
 	search_duration = _calculate_search_duration(container)
 	
 	_populate_container_items(items)
 	_start_search()
+	
+	# Refresh inventory display to ensure items are visible
+	if inventory_grid:
+		inventory_grid.refresh_display()
+	
 	visible = true
 
 
@@ -223,6 +252,9 @@ func _check_container_empty() -> void:
 func _start_search() -> void:
 	is_searching = true
 	search_progress = 0.0
+	
+	# Play search sound (looping ambient)
+	AudioManager.play_sfx("container_search", -5.0)
 	
 	# Make sure overlay is added to container panel
 	if search_overlay and container_panel:
@@ -284,6 +316,13 @@ func _update_search(delta: float) -> void:
 func _complete_search() -> void:
 	is_searching = false
 	
+	# Play search complete sound based on best rarity found
+	var best_rarity := 0
+	for item in loot_items:
+		if is_instance_valid(item) and item.item_data:
+			best_rarity = maxi(best_rarity, item.item_data.rarity)
+	AudioManager.play_loot_sound(best_rarity)
+	
 	# Hide overlay
 	if search_overlay:
 		search_overlay.visible = false
@@ -320,6 +359,8 @@ func _populate_container_items(items: Array[ItemData]) -> void:
 		loot_item.drag_started.connect(_on_item_drag_started)
 		loot_item.drag_ended.connect(_on_item_drag_ended)
 		loot_item.destroy_requested.connect(_on_item_destroy_requested)
+		loot_item.rotate_requested.connect(_on_item_rotate_requested)
+		loot_item.examine_requested.connect(_on_item_examine_requested)
 		
 		container_items.add_child(loot_item)
 		loot_items.append(loot_item)
@@ -371,22 +412,32 @@ func _on_item_drag_started(item: LootItem) -> void:
 
 func _on_item_drag_ended(item: LootItem, _drop_pos: Vector2) -> void:
 	if item != dragging_item:
+		print("[LootMenu] _on_item_drag_ended: item != dragging_item, skipping")
 		return
 	
 	var placed = false
+	var item_name = item.item_data.name if item and item.item_data else "null"
+	print("[LootMenu] _on_item_drag_ended: %s (state=%d)" % [item_name, item.current_state])
 	
-	# Check if we were dragging from inventory
-	if inventory_grid and inventory_grid.dragging_from_inventory == item:
+	# Check if this item is from inventory (for rearranging) - use state, not dragging_item
+	# because start_hover also sets dragging_item for container items
+	var is_from_inventory = item.current_state == LootItem.ItemState.IN_INVENTORY
+	
+	if inventory_grid and is_from_inventory:
 		# End inventory drag (will place or return to original)
-		var over_grid = inventory_grid.is_cursor_over_grid()
+		print("[LootMenu] Item was from inventory, ending inventory drag")
+		var over_grid = inventory_grid.is_cursor_over_inventory()
 		placed = inventory_grid.end_drag_from_inventory(over_grid)
 	else:
 		# Try to place in inventory from container
-		if inventory_grid and inventory_grid.is_cursor_over_grid():
+		print("[LootMenu] Item from container, checking placement...")
+		if inventory_grid and inventory_grid.is_cursor_over_inventory():
+			print("[LootMenu] Cursor over inventory, trying to place")
 			placed = inventory_grid.try_place_at_cursor(item)
+			print("[LootMenu] try_place_at_cursor returned: %s" % placed)
 			
 			if placed:
-				# Remove from container
+				# Remove from container tracking
 				loot_items.erase(item)
 				
 				if current_container and current_container.has_method("remove_item"):
@@ -395,10 +446,16 @@ func _on_item_drag_ended(item: LootItem, _drop_pos: Vector2) -> void:
 				# Play loot pickup sound
 				AudioManager.play_sfx_varied("loot_pickup", 0.2, -2.0)
 				
+				# Emit signal for boarding manager to track loot value
+				print("[LootMenu] Emitting item_transferred for: %s ($%d)" % [
+					item.item_data.name if item.item_data else "null",
+					item.item_data.value if item.item_data else 0])
 				emit_signal("item_transferred", item.item_data)
 				
 				# Check if container is now empty
 				_check_container_empty()
+		else:
+			print("[LootMenu] Cursor NOT over inventory")
 		
 		# If not placed, return to original position
 		if not placed:
@@ -419,18 +476,29 @@ func _on_close_pressed() -> void:
 	close_menu()
 
 
-## Handle request to destroy an item (right-click in inventory)
+## Handle request to destroy an item (via context menu in inventory)
 func _on_item_destroy_requested(item: LootItem) -> void:
 	if inventory_grid:
 		inventory_grid.destroy_item(item)
-		# Update value display
-		if value_label:
-			value_label.text = "Inventory Value: $%d" % inventory_grid.get_total_value()
+
+
+## Handle request to rotate an item (via context menu in inventory)
+func _on_item_rotate_requested(item: LootItem) -> void:
+	if inventory_grid:
+		inventory_grid.rotate_item(item)
+
+
+## Handle request to examine an item (via context menu in inventory)
+func _on_item_examine_requested(item: LootItem) -> void:
+	# Show tooltip for the item
+	var item_tooltip := ItemTooltip.get_instance()
+	if item_tooltip and item.item_data:
+		item_tooltip.show_for_item(item.item_data)
 
 
 # ==============================================================================
 # INVENTORY ACCESS
 # ==============================================================================
 
-func get_inventory() -> GridInventory:
+func get_inventory() -> SlotInventory:
 	return inventory_grid

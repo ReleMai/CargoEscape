@@ -129,6 +129,27 @@ custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "100%"
 
+[node name="AmbientVolume" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/AudioSettings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/AmbientVolume"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Ambient Volume:"
+
+[node name="AmbientSlider" type="HSlider" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/AmbientVolume"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/AudioSettings/AmbientVolume"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+
 [node name="DisplaySettings" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10

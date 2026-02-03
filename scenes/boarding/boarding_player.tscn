@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/boarding/boarding_player.gd" id="1_player"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_collision"]
-size = Vector2(40, 56)
+size = Vector2(28, 40)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
 radius = 60.0
@@ -13,27 +13,27 @@ collision_layer = 2
 script = ExtResource("1_player")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
+scale = Vector2(1.5, 1.5)
 
 [node name="Body" type="ColorRect" parent="Sprite2D"]
-offset_left = -12.0
-offset_top = -16.0
-offset_right = 12.0
-offset_bottom = 16.0
+offset_left = -10.0
+offset_top = -14.0
+offset_right = 10.0
+offset_bottom = 14.0
 color = Color(0.2, 0.7, 0.4, 1)
 
 [node name="Visor" type="ColorRect" parent="Sprite2D"]
-offset_left = -8.0
-offset_top = -12.0
-offset_right = 8.0
-offset_bottom = -4.0
+offset_left = -7.0
+offset_top = -10.0
+offset_right = 7.0
+offset_bottom = -3.0
 color = Color(0.3, 0.8, 0.9, 1)
 
 [node name="Pack" type="ColorRect" parent="Sprite2D"]
-offset_left = -10.0
-offset_top = 4.0
-offset_right = 10.0
-offset_bottom = 14.0
+offset_left = -8.0
+offset_top = 3.0
+offset_right = 8.0
+offset_bottom = 12.0
 color = Color(0.4, 0.35, 0.3, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

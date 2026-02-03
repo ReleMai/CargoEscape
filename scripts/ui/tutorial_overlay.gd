@@ -43,7 +43,7 @@ signal skip_requested
 @onready var description_label: Label = $TooltipPanel/VBox/DescriptionLabel
 @onready var skip_button: Button = $SkipButton
 @onready var highlight_rect: ColorRect = $HighlightRect
-@onready var arrow_pointer: Sprite2D = $ArrowPointer
+@onready var arrow_pointer: Polygon2D = $ArrowPointer
 
 # ==============================================================================
 # STATE
@@ -115,6 +115,9 @@ func hide_tutorial() -> void:
 
 func _show_tooltip() -> void:
 	tooltip_panel.visible = true
+	
+	# Play notification sound
+	AudioManager.play_sfx("ui_notification")
 	
 	# Animate in
 	tooltip_panel.modulate.a = 0

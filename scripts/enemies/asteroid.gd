@@ -150,7 +150,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	# Draw shadow layer (slightly offset)
-	var shadow_offset := Vector2(3, 3)
+	var _shadow_offset := Vector2(3, 3)
 	draw_polygon(polygon_points, [shadow_color])
 	
 	# Draw base asteroid
@@ -243,7 +243,7 @@ func _draw_craters() -> void:
 		draw_circle(pos, crater_radius, crater_color)
 		
 		# Inner highlight (rim lighting)
-		var inner_pos := pos + Vector2(-crater_radius * 0.3, -crater_radius * 0.3)
+		var _inner_pos := pos + Vector2(-crater_radius * 0.3, -crater_radius * 0.3)
 		draw_arc(pos, crater_radius * 0.8, PI * 0.8, PI * 1.5, 8, highlight_color.darkened(0.3), 1.5)
 
 
@@ -251,7 +251,7 @@ func _draw_highlight_edge() -> void:
 	# Draw a subtle highlight on the upper-left edge
 	var highlight_points: PackedVector2Array = []
 	
-	for i in range(vertex_count / 4, vertex_count / 2):
+	for i in range(int(vertex_count / 4.0), int(vertex_count / 2.0)):
 		highlight_points.append(polygon_points[i])
 	
 	if highlight_points.size() > 1:

@@ -94,7 +94,7 @@ signal run_ended(final_score: int)
 # ==============================================================================
 
 ## Reference to the inventory
-var inventory_ref: GridInventory = null
+var inventory_ref: SlotInventory = null
 
 ## Mission statistics
 var mission_stats: Dictionary = {
@@ -152,7 +152,7 @@ func _ready() -> void:
 # ==============================================================================
 
 ## Show the station UI with mission results
-func show_station(inventory: GridInventory, stats: Dictionary = {}) -> void:
+func show_station(inventory: SlotInventory, stats: Dictionary = {}) -> void:
 	inventory_ref = inventory
 	mission_stats = stats
 	

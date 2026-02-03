@@ -45,6 +45,17 @@ class_name ItemData
 ## Description shown in tooltips
 @export_multiline var description: String = "A mysterious item."
 
+## Extended lore/flavor text (shown in examine mode)
+@export_multiline var lore_text: String = ""
+
+## Crafting components this item provides when salvaged
+## Format: {"component_id": amount, ...}
+@export var crafting_components: Dictionary = {}
+
+## Recipe to craft this item (if craftable)
+## Format: {"component_id": amount, ...}
+@export var craft_recipe: Dictionary = {}
+
 ## Item tags for classification (e.g., ["weapon", "illegal", "tech"])
 @export var tags: Array[String] = []
 
@@ -76,6 +87,9 @@ class_name ItemData
 ## Item category for container loot weighting
 ## 0=Scrap, 1=Component, 2=Valuable, 3=Module, 4=Artifact
 @export_range(0, 4) var category: int = 0
+
+## EXP granted when picking up this item (0 = auto-calculate)
+@export var exp_value: int = 0
 
 @export_group("Faction System")
 ## Which faction commonly has this item (use Factions.Type enum values)
@@ -226,6 +240,23 @@ func is_restricted_for_faction(faction_type: int) -> bool:
 ## Get weight per inventory cell (efficiency metric)
 func get_weight_density() -> float:
 	return weight / float(get_cell_count())
+
+
+## Calculate EXP value based on rarity and size
+## Formula: base_exp * rarity_multiplier * (grid_width * grid_height)
+func calculate_exp_value() -> int:
+	var base_exp = 5
+	var rarity_multipliers = [1, 2, 4, 8, 16]  # Common to Legendary
+	var size_factor = grid_width * grid_height
+	
+	return base_exp * rarity_multipliers[clampi(rarity, 0, 4)] * size_factor
+
+
+## Get the EXP value (use manual value if set, otherwise calculate)
+func get_exp_value() -> int:
+	if exp_value > 0:
+		return exp_value
+	return calculate_exp_value()
 
 
 # ==============================================================================

@@ -76,6 +76,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "NEW GAME"
 
+[node name="OptionsButton" type="Button" parent="UI/MenuContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "OPTIONS"
+
 [node name="QuitButton" type="Button" parent="UI/MenuContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24

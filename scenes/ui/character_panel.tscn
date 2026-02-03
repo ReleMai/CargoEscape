@@ -1,0 +1,351 @@
+[gd_scene load_steps=2 format=3 uid="uid://8laphme71g6s"]
+
+[ext_resource type="Script" path="res://scripts/ui/character_panel.gd" id="1_panel"]
+
+[node name="CharacterPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_panel")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.1, 0.9)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+text = "CHARACTER MENU"
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBox/Header"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Close [Tab]"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Character" type="MarginContainer" parent="MarginContainer/VBox/TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/VBox/TabContainer/Character"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="StatsPanel" type="VBoxContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+
+[node name="StatsHeader" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Character Stats"
+
+[node name="LevelPanel" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel"]
+layout_mode = 2
+
+[node name="LevelVBox" type="VBoxContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/LevelPanel"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/LevelPanel/LevelVBox"]
+layout_mode = 2
+text = "Level: 1"
+
+[node name="ExpProgress" type="ProgressBar" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/LevelPanel/LevelVBox"]
+layout_mode = 2
+value = 50.0
+show_percentage = false
+
+[node name="ExpLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/LevelPanel/LevelVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "EXP: 0 / 100"
+
+[node name="StatPointsLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+text = "Stat Points: 0"
+
+[node name="StatsGrid" type="GridContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+
+[node name="HealthLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Health:"
+
+[node name="HealthValue" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "100"
+horizontal_alignment = 2
+
+[node name="HealthButton" type="Button" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "+"
+
+[node name="AttackLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Attack:"
+
+[node name="AttackValue" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "10"
+horizontal_alignment = 2
+
+[node name="AttackButton" type="Button" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "+"
+
+[node name="DefenseLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Defense:"
+
+[node name="DefenseValue" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "5"
+horizontal_alignment = 2
+
+[node name="DefenseButton" type="Button" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "+"
+
+[node name="SpeedLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Speed:"
+
+[node name="SpeedValue" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "10"
+horizontal_alignment = 2
+
+[node name="SpeedButton" type="Button" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "+"
+
+[node name="LuckLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Luck:"
+
+[node name="LuckValue" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "5"
+horizontal_alignment = 2
+
+[node name="LuckButton" type="Button" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "+"
+
+[node name="StealthLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Stealth:"
+
+[node name="StealthValue" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "10"
+horizontal_alignment = 2
+
+[node name="StealthButton" type="Button" parent="MarginContainer/VBox/TabContainer/Character/HBox/StatsPanel/StatsGrid"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+text = "+"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBox/TabContainer/Character/HBox"]
+layout_mode = 2
+
+[node name="EquipmentPanel" type="VBoxContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EquipmentHeader" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Equipment"
+
+[node name="EquipmentGrid" type="GridContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="WeaponLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Primary:"
+
+[node name="WeaponSlot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="WeaponName" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/WeaponSlot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SecondaryLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Secondary:"
+
+[node name="SecondarySlot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="SecondaryName" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/SecondarySlot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ArmorLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Armor:"
+
+[node name="ArmorSlot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="ArmorName" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/ArmorSlot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HelmetLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Helmet:"
+
+[node name="HelmetSlot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="HelmetName" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/HelmetSlot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Accessory1Label" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Accessory 1:"
+
+[node name="Accessory1Slot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="Accessory1Name" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/Accessory1Slot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Accessory2Label" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Accessory 2:"
+
+[node name="Accessory2Slot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="Accessory2Name" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/Accessory2Slot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RelicLabel" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Relic:"
+
+[node name="RelicSlot" type="PanelContainer" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="RelicName" type="Label" parent="MarginContainer/VBox/TabContainer/Character/HBox/EquipmentPanel/EquipmentGrid/RelicSlot"]
+layout_mode = 2
+text = "(Empty)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Inventory" type="MarginContainer" parent="MarginContainer/VBox/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBox/TabContainer/Inventory"]
+layout_mode = 2
+
+[node name="InventoryHeader" type="Label" parent="MarginContainer/VBox/TabContainer/Inventory/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Right-click items to destroy. Drag and drop to rearrange."
+horizontal_alignment = 1
+
+[node name="InventoryHolder" type="VBoxContainer" parent="MarginContainer/VBox/TabContainer/Inventory/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="MarginContainer/VBox/Header/CloseButton" to="." method="close_panel"]

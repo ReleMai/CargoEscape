@@ -20,6 +20,9 @@ class_name MainMenu
 @onready var title_label: Label = $TitleContainer/TitleLabel
 @onready var subtitle_label: Label = $TitleContainer/SubtitleLabel
 
+# Optional node - may not exist in all menu variants
+var accessibility_button: Button = null
+
 
 # ==============================================================================
 # PRELOADS
@@ -32,6 +35,12 @@ const AchievementGalleryScene = preload("res://scenes/ui/achievement_gallery.tsc
 # ==============================================================================
 
 func _ready() -> void:
+	# Get optional accessibility button if it exists
+	accessibility_button = get_node_or_null("MenuContainer/AccessibilityButton")
+	
+	# Start main menu music
+	AudioManager.play_music("main_menu")
+	
 	_setup_ui()
 	_connect_signals()
 	_play_entrance_animation()
@@ -111,6 +120,9 @@ func _play_entrance_animation() -> void:
 # ==============================================================================
 
 func _on_start_pressed() -> void:
+	# Play button click sound
+	AudioManager.play_sfx("ui_confirm", -3.0)
+	
 	# Check if animations should be reduced
 	var should_animate = true
 	if has_node("/root/AccessibilityManager"):
@@ -131,16 +143,21 @@ func _start_game() -> void:
 	# Reset game state before starting
 	if GameManager:
 		GameManager.reset_game()
+		GameManager.initialize_starting_equipment()
+		var station_data = preload("res://resources/stations/abandoned_station.tres")
+		GameManager.set_current_station(station_data)
 	
-	# Go to intro scene with loading screen
-	LoadingScreen.start_transition("res://scenes/intro/intro_scene.tscn")
+	# Go directly to gameplay (main.tscn) - not intro_scene which is the animated menu
+	LoadingScreen.start_transition("res://scenes/main.tscn")
 
 
 func _on_quit_pressed() -> void:
+	AudioManager.play_sfx("ui_click", -3.0)
 	get_tree().quit()
 
 
 func _on_achievements_pressed() -> void:
+	AudioManager.play_sfx("ui_click", -3.0)
 	# Open achievement gallery as overlay
 	var gallery = AchievementGalleryScene.instantiate()
 	add_child(gallery)

@@ -38,6 +38,8 @@ signal escape_triggered
 # ==============================================================================
 
 var is_active: bool = true
+var is_locked: bool = false  # Kill requirement not met
+var lock_reason: String = ""  # Why the exit is locked
 var player_in_range: bool = false
 
 # ==============================================================================
@@ -58,21 +60,38 @@ func _ready() -> void:
 # ==============================================================================
 
 func can_interact() -> bool:
-	return is_active
+	return is_active and not is_locked
 
 
 func get_interact_prompt() -> String:
+	if is_locked:
+		return "🔒 " + lock_reason
 	return "[E] ESCAPE!"
 
 
 func trigger_escape() -> void:
-	if not is_active:
+	if not is_active or is_locked:
+		if is_locked:
+			AudioManager.play_sfx("error")
 		return
 	
 	# Play escape sound
 	AudioManager.play_sfx("escape", 0.0)
 	
 	emit_signal("escape_triggered")
+
+
+## Set locked state with optional reason message
+func set_locked(locked: bool, reason: String = "") -> void:
+	is_locked = locked
+	lock_reason = reason
+	_update_visuals()
+	
+	if player_in_range:
+		if locked:
+			_show_locked_prompt()
+		else:
+			_show_escape_prompt()
 
 
 func set_active(active: bool) -> void:
@@ -134,16 +153,27 @@ func _load_exit_sprite() -> void:
 
 func _update_visuals() -> void:
 	if sprite:
-		sprite.modulate = Color(0.3, 1.0, 0.5) if is_active else Color(0.5, 0.5, 0.5)
+		if is_locked:
+			sprite.modulate = Color(1.0, 0.3, 0.3)  # Red when locked
+		elif is_active:
+			sprite.modulate = Color(0.3, 1.0, 0.5)  # Green when open
+		else:
+			sprite.modulate = Color(0.5, 0.5, 0.5)  # Gray when inactive
 	
 	if particles:
-		particles.emitting = is_active
+		particles.emitting = is_active and not is_locked
 
 
 func _show_escape_prompt() -> void:
 	if label:
 		label.text = "ESCAPE!\n[E]"
 		label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.5))
+
+
+func _show_locked_prompt() -> void:
+	if label:
+		label.text = "🔒 LOCKED\n" + lock_reason
+		label.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 
 
 func _hide_escape_prompt() -> void:

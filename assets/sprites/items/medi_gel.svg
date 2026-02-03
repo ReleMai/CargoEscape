@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Medi-Gel - 1x1 medical supply -->
+  <defs>
+    <linearGradient id="gelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#60C0E0"/>
+      <stop offset="50%" style="stop-color:#40A0D0"/>
+      <stop offset="100%" style="stop-color:#2080B0"/>
+    </linearGradient>
+    <linearGradient id="tubeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#E8E8F0"/>
+      <stop offset="50%" style="stop-color:#D0D0E0"/>
+      <stop offset="100%" style="stop-color:#E8E8F0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Tube body -->
+  <rect x="12" y="16" width="40" height="36" rx="8" fill="url(#tubeGrad)" stroke="#A0A0B0" stroke-width="1"/>
+  
+  <!-- Gel visible through tube -->
+  <rect x="14" y="26" width="36" height="24" rx="6" fill="url(#gelGrad)" opacity="0.8"/>
+  
+  <!-- Tube cap -->
+  <rect x="22" y="8" width="20" height="12" fill="#404050" rx="3"/>
+  <rect x="26" y="4" width="12" height="6" fill="#505060" rx="2"/>
+  
+  <!-- Red cross symbol -->
+  <rect x="28" y="30" width="8" height="16" fill="#E04040" rx="1"/>
+  <rect x="24" y="34" width="16" height="8" fill="#E04040" rx="1"/>
+  
+  <!-- Highlight -->
+  <ellipse cx="20" cy="32" rx="3" ry="10" fill="rgba(255,255,255,0.3)"/>
+  
+  <!-- Dose marks -->
+  <line x1="48" y1="30" x2="52" y2="30" stroke="#808090" stroke-width="1"/>
+  <line x1="48" y1="38" x2="52" y2="38" stroke="#808090" stroke-width="1"/>
+  <line x1="48" y1="46" x2="52" y2="46" stroke="#808090" stroke-width="1"/>
+</svg>

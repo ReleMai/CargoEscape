@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Katana - Traditional Sword -->
+  <defs>
+    <linearGradient id="katanaBladeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e8f0"/>
+      <stop offset="30%" style="stop-color:#c0c0d0"/>
+      <stop offset="70%" style="stop-color:#a0a0b0"/>
+      <stop offset="100%" style="stop-color:#808090"/>
+    </linearGradient>
+    <linearGradient id="katanaWrapGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2a1a1a"/>
+      <stop offset="50%" style="stop-color:#1a0a0a"/>
+      <stop offset="100%" style="stop-color:#2a1a1a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Curved Blade -->
+  <path d="M16,2 Q14,8 14,14 Q14,20 15,24 L17,24 Q18,20 18,14 Q18,8 16,2" 
+        fill="url(#katanaBladeGrad)" stroke="#606070" stroke-width="0.5"/>
+  
+  <!-- Blade Edge (Hamon) -->
+  <path d="M15,4 Q14.5,10 15,18 Q15.2,21 15.5,23" 
+        fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.6"/>
+  
+  <!-- Blade Tip -->
+  <polygon points="16,1 14.5,4 17.5,4" fill="#d0d0e0" stroke="#808090" stroke-width="0.3"/>
+  
+  <!-- Habaki (Blade Collar) -->
+  <rect x="14" y="23" width="4" height="2" fill="#b8860b" stroke="#8b6914" stroke-width="0.3"/>
+  
+  <!-- Tsuba (Guard) -->
+  <ellipse cx="16" cy="26.5" rx="4" ry="1.5" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="0.5"/>
+  <ellipse cx="16" cy="26.5" rx="3" ry="1" fill="#3a3a3a"/>
+  <!-- Tsuba Design -->
+  <circle cx="14" cy="26.5" r="0.5" fill="#1a1a1a"/>
+  <circle cx="18" cy="26.5" r="0.5" fill="#1a1a1a"/>
+  
+  <!-- Tsuka (Handle) -->
+  <rect x="14.5" y="27" width="3" height="5" rx="0.3" fill="url(#katanaWrapGrad)"/>
+  
+  <!-- Wrap Pattern (Tsuka-ito) -->
+  <line x1="14.5" y1="28" x2="17.5" y2="28" stroke="#3a2a2a" stroke-width="0.3"/>
+  <line x1="14.5" y1="28.8" x2="17.5" y2="28.8" stroke="#3a2a2a" stroke-width="0.3"/>
+  <line x1="14.5" y1="29.6" x2="17.5" y2="29.6" stroke="#3a2a2a" stroke-width="0.3"/>
+  <line x1="14.5" y1="30.4" x2="17.5" y2="30.4" stroke="#3a2a2a" stroke-width="0.3"/>
+  
+  <!-- Diamond Pattern -->
+  <polygon points="15.5,27.5 16,28 16.5,27.5 16,27" fill="#1a0a0a" opacity="0.5"/>
+  <polygon points="15.5,29 16,29.5 16.5,29 16,28.5" fill="#1a0a0a" opacity="0.5"/>
+  <polygon points="15.5,30.5 16,31 16.5,30.5 16,30" fill="#1a0a0a" opacity="0.5"/>
+  
+  <!-- Kashira (Pommel) -->
+  <ellipse cx="16" cy="32" rx="2" ry="0.8" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="0.3"/>
+</svg>

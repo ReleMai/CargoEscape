@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ShipModule" load_steps=2 format=3 uid="uid://stealth_engine_module"]
+
+[ext_resource type="Script" path="res://scripts/data/ship_module.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+module_id = "stealth_engine"
+module_name = "Stealth Engine"
+description = "Silent running propulsion system. Reduces heat signature and detection range. Perfect for smugglers."
+slot_type = 0
+rarity = 3
+base_value = 850
+primary_color = Color(0.15, 0.15, 0.2, 1)
+secondary_color = Color(0.25, 0.25, 0.35, 1)
+glow_color = Color(0.1, 0.1, 0.15, 0.3)
+visual_scale = 0.9
+damage = 0.0
+fire_rate = 0.0
+projectile_speed = 0.0
+energy_cost = 0.0
+thrust_bonus = 0.1
+speed_bonus = 0.15
+drag_reduction = 0.1
+shield_bonus = 0.0
+scanner_bonus = 0.0
+cargo_bonus = 0

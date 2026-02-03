@@ -87,15 +87,23 @@ var hull_width: float = 40.0
 # LIFECYCLE
 # ==============================================================================
 
+var _redraw_timer: float = 0.0
+const REDRAW_INTERVAL: float = 0.033  # ~30 FPS for ship animation
+
 func _ready() -> void:
 	_configure_ship_dimensions()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	# Animate engine glow
 	if engines_active:
 		engine_intensity = 0.6 + sin(Time.get_ticks_msec() * 0.01) * 0.3
-	queue_redraw()
+		# Throttle redraws when engines are active
+		_redraw_timer += delta
+		if _redraw_timer >= REDRAW_INTERVAL:
+			_redraw_timer = 0.0
+			queue_redraw()
+	# Don't redraw when engines are off - ship is static
 
 
 func _draw() -> void:

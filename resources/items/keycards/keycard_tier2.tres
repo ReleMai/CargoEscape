@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot/item_data.gd" id="1_basic"]
+
+[resource]
+script = ExtResource("1_basic")
+id = "keycard_tier2"
+name = "Security Keycard (Blue)"
+description = "Enhanced security keycard. Opens mid-level secure doors."
+tags = Array[String](["keycard", "tool", "key", "security"])
+grid_width = 1
+grid_height = 1
+weight = 0.05
+stack_size = 1
+base_value = 75
+black_market_value = 100
+rarity = 1
+category = 1
+faction_affinity = -1
+faction_restricted = Array[int]([])
+spawn_weight = 1.0
+base_search_time = 0.5
+search_time_multiplier = 0.0
+rarity_color = Color(0.3, 0.5, 1.0, 1)
+icon_path = "res://assets/sprites/items/keycard_blue.svg"
+value = 75

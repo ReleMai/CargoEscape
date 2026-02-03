@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Soldier NPC - Enemy Guard -->
+  <defs>
+    <linearGradient id="soldierArmorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b2020"/>
+      <stop offset="50%" style="stop-color:#6b1515"/>
+      <stop offset="100%" style="stop-color:#4b1010"/>
+    </linearGradient>
+    <linearGradient id="soldierHelmetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a1818"/>
+      <stop offset="100%" style="stop-color:#3a0a0a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Shadow -->
+  <ellipse cx="16" cy="30" rx="8" ry="2" fill="rgba(0,0,0,0.3)"/>
+  
+  <!-- Legs -->
+  <rect x="11" y="22" width="4" height="7" rx="1" fill="#2a2a2a"/>
+  <rect x="17" y="22" width="4" height="7" rx="1" fill="#2a2a2a"/>
+  
+  <!-- Boots -->
+  <rect x="10" y="27" width="5" height="3" rx="1" fill="#1a1a1a"/>
+  <rect x="17" y="27" width="5" height="3" rx="1" fill="#1a1a1a"/>
+  
+  <!-- Body Armor -->
+  <rect x="9" y="12" width="14" height="12" rx="2" fill="url(#soldierArmorGrad)" stroke="#3a0808" stroke-width="0.5"/>
+  
+  <!-- Chest Plate -->
+  <rect x="11" y="14" width="10" height="8" rx="1" fill="#5a1515"/>
+  <line x1="16" y1="14" x2="16" y2="22" stroke="#4a1010" stroke-width="0.5"/>
+  
+  <!-- Shoulder Pads -->
+  <rect x="6" y="12" width="5" height="4" rx="1" fill="#6b1515" stroke="#4a0a0a" stroke-width="0.5"/>
+  <rect x="21" y="12" width="5" height="4" rx="1" fill="#6b1515" stroke="#4a0a0a" stroke-width="0.5"/>
+  
+  <!-- Arms -->
+  <rect x="5" y="15" width="4" height="8" rx="1" fill="#2a2a2a"/>
+  <rect x="23" y="15" width="4" height="8" rx="1" fill="#2a2a2a"/>
+  
+  <!-- Weapon (held in right hand) -->
+  <rect x="25" y="17" width="6" height="3" rx="0.5" fill="#3a3a3a"/>
+  <rect x="30" y="17.5" width="2" height="2" fill="#2a2a2a"/>
+  
+  <!-- Helmet -->
+  <rect x="10" y="3" width="12" height="10" rx="2" fill="url(#soldierHelmetGrad)" stroke="#2a0505" stroke-width="0.5"/>
+  
+  <!-- Visor -->
+  <rect x="11" y="5" width="10" height="4" rx="1" fill="#1a0505"/>
+  <rect x="12" y="6" width="8" height="2" rx="0.5" fill="#cc2020" opacity="0.8"/>
+  
+  <!-- Helmet Details -->
+  <rect x="10" y="2" width="12" height="2" rx="1" fill="#4a1010"/>
+  <line x1="16" y1="3" x2="16" y2="10" stroke="#2a0505" stroke-width="0.5"/>
+  
+  <!-- Belt -->
+  <rect x="9" y="21" width="14" height="2" fill="#3a3a3a"/>
+  <rect x="14" y="21" width="4" height="2" fill="#4a4a4a"/>
+  
+  <!-- Faction Symbol on Chest -->
+  <circle cx="16" cy="17" r="2" fill="none" stroke="#aa3030" stroke-width="0.5"/>
+  <line x1="16" y1="15.5" x2="16" y2="18.5" stroke="#aa3030" stroke-width="0.5"/>
+  <line x1="14.5" y1="17" x2="17.5" y2="17" stroke="#aa3030" stroke-width="0.5"/>
+</svg>

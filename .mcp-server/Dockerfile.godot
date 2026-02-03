@@ -1,0 +1,118 @@
+# Cargo Escape MCP Server with Godot Headless
+# 
+# Multi-stage build:
+# 1. Godot stage: Download Godot headless binary
+# 2. Build stage: Install Node.js dependencies  
+# 3. Production stage: Combine everything (using Debian for glibc compatibility)
+
+#=============================================================================
+# STAGE 1: Download Godot Headless
+#=============================================================================
+FROM debian:bookworm-slim AS godot-downloader
+
+# Install download tools
+RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
+
+# Download Godot 4.6 headless (Linux server build)
+ARG GODOT_VERSION=4.6
+ARG GODOT_RELEASE=stable
+
+WORKDIR /godot
+
+# Download the Linux build (works with glibc)
+RUN curl -L -o godot.zip \
+    "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64.zip" && \
+    unzip godot.zip && \
+    mv Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64 /godot/godot && \
+    chmod +x /godot/godot
+
+#=============================================================================
+# STAGE 2: Build Node.js dependencies (using Alpine for speed)
+#=============================================================================
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install all dependencies
+RUN npm ci --ignore-scripts
+
+# Copy source code
+COPY src/ ./src/
+
+# Prune dev dependencies and clean npm cache
+RUN npm prune --production && \
+    npm cache clean --force
+
+#=============================================================================
+# STAGE 3: Production image with Godot + Node.js (Debian for glibc)
+#=============================================================================
+FROM node:20-slim AS production
+
+# Install runtime dependencies for Godot headless
+# Godot needs various libraries for headless operation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    ca-certificates \
+    git \
+    libx11-6 \
+    libxcursor1 \
+    libxinerama1 \
+    libxrandr2 \
+    libxi6 \
+    libgl1 \
+    libglu1-mesa \
+    libasound2 \
+    libpulse0 \
+    libfontconfig1 \
+    libfreetype6 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Create non-root user for security
+RUN groupadd -g 1001 nodejs && \
+    useradd -u 1001 -g nodejs -m nodejs
+
+# Copy Godot binary from downloader stage
+COPY --from=godot-downloader /godot/godot /usr/local/bin/godot
+RUN chmod +x /usr/local/bin/godot
+
+# Copy Node.js app from builder stage
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/src ./src
+COPY --from=builder --chown=nodejs:nodejs /app/package.json ./package.json
+
+# Create directories and configure git
+RUN mkdir -p /home/nodejs/.config/godot && \
+    mkdir -p /home/nodejs/.local/share/godot && \
+    mkdir -p /home/nodejs/.cache && \
+    mkdir -p /app/cache && \
+    mkdir -p /app/logs && \
+    chown -R nodejs:nodejs /home/nodejs /app
+
+# Switch to non-root user
+USER nodejs
+
+# Configure git safe.directory for nodejs user
+RUN git config --global --add safe.directory '*'
+
+# Environment variables
+ENV WORKSPACE_PATH=/workspace
+ENV PORT=3000
+ENV HOST=0.0.0.0
+ENV NODE_ENV=production
+ENV GODOT_PATH=/usr/local/bin/godot
+ENV DISPLAY=""
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=15s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
+# Start the new server
+CMD ["node", "src/server.js"]

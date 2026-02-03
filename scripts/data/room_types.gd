@@ -6,9 +6,13 @@
 # PURPOSE: Data definitions for different room types in ship layouts
 #
 # ROOM CATEGORIES:
-# - Essential: Entry Airlock, Exit Airlock, Corridor
+# - Essential: Entry Airlock, Boarding Dock, Exit Airlock, Corridor
 # - Common: Cargo Bay, Storage, Crew Quarters, Supply Room
 # - Special: Bridge, Engine Room, Armory, Vault, Med Bay, Lab, etc.
+#
+# SCALE NOTE:
+# Rooms are now MUCH larger (2-3x previous sizes) to match the giant ship
+# interiors. This creates proper sense of scale and exploration.
 #
 # ==============================================================================
 
@@ -22,6 +26,7 @@ extends RefCounted
 
 enum Type {
 	# Essential
+	BOARDING_DOCK,  # New: Starting area with airlock and decontamination
 	ENTRY_AIRLOCK,
 	EXIT_AIRLOCK,
 	CORRIDOR,
@@ -125,16 +130,40 @@ static func _define_rooms() -> void:
 	# ESSENTIAL ROOMS
 	# =========================================================================
 	
+	# BOARDING DOCK - NEW starting location
+	var dock = RoomData.new(
+		Type.BOARDING_DOCK,
+		Category.ESSENTIAL,
+		"Boarding Dock",
+		"Docking bay where the player enters. Includes airlock and decontamination."
+	)
+	dock.min_size = Vector2(480, 400)
+	dock.max_size = Vector2(560, 480)
+	dock.preferred_size = Vector2(520, 440)
+	dock.preferred_position = "side"
+	dock.min_containers = 0
+	dock.max_containers = 1  # Maybe a supply cabinet
+	dock.container_types.assign([CT.Type.SUPPLY_CABINET])
+	dock.floor_pattern = "grated"
+	dock.wall_style = "bulkhead"
+	dock.has_special_lighting = true
+	dock.lighting_color = Color(0.4, 0.6, 1.0)  # Blue decontamination lights
+	dock.decoration_tags.assign([
+		"airlock_door", "decon_chamber", "equipment_lockers", 
+		"warning_stripes", "pressure_indicators", "suit_storage"
+	])
+	_rooms[Type.BOARDING_DOCK] = dock
+	
 	# ENTRY AIRLOCK
 	var entry = RoomData.new(
 		Type.ENTRY_AIRLOCK,
 		Category.ESSENTIAL,
 		"Entry Airlock",
-		"Player spawn point. Sealed door to the ship exterior."
+		"Secondary entry point. Sealed door to the ship exterior."
 	)
-	entry.min_size = Vector2(80, 80)
-	entry.max_size = Vector2(100, 100)
-	entry.preferred_size = Vector2(90, 90)
+	entry.min_size = Vector2(320, 320)
+	entry.max_size = Vector2(400, 400)
+	entry.preferred_size = Vector2(360, 360)
 	entry.preferred_position = "side"
 	entry.min_containers = 0
 	entry.max_containers = 0
@@ -150,9 +179,9 @@ static func _define_rooms() -> void:
 		"Exit Airlock",
 		"Escape point. Must reach before timer expires."
 	)
-	exit.min_size = Vector2(80, 80)
-	exit.max_size = Vector2(100, 100)
-	exit.preferred_size = Vector2(90, 90)
+	exit.min_size = Vector2(320, 320)
+	exit.max_size = Vector2(400, 400)
+	exit.preferred_size = Vector2(360, 360)
 	exit.preferred_position = "side"
 	exit.min_containers = 0
 	exit.max_containers = 0
@@ -163,41 +192,41 @@ static func _define_rooms() -> void:
 	exit.decoration_tags.assign(["airlock", "exit_sign", "green_lights"])
 	_rooms[Type.EXIT_AIRLOCK] = exit
 	
-	# CORRIDOR
+	# CORRIDOR - much longer and wider for big ships
 	var corridor = RoomData.new(
 		Type.CORRIDOR,
 		Category.ESSENTIAL,
 		"Corridor",
 		"Passageway connecting rooms."
 	)
-	corridor.min_size = Vector2(60, 60)
-	corridor.max_size = Vector2(120, 400)  # Can be long
-	corridor.preferred_size = Vector2(80, 150)
+	corridor.min_size = Vector2(280, 280)
+	corridor.max_size = Vector2(440, 1200)  # Can be very long
+	corridor.preferred_size = Vector2(320, 560)
 	corridor.preferred_position = "any"
 	corridor.min_containers = 0
-	corridor.max_containers = 1
+	corridor.max_containers = 2
 	corridor.container_types.assign([CT.Type.SUPPLY_CABINET])
 	corridor.floor_pattern = "default"
-	corridor.decoration_tags.assign(["direction_arrows", "wall_panels", "lights"])
+	corridor.decoration_tags.assign(["direction_arrows", "wall_panels", "lights", "pipe_runs"])
 	_rooms[Type.CORRIDOR] = corridor
 	
 	# =========================================================================
-	# COMMON ROOMS
+	# COMMON ROOMS - Scaled up 2x
 	# =========================================================================
 	
-	# CARGO BAY
+	# CARGO BAY - Massive freight storage
 	var cargo = RoomData.new(
 		Type.CARGO_BAY,
 		Category.COMMON,
 		"Cargo Bay",
 		"Large storage area for freight and cargo."
 	)
-	cargo.min_size = Vector2(150, 150)
-	cargo.max_size = Vector2(300, 250)
-	cargo.preferred_size = Vector2(200, 180)
+	cargo.min_size = Vector2(560, 560)
+	cargo.max_size = Vector2(1100, 900)
+	cargo.preferred_size = Vector2(760, 680)
 	cargo.preferred_position = "center"
-	cargo.min_containers = 2
-	cargo.max_containers = 5
+	cargo.min_containers = 4
+	cargo.max_containers = 10
 	cargo.container_types.assign([CT.Type.CARGO_CRATE, CT.Type.SCRAP_PILE])
 	cargo.floor_pattern = "grid"
 	cargo.decoration_tags.assign([
@@ -205,296 +234,296 @@ static func _define_rooms() -> void:
 	])
 	_rooms[Type.CARGO_BAY] = cargo
 	
-	# STORAGE
+	# STORAGE - Scaled up 2x
 	var storage = RoomData.new(
 		Type.STORAGE,
 		Category.COMMON,
 		"Storage Room",
 		"General purpose storage space."
 	)
-	storage.min_size = Vector2(100, 100)
-	storage.max_size = Vector2(150, 150)
-	storage.preferred_size = Vector2(120, 120)
+	storage.min_size = Vector2(400, 400)
+	storage.max_size = Vector2(560, 560)
+	storage.preferred_size = Vector2(480, 480)
 	storage.preferred_position = "any"
-	storage.min_containers = 1
-	storage.max_containers = 3
+	storage.min_containers = 2
+	storage.max_containers = 5
 	storage.container_types.assign([CT.Type.CARGO_CRATE, CT.Type.LOCKER])
 	storage.floor_pattern = "default"
-	storage.decoration_tags.assign(["shelves", "boxes"])
+	storage.decoration_tags.assign(["shelves", "boxes", "barrel_stacks"])
 	_rooms[Type.STORAGE] = storage
 	
-	# CREW QUARTERS
+	# CREW QUARTERS - Scaled up 2x
 	var quarters = RoomData.new(
 		Type.CREW_QUARTERS,
 		Category.COMMON,
 		"Crew Quarters",
 		"Living space for ship personnel."
 	)
-	quarters.min_size = Vector2(100, 80)
-	quarters.max_size = Vector2(150, 120)
-	quarters.preferred_size = Vector2(120, 100)
+	quarters.min_size = Vector2(300, 240)
+	quarters.max_size = Vector2(440, 360)
+	quarters.preferred_size = Vector2(360, 300)
 	quarters.preferred_position = "side"
-	quarters.min_containers = 1
-	quarters.max_containers = 2
+	quarters.min_containers = 2
+	quarters.max_containers = 4
 	quarters.container_types.assign([CT.Type.LOCKER, CT.Type.SUPPLY_CABINET])
 	quarters.rarity_modifiers = {0: 1.0, 1: 1.2, 2: 0.8, 3: 0.5, 4: 0.2}
 	quarters.floor_pattern = "carpet"
-	quarters.decoration_tags.assign(["bunks", "personal_items", "lockers"])
+	quarters.decoration_tags.assign(["bunks", "personal_items", "lockers", "terminals"])
 	_rooms[Type.CREW_QUARTERS] = quarters
 	
-	# SUPPLY ROOM
+	# SUPPLY ROOM - Scaled up 2x
 	var supply = RoomData.new(
 		Type.SUPPLY_ROOM,
 		Category.COMMON,
 		"Supply Room",
 		"Components and consumables storage."
 	)
-	supply.min_size = Vector2(80, 80)
-	supply.max_size = Vector2(120, 120)
-	supply.preferred_size = Vector2(100, 100)
+	supply.min_size = Vector2(240, 240)
+	supply.max_size = Vector2(360, 360)
+	supply.preferred_size = Vector2(300, 300)
 	supply.preferred_position = "any"
-	supply.min_containers = 1
-	supply.max_containers = 3
+	supply.min_containers = 2
+	supply.max_containers = 5
 	supply.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.CARGO_CRATE])
 	supply.rarity_modifiers = {0: 1.2, 1: 1.3, 2: 0.8, 3: 0.4, 4: 0.1}
 	supply.floor_pattern = "default"
-	supply.decoration_tags.assign(["supply_shelves", "tool_racks"])
+	supply.decoration_tags.assign(["supply_shelves", "tool_racks", "workbenches"])
 	_rooms[Type.SUPPLY_ROOM] = supply
 	
 	# =========================================================================
-	# SPECIAL ROOMS
+	# SPECIAL ROOMS - Scaled up 2x
 	# =========================================================================
 	
-	# BRIDGE
+	# BRIDGE - Command center
 	var bridge = RoomData.new(
 		Type.BRIDGE,
 		Category.SPECIAL,
 		"Bridge",
 		"Ship command center with navigation and control systems."
 	)
-	bridge.min_size = Vector2(140, 120)
-	bridge.max_size = Vector2(220, 180)
-	bridge.preferred_size = Vector2(180, 150)
+	bridge.min_size = Vector2(420, 360)
+	bridge.max_size = Vector2(660, 540)
+	bridge.preferred_size = Vector2(540, 440)
 	bridge.preferred_position = "front"
 	bridge.required_for_classes.assign([
 		"patrol_frigate", "military_cruiser", "corporate_transport"
 	])
-	bridge.min_containers = 1
-	bridge.max_containers = 2
+	bridge.min_containers = 2
+	bridge.max_containers = 4
 	bridge.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.LOCKER])
 	bridge.rarity_modifiers = {0: 0.7, 1: 1.0, 2: 1.3, 3: 1.2, 4: 0.8}
 	bridge.floor_pattern = "reinforced"
 	bridge.has_special_lighting = true
 	bridge.lighting_color = Color(0.8, 0.9, 1.0)  # Blue-white
-	bridge.decoration_tags.assign(["control_panels", "viewscreen", "captain_chair", "nav_console"])
+	bridge.decoration_tags.assign(["control_panels", "viewscreen", "captain_chair", "nav_console", "terminals"])
 	_rooms[Type.BRIDGE] = bridge
 	
-	# ENGINE ROOM
+	# ENGINE ROOM - Power systems
 	var engine = RoomData.new(
 		Type.ENGINE_ROOM,
 		Category.SPECIAL,
 		"Engine Room",
 		"Ship propulsion and power systems."
 	)
-	engine.min_size = Vector2(140, 120)
-	engine.max_size = Vector2(200, 180)
-	engine.preferred_size = Vector2(170, 150)
+	engine.min_size = Vector2(420, 360)
+	engine.max_size = Vector2(600, 540)
+	engine.preferred_size = Vector2(500, 440)
 	engine.preferred_position = "back"
 	engine.required_for_classes.assign([
 		"freight_hauler", "patrol_frigate", "military_cruiser"
 	])
-	engine.min_containers = 1
-	engine.max_containers = 3
+	engine.min_containers = 2
+	engine.max_containers = 5
 	engine.container_types.assign([CT.Type.SCRAP_PILE, CT.Type.SUPPLY_CABINET])
 	engine.rarity_modifiers = {0: 1.5, 1: 1.3, 2: 0.7, 3: 0.3, 4: 0.1}
 	engine.floor_pattern = "grated"
 	engine.has_special_lighting = true
 	engine.lighting_color = Color(1.0, 0.8, 0.6)  # Orange-warm
-	engine.decoration_tags.assign(["pipes", "generators", "warning_lights", "conduits"])
+	engine.decoration_tags.assign(["pipes", "generators", "warning_lights", "conduits", "reactor_core"])
 	_rooms[Type.ENGINE_ROOM] = engine
 	
-	# ARMORY
+	# ARMORY - Weapons storage
 	var armory = RoomData.new(
 		Type.ARMORY,
 		Category.SPECIAL,
 		"Armory",
 		"Weapons and combat equipment storage."
 	)
-	armory.min_size = Vector2(100, 100)
-	armory.max_size = Vector2(160, 140)
-	armory.preferred_size = Vector2(130, 120)
+	armory.min_size = Vector2(300, 300)
+	armory.max_size = Vector2(480, 420)
+	armory.preferred_size = Vector2(390, 360)
 	armory.preferred_position = "side"
-	armory.min_containers = 2
-	armory.max_containers = 4
+	armory.min_containers = 3
+	armory.max_containers = 6
 	armory.container_types.assign([CT.Type.ARMORY, CT.Type.LOCKER])
 	armory.rarity_modifiers = {0: 0.5, 1: 0.8, 2: 1.2, 3: 1.5, 4: 1.0}
 	armory.floor_pattern = "reinforced"
 	armory.wall_style = "reinforced"
 	armory.has_special_lighting = true
 	armory.lighting_color = Color(1.0, 0.85, 0.85)  # Red-tinted
-	armory.decoration_tags.assign(["weapon_racks", "ammo_crates", "security_door"])
+	armory.decoration_tags.assign(["weapon_racks", "ammo_crates", "security_door", "armor_stands"])
 	_rooms[Type.ARMORY] = armory
 	
-	# VAULT
+	# VAULT - Secured valuables
 	var vault = RoomData.new(
 		Type.VAULT,
 		Category.SPECIAL,
 		"Vault",
 		"Secured storage for valuable items."
 	)
-	vault.min_size = Vector2(80, 80)
-	vault.max_size = Vector2(120, 120)
-	vault.preferred_size = Vector2(100, 100)
+	vault.min_size = Vector2(240, 240)
+	vault.max_size = Vector2(360, 360)
+	vault.preferred_size = Vector2(300, 300)
 	vault.preferred_position = "center"
-	vault.min_containers = 1
-	vault.max_containers = 2
+	vault.min_containers = 2
+	vault.max_containers = 4
 	vault.container_types.assign([CT.Type.VAULT, CT.Type.SECURE_CACHE])
 	vault.rarity_modifiers = {0: 0.3, 1: 0.6, 2: 1.2, 3: 1.8, 4: 2.0}
 	vault.floor_pattern = "reinforced"
 	vault.wall_style = "reinforced"
 	vault.has_special_lighting = true
 	vault.lighting_color = Color(1.0, 0.95, 0.8)  # Gold-white
-	vault.decoration_tags.assign(["vault_door", "security_panels", "reinforced_walls"])
+	vault.decoration_tags.assign(["vault_door", "security_panels", "reinforced_walls", "safe_boxes"])
 	_rooms[Type.VAULT] = vault
 	
-	# MED BAY
+	# MED BAY - Medical facility
 	var medbay = RoomData.new(
 		Type.MED_BAY,
 		Category.SPECIAL,
 		"Medical Bay",
 		"Medical treatment and supplies."
 	)
-	medbay.min_size = Vector2(100, 80)
-	medbay.max_size = Vector2(150, 120)
-	medbay.preferred_size = Vector2(120, 100)
+	medbay.min_size = Vector2(300, 240)
+	medbay.max_size = Vector2(440, 360)
+	medbay.preferred_size = Vector2(360, 300)
 	medbay.preferred_position = "any"
-	medbay.min_containers = 1
-	medbay.max_containers = 3
+	medbay.min_containers = 2
+	medbay.max_containers = 5
 	medbay.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.LOCKER])
 	medbay.rarity_modifiers = {0: 0.8, 1: 1.5, 2: 1.2, 3: 0.5, 4: 0.2}
 	medbay.floor_pattern = "default"
 	medbay.has_special_lighting = true
 	medbay.lighting_color = Color(0.9, 1.0, 0.95)  # Clean white-green
-	medbay.decoration_tags.assign(["med_beds", "medical_equipment", "cabinets"])
+	medbay.decoration_tags.assign(["med_beds", "medical_equipment", "cabinets", "surgery_table"])
 	_rooms[Type.MED_BAY] = medbay
 	
-	# LAB
+	# LAB - Research facility
 	var lab = RoomData.new(
 		Type.LAB,
 		Category.SPECIAL,
 		"Laboratory",
 		"Research and development facility."
 	)
-	lab.min_size = Vector2(100, 100)
-	lab.max_size = Vector2(160, 140)
-	lab.preferred_size = Vector2(130, 120)
+	lab.min_size = Vector2(300, 300)
+	lab.max_size = Vector2(480, 420)
+	lab.preferred_size = Vector2(390, 360)
 	lab.preferred_position = "any"
-	lab.min_containers = 1
-	lab.max_containers = 3
+	lab.min_containers = 2
+	lab.max_containers = 5
 	lab.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.SECURE_CACHE])
 	lab.rarity_modifiers = {0: 0.5, 1: 0.8, 2: 1.5, 3: 1.3, 4: 1.0}
 	lab.floor_pattern = "default"
 	lab.has_special_lighting = true
 	lab.lighting_color = Color(0.85, 0.9, 1.0)  # Blue-white
-	lab.decoration_tags.assign(["lab_equipment", "consoles", "specimens"])
+	lab.decoration_tags.assign(["lab_equipment", "consoles", "specimens", "server_racks"])
 	_rooms[Type.LAB] = lab
 	
-	# EXECUTIVE SUITE
+	# EXECUTIVE SUITE - Luxury VIP quarters - Scaled up 2x
 	var executive = RoomData.new(
 		Type.EXECUTIVE_SUITE,
 		Category.SPECIAL,
 		"Executive Suite",
 		"Luxury quarters for VIPs."
 	)
-	executive.min_size = Vector2(120, 100)
-	executive.max_size = Vector2(180, 150)
-	executive.preferred_size = Vector2(150, 130)
+	executive.min_size = Vector2(360, 300)
+	executive.max_size = Vector2(540, 440)
+	executive.preferred_size = Vector2(440, 390)
 	executive.preferred_position = "front"
-	executive.min_containers = 1
-	executive.max_containers = 2
+	executive.min_containers = 2
+	executive.max_containers = 4
 	executive.container_types.assign([CT.Type.LOCKER, CT.Type.SUPPLY_CABINET])
 	executive.rarity_modifiers = {0: 0.5, 1: 0.8, 2: 1.3, 3: 1.5, 4: 1.2}
 	executive.floor_pattern = "carpet"
-	executive.decoration_tags.assign(["luxury_furniture", "artwork", "personal_items"])
+	executive.decoration_tags.assign(["luxury_furniture", "artwork", "personal_items", "terminals"])
 	_rooms[Type.EXECUTIVE_SUITE] = executive
 	
-	# CONFERENCE
+	# CONFERENCE - Meeting room - Scaled up 2x
 	var conference = RoomData.new(
 		Type.CONFERENCE,
 		Category.SPECIAL,
 		"Conference Room",
 		"Meeting and briefing space."
 	)
-	conference.min_size = Vector2(100, 80)
-	conference.max_size = Vector2(160, 120)
-	conference.preferred_size = Vector2(130, 100)
+	conference.min_size = Vector2(300, 240)
+	conference.max_size = Vector2(480, 360)
+	conference.preferred_size = Vector2(390, 300)
 	conference.preferred_position = "any"
 	conference.min_containers = 0
-	conference.max_containers = 1
+	conference.max_containers = 2
 	conference.container_types.assign([CT.Type.SUPPLY_CABINET])
 	conference.rarity_modifiers = {0: 0.8, 1: 1.0, 2: 1.2, 3: 0.8, 4: 0.3}
 	conference.floor_pattern = "carpet"
-	conference.decoration_tags.assign(["conference_table", "screens", "chairs"])
+	conference.decoration_tags.assign(["conference_table", "screens", "chairs", "holodisplay"])
 	_rooms[Type.CONFERENCE] = conference
 	
-	# SERVER ROOM
+	# SERVER ROOM - Data center - Scaled up 2x
 	var server = RoomData.new(
 		Type.SERVER_ROOM,
 		Category.SPECIAL,
 		"Server Room",
 		"Data storage and processing systems."
 	)
-	server.min_size = Vector2(80, 80)
-	server.max_size = Vector2(140, 120)
-	server.preferred_size = Vector2(110, 100)
+	server.min_size = Vector2(240, 240)
+	server.max_size = Vector2(420, 360)
+	server.preferred_size = Vector2(330, 300)
 	server.preferred_position = "any"
-	server.min_containers = 1
-	server.max_containers = 2
+	server.min_containers = 2
+	server.max_containers = 4
 	server.container_types.assign([CT.Type.SUPPLY_CABINET, CT.Type.SECURE_CACHE])
 	server.rarity_modifiers = {0: 0.6, 1: 1.0, 2: 1.4, 3: 1.2, 4: 0.8}
 	server.floor_pattern = "grated"
 	server.has_special_lighting = true
 	server.lighting_color = Color(0.7, 0.85, 1.0)  # Blue
-	server.decoration_tags.assign(["server_racks", "cables", "cooling_units"])
+	server.decoration_tags.assign(["server_racks", "cables", "cooling_units", "terminal_banks"])
 	_rooms[Type.SERVER_ROOM] = server
 	
-	# BARRACKS
+	# BARRACKS - Military quarters - Scaled up 2x
 	var barracks = RoomData.new(
 		Type.BARRACKS,
 		Category.SPECIAL,
 		"Barracks",
 		"Military personnel quarters."
 	)
-	barracks.min_size = Vector2(140, 100)
-	barracks.max_size = Vector2(200, 160)
-	barracks.preferred_size = Vector2(170, 130)
+	barracks.min_size = Vector2(420, 300)
+	barracks.max_size = Vector2(600, 480)
+	barracks.preferred_size = Vector2(510, 390)
 	barracks.preferred_position = "side"
-	barracks.min_containers = 2
-	barracks.max_containers = 4
+	barracks.min_containers = 3
+	barracks.max_containers = 6
 	barracks.container_types.assign([CT.Type.LOCKER, CT.Type.CARGO_CRATE])
 	barracks.rarity_modifiers = {0: 1.2, 1: 1.0, 2: 0.8, 3: 0.6, 4: 0.3}
 	barracks.floor_pattern = "default"
-	barracks.decoration_tags.assign(["bunks", "lockers", "military_gear"])
+	barracks.decoration_tags.assign(["bunks", "lockers", "military_gear", "weapon_racks"])
 	_rooms[Type.BARRACKS] = barracks
 	
-	# CONTRABAND HOLD
+	# CONTRABAND HOLD - Hidden compartment - Scaled up 2x
 	var contraband = RoomData.new(
 		Type.CONTRABAND_HOLD,
 		Category.SPECIAL,
 		"Hidden Compartment",
 		"Secret storage for illegal goods."
 	)
-	contraband.min_size = Vector2(60, 60)
-	contraband.max_size = Vector2(100, 100)
-	contraband.preferred_size = Vector2(80, 80)
+	contraband.min_size = Vector2(200, 200)
+	contraband.max_size = Vector2(300, 300)
+	contraband.preferred_size = Vector2(240, 240)
 	contraband.preferred_position = "any"
-	contraband.min_containers = 1
-	contraband.max_containers = 2
+	contraband.min_containers = 2
+	contraband.max_containers = 4
 	contraband.container_types.assign([CT.Type.SECURE_CACHE])
 	contraband.rarity_modifiers = {0: 0.2, 1: 0.5, 2: 1.0, 3: 1.8, 4: 2.5}
 	contraband.floor_pattern = "grated"
 	contraband.wall_style = "bulkhead"
-	contraband.decoration_tags.assign(["hidden_panels", "concealed_door"])
+	contraband.decoration_tags.assign(["hidden_panels", "concealed_door", "stashed_crates"])
 	_rooms[Type.CONTRABAND_HOLD] = contraband
 
 

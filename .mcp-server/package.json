@@ -1,0 +1,34 @@
+{
+  "name": "cargo-escape-mcp-server",
+  "version": "1.0.0",
+  "description": "Custom MCP server for Cargo Escape game development",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:http": "node src/http-server.js",
+    "dev": "node --watch src/index.js",
+    "dev:http": "node --watch src/http-server.js",
+    "docker:build": "docker-compose build --no-cache",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "security:audit": "npm audit",
+    "security:fix": "npm audit fix"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "tar": "^7.5.7",
+    "cross-spawn": "^7.0.5",
+    "glob": "^11.1.0",
+    "brace-expansion": "^2.0.2",
+    "diff": "^5.2.2"
+  },
+  "overrides": {
+    "tar": "^7.5.7",
+    "cross-spawn": "^7.0.5",
+    "glob": "^11.1.0",
+    "brace-expansion": "^2.0.2",
+    "diff": "^5.2.2"
+  }
+}

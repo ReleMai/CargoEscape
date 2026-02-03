@@ -25,7 +25,7 @@ class_name AchievementGallery
 # PRELOADS
 # ==============================================================================
 
-const AchievementItem = preload("res://scenes/ui/achievement_item.tscn")
+const AchievementItemScene = preload("res://scenes/ui/achievement_item.tscn")
 
 
 # ==============================================================================
@@ -66,7 +66,7 @@ func _populate_achievements() -> void:
 	
 	# Create UI items
 	for achievement in achievements:
-		var item = AchievementItem.instantiate()
+		var item = AchievementItemScene.instantiate()
 		achievement_list.add_child(item)
 		item.set_achievement(achievement)
 

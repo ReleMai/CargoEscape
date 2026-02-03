@@ -54,6 +54,7 @@ static func get_all_comprehensive_items() -> Dictionary:
 	items.merge(_get_epic_items())
 	items.merge(_get_legendary_items())
 	items.merge(_get_module_items())
+	items.merge(_get_keycard_items())
 	
 	return items
 
@@ -520,6 +521,71 @@ static func _get_module_items() -> Dictionary:
 			"width": 2,
 			"height": 2,
 			"category": 3
+		}
+	}
+
+
+# ==============================================================================
+# KEYCARD ITEMS
+# ==============================================================================
+
+static func _get_keycard_items() -> Dictionary:
+	return {
+		"keycard_tier1": {
+			"name": "Security Keycard (Green)",
+			"id": "keycard_tier1",
+			"description": "Standard security keycard. Opens basic locked doors.",
+			"tags": ["keycard", "tool", "key", "security", "tier1"],
+			"weight": 0.05,
+			"base_value": 25,
+			"black_market_value": 40,
+			"rarity": Rarity.COMMON,
+			"faction_affinity": -1,  # Universal
+			"faction_restricted": [],
+			"spawn_weight": 1.5,
+			"stack_size": 1,
+			"icon_path": "res://assets/sprites/items/keycard_green.svg",
+			"width": 1,
+			"height": 1,
+			"category": 1  # COMPONENT
+		},
+		
+		"keycard_tier2": {
+			"name": "Security Keycard (Blue)",
+			"id": "keycard_tier2",
+			"description": "Enhanced security keycard. Opens mid-level secure doors.",
+			"tags": ["keycard", "tool", "key", "security", "tier2"],
+			"weight": 0.05,
+			"base_value": 75,
+			"black_market_value": 100,
+			"rarity": Rarity.UNCOMMON,
+			"faction_affinity": -1,  # Universal
+			"faction_restricted": [],
+			"spawn_weight": 1.0,
+			"stack_size": 1,
+			"icon_path": "res://assets/sprites/items/keycard_blue.svg",
+			"width": 1,
+			"height": 1,
+			"category": 1
+		},
+		
+		"keycard_tier3": {
+			"name": "Security Keycard (Red)",
+			"id": "keycard_tier3",
+			"description": "High-security keycard. Opens restricted areas and captain's quarters.",
+			"tags": ["keycard", "tool", "key", "security", "tier3"],
+			"weight": 0.05,
+			"base_value": 150,
+			"black_market_value": 200,
+			"rarity": Rarity.RARE,
+			"faction_affinity": -1,  # Universal
+			"faction_restricted": [],
+			"spawn_weight": 0.5,
+			"stack_size": 1,
+			"icon_path": "res://assets/sprites/items/keycard_red.svg",
+			"width": 1,
+			"height": 1,
+			"category": 1
 		}
 	}
 

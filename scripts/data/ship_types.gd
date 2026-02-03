@@ -6,11 +6,16 @@
 # PURPOSE: Data definitions for different ship tiers with loot and layout info
 #
 # SHIP TIERS:
-# 1. Cargo Shuttle - Easy, common loot, 90s
-# 2. Freight Hauler - Medium, uncommon focus, 75s
-# 3. Corporate Transport - Medium-Hard, rare focus, 60s
-# 4. Military Frigate - Hard, epic focus, 50s
-# 5. Black Ops Vessel - Extreme, legendary focus, 40s
+# 1. Cargo Shuttle - Easy, common loot, 120s (smallest but still big)
+# 2. Freight Hauler - Medium, uncommon focus, 150s
+# 3. Corporate Transport - Medium-Hard, rare focus, 180s
+# 4. Military Frigate - Hard, epic focus, 200s
+# 5. Black Ops Vessel - Extreme, legendary focus, 240s
+#
+# SCALE NOTE:
+# Ships are now MASSIVE to feel like real space vessels. Players need to
+# explore and use the fog of war system to navigate. Time limits have been
+# increased to compensate for the larger exploration area.
 #
 # ==============================================================================
 
@@ -36,7 +41,7 @@ enum Tier {
 # ==============================================================================
 
 class ShipData:
-	var tier: Tier
+	var tier: Tier = Tier.CARGO_SHUTTLE
 	var display_name: String
 	var description: String
 	
@@ -95,16 +100,17 @@ static func _ensure_initialized() -> void:
 static func _define_ships() -> void:
 	# -------------------------------------------------------------------------
 	# TIER 1: CARGO SHUTTLE
+	# Smallest ship but still feels substantial - like a real cargo vessel
 	# -------------------------------------------------------------------------
 	var shuttle = ShipData.new(
 		Tier.CARGO_SHUTTLE,
 		"Cargo Shuttle",
 		"Small civilian cargo vessel. Easy pickings but slim rewards."
 	)
-	shuttle.time_limit = 90.0
-	shuttle.size = Vector2(900, 600)
-	shuttle.min_containers = 3
-	shuttle.max_containers = 5
+	shuttle.time_limit = 120.0  # Increased for larger ship
+	shuttle.size = Vector2(3200, 2400)  # ~2.5x larger than before
+	shuttle.min_containers = 6
+	shuttle.max_containers = 8
 	shuttle.rarity_modifiers = {
 		0: 1.5,   # Common boosted
 		1: 0.8,   # Uncommon reduced
@@ -121,16 +127,17 @@ static func _define_ships() -> void:
 	
 	# -------------------------------------------------------------------------
 	# TIER 2: FREIGHT HAULER
+	# Medium-sized cargo ship with multiple cargo bays
 	# -------------------------------------------------------------------------
 	var hauler = ShipData.new(
 		Tier.FREIGHT_HAULER,
 		"Freight Hauler",
 		"Commercial freight vessel. More cargo, more risk."
 	)
-	hauler.time_limit = 75.0
-	hauler.size = Vector2(1100, 700)
-	hauler.min_containers = 5
-	hauler.max_containers = 7
+	hauler.time_limit = 150.0  # Increased for larger ship
+	hauler.size = Vector2(4200, 3000)  # ~2.5x larger
+	hauler.min_containers = 10
+	hauler.max_containers = 14
 	hauler.rarity_modifiers = {
 		0: 1.2,   # Common still common
 		1: 1.2,   # Uncommon boosted
@@ -147,16 +154,17 @@ static func _define_ships() -> void:
 	
 	# -------------------------------------------------------------------------
 	# TIER 3: CORPORATE TRANSPORT
+	# Large luxury transport with multiple decks
 	# -------------------------------------------------------------------------
 	var corporate = ShipData.new(
 		Tier.CORPORATE_TRANSPORT,
 		"Corporate Transport",
 		"Luxury corporate vessel. High value cargo, tighter security."
 	)
-	corporate.time_limit = 60.0
-	corporate.size = Vector2(1200, 750)
-	corporate.min_containers = 6
-	corporate.max_containers = 8
+	corporate.time_limit = 180.0  # Increased for massive ship
+	corporate.size = Vector2(5400, 3600)  # ~3x larger
+	corporate.min_containers = 14
+	corporate.max_containers = 18
 	corporate.rarity_modifiers = {
 		0: 0.8,   # Common reduced
 		1: 1.0,   # Uncommon normal
@@ -173,16 +181,17 @@ static func _define_ships() -> void:
 	
 	# -------------------------------------------------------------------------
 	# TIER 4: MILITARY FRIGATE
+	# Massive warship with armories and secure compartments
 	# -------------------------------------------------------------------------
 	var frigate = ShipData.new(
 		Tier.MILITARY_FRIGATE,
 		"Military Frigate",
 		"Armed military vessel. Heavy firepower, high-grade equipment."
 	)
-	frigate.time_limit = 50.0
-	frigate.size = Vector2(1400, 850)
-	frigate.min_containers = 8
-	frigate.max_containers = 12
+	frigate.time_limit = 200.0  # Long time for huge ship
+	frigate.size = Vector2(6800, 4200)  # ~3.5x larger
+	frigate.min_containers = 18
+	frigate.max_containers = 24
 	frigate.rarity_modifiers = {
 		0: 0.5,   # Common rare
 		1: 0.8,   # Uncommon reduced
@@ -199,16 +208,17 @@ static func _define_ships() -> void:
 	
 	# -------------------------------------------------------------------------
 	# TIER 5: BLACK OPS VESSEL
+	# Enormous classified ship - a true capital ship experience
 	# -------------------------------------------------------------------------
 	var blackops = ShipData.new(
 		Tier.BLACK_OPS_VESSEL,
 		"Black Ops Vessel",
 		"Classified stealth ship. Extreme danger, legendary rewards."
 	)
-	blackops.time_limit = 40.0
-	blackops.size = Vector2(1500, 900)
-	blackops.min_containers = 10
-	blackops.max_containers = 15
+	blackops.time_limit = 240.0  # Extended for massive exploration
+	blackops.size = Vector2(8000, 5000)  # ~4x larger - truly massive
+	blackops.min_containers = 24
+	blackops.max_containers = 30
 	blackops.rarity_modifiers = {
 		0: 0.2,   # Common very rare
 		1: 0.5,   # Uncommon rare

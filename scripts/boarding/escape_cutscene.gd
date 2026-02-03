@@ -54,10 +54,10 @@ enum EscapeVariation {
 # ==============================================================================
 
 @export_group("Timing")
-@export var rush_duration: float = 0.5
-@export var undocking_duration: float = 1.5
-@export var getaway_duration: float = 2.0
-@export var loot_summary_fade_duration: float = 0.8
+@export var rush_duration: float = 0.3
+@export var undocking_duration: float = 0.5
+@export var getaway_duration: float = 0.5
+@export var loot_summary_fade_duration: float = 0.3
 
 @export_group("Variations")
 @export var close_call_threshold: float = 10.0  # seconds
@@ -227,7 +227,7 @@ func _start_rush_phase() -> void:
 		label_tween.chain().tween_property(escaping_label, "modulate:a", 0.0, rush_duration * 0.3)
 
 
-func _update_rush_phase(delta: float) -> void:
+func _update_rush_phase(_delta: float) -> void:
 	if phase_timer >= rush_duration:
 		_transition_to_undocking()
 
@@ -265,7 +265,7 @@ func _start_undocking_phase() -> void:
 	_animate_undocking_status()
 
 
-func _update_undocking_phase(delta: float) -> void:
+func _update_undocking_phase(_delta: float) -> void:
 	if phase_timer >= undocking_duration:
 		_transition_to_getaway()
 
@@ -332,7 +332,7 @@ func _start_getaway_phase() -> void:
 		_trigger_explosion()
 
 
-func _update_getaway_phase(delta: float) -> void:
+func _update_getaway_phase(_delta: float) -> void:
 	if phase_timer >= getaway_duration:
 		_transition_to_loot_summary()
 
@@ -450,7 +450,7 @@ func _populate_loot_summary() -> void:
 				bonus_label.visible = false
 
 
-func _update_loot_summary_phase(delta: float) -> void:
+func _update_loot_summary_phase(_delta: float) -> void:
 	# User can press key to continue to next scene
 	pass
 
@@ -501,5 +501,4 @@ func _hide_all_containers() -> void:
 
 
 func _play_slam_sound() -> void:
-	# TODO: Play airlock slam sound effect
-	pass
+	AudioManager.play_sfx("airlock_close", 2.0)

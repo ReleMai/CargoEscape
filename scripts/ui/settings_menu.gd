@@ -26,6 +26,8 @@ signal back_requested
 @onready var sfx_volume_label: Label = $Panel/MarginContainer/VBoxContainer/AudioSettings/SFXVolume/ValueLabel
 @onready var music_volume_slider: HSlider = $Panel/MarginContainer/VBoxContainer/AudioSettings/MusicVolume/MusicSlider
 @onready var music_volume_label: Label = $Panel/MarginContainer/VBoxContainer/AudioSettings/MusicVolume/ValueLabel
+@onready var ambient_volume_slider: HSlider = $Panel/MarginContainer/VBoxContainer/AudioSettings/AmbientVolume/AmbientSlider
+@onready var ambient_volume_label: Label = $Panel/MarginContainer/VBoxContainer/AudioSettings/AmbientVolume/ValueLabel
 @onready var fullscreen_toggle: CheckButton = $Panel/MarginContainer/VBoxContainer/DisplaySettings/FullscreenToggle
 @onready var back_button: Button = $Panel/MarginContainer/VBoxContainer/BackButton
 
@@ -36,6 +38,7 @@ signal back_requested
 var master_volume: float = 1.0
 var sfx_volume: float = 1.0
 var music_volume: float = 1.0
+var ambient_volume: float = 1.0
 var is_fullscreen: bool = false
 
 # ==============================================================================
@@ -59,6 +62,8 @@ func _connect_signals() -> void:
 		sfx_volume_slider.value_changed.connect(_on_sfx_volume_changed)
 	if music_volume_slider:
 		music_volume_slider.value_changed.connect(_on_music_volume_changed)
+	if ambient_volume_slider:
+		ambient_volume_slider.value_changed.connect(_on_ambient_volume_changed)
 	if fullscreen_toggle:
 		fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
 	if back_button:
@@ -78,12 +83,14 @@ func _load_settings() -> void:
 		master_volume = config.get_value("audio", "master_volume", 1.0)
 		sfx_volume = config.get_value("audio", "sfx_volume", 1.0)
 		music_volume = config.get_value("audio", "music_volume", 1.0)
+		ambient_volume = config.get_value("audio", "ambient_volume", 1.0)
 		is_fullscreen = config.get_value("display", "fullscreen", false)
 	else:
 		# Use defaults
 		master_volume = 1.0
 		sfx_volume = 1.0
 		music_volume = 1.0
+		ambient_volume = 1.0
 		is_fullscreen = false
 	
 	# Apply settings
@@ -97,6 +104,7 @@ func _save_settings() -> void:
 	config.set_value("audio", "master_volume", master_volume)
 	config.set_value("audio", "sfx_volume", sfx_volume)
 	config.set_value("audio", "music_volume", music_volume)
+	config.set_value("audio", "ambient_volume", ambient_volume)
 	config.set_value("display", "fullscreen", is_fullscreen)
 	
 	config.save("user://settings.cfg")
@@ -108,25 +116,54 @@ func _apply_audio_settings() -> void:
 	var master_vol = maxf(master_volume, 0.0001)
 	var sfx_vol = maxf(sfx_volume, 0.0001)
 	var music_vol = maxf(music_volume, 0.0001)
+	var ambient_vol = maxf(ambient_volume, 0.0001)
 	
 	var master_db = linear_to_db(master_vol)
 	var sfx_db = linear_to_db(sfx_vol)
 	var music_db = linear_to_db(music_vol)
+	var ambient_db = linear_to_db(ambient_vol)
+	
+	# Debug: Print available buses
+	print("[Settings] Applying audio - Master: %.0f%%, SFX: %.0f%%, Music: %.0f%%, Ambient: %.0f%%" % [master_volume * 100, sfx_volume * 100, music_volume * 100, ambient_volume * 100])
+	print("[Settings] Available buses: ", _get_bus_names())
 	
 	# Apply to audio buses if they exist
-	if AudioServer.get_bus_index("Master") >= 0:
-		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), master_db)
-		# Mute the bus if volume is essentially zero
-		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), master_volume < 0.01)
+	var master_idx = AudioServer.get_bus_index("Master")
+	if master_idx >= 0:
+		AudioServer.set_bus_volume_db(master_idx, master_db)
+		AudioServer.set_bus_mute(master_idx, master_volume < 0.01)
+		print("[Settings] Master bus set to %.1f dB" % master_db)
 	
-	# You can add SFX and Music buses in the Audio settings
-	if AudioServer.get_bus_index("SFX") >= 0:
-		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), sfx_db)
-		AudioServer.set_bus_mute(AudioServer.get_bus_index("SFX"), sfx_volume < 0.01)
+	var sfx_idx = AudioServer.get_bus_index("SFX")
+	if sfx_idx >= 0:
+		AudioServer.set_bus_volume_db(sfx_idx, sfx_db)
+		AudioServer.set_bus_mute(sfx_idx, sfx_volume < 0.01)
+		print("[Settings] SFX bus set to %.1f dB" % sfx_db)
+	else:
+		push_warning("[Settings] SFX bus not found!")
 	
-	if AudioServer.get_bus_index("Music") >= 0:
-		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), music_db)
-		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), music_volume < 0.01)
+	var music_idx = AudioServer.get_bus_index("Music")
+	if music_idx >= 0:
+		AudioServer.set_bus_volume_db(music_idx, music_db)
+		AudioServer.set_bus_mute(music_idx, music_volume < 0.01)
+		print("[Settings] Music bus set to %.1f dB" % music_db)
+	else:
+		push_warning("[Settings] Music bus not found!")
+	
+	var ambient_idx = AudioServer.get_bus_index("Ambient")
+	if ambient_idx >= 0:
+		AudioServer.set_bus_volume_db(ambient_idx, ambient_db)
+		AudioServer.set_bus_mute(ambient_idx, ambient_volume < 0.01)
+		print("[Settings] Ambient bus set to %.1f dB" % ambient_db)
+	else:
+		push_warning("[Settings] Ambient bus not found!")
+
+
+func _get_bus_names() -> Array:
+	var names = []
+	for i in range(AudioServer.bus_count):
+		names.append(AudioServer.get_bus_name(i))
+	return names
 
 
 func _apply_display_settings() -> void:
@@ -143,6 +180,8 @@ func _update_ui() -> void:
 		sfx_volume_slider.value = sfx_volume
 	if music_volume_slider:
 		music_volume_slider.value = music_volume
+	if ambient_volume_slider:
+		ambient_volume_slider.value = ambient_volume
 	if fullscreen_toggle:
 		fullscreen_toggle.button_pressed = is_fullscreen
 	
@@ -156,6 +195,8 @@ func _update_volume_labels() -> void:
 		sfx_volume_label.text = str(int(sfx_volume * 100)) + "%"
 	if music_volume_label:
 		music_volume_label.text = str(int(music_volume * 100)) + "%"
+	if ambient_volume_label:
+		ambient_volume_label.text = str(int(ambient_volume * 100)) + "%"
 
 
 # ==============================================================================
@@ -178,6 +219,13 @@ func _on_sfx_volume_changed(value: float) -> void:
 
 func _on_music_volume_changed(value: float) -> void:
 	music_volume = value
+	_apply_audio_settings()
+	_update_volume_labels()
+	_save_settings()
+
+
+func _on_ambient_volume_changed(value: float) -> void:
+	ambient_volume = value
 	_apply_audio_settings()
 	_update_volume_labels()
 	_save_settings()

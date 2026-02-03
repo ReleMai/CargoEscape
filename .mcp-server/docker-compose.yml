@@ -1,0 +1,44 @@
+# Docker Compose for Cargo Escape MCP Server
+#
+# Usage:
+#   docker-compose up --build
+#
+# This runs the HTTP version of the MCP server, accessible at http://localhost:3100
+# Uses Alpine-based image for minimal attack surface
+
+version: '3.8'
+
+services:
+  mcp-server:
+    build: .
+    container_name: cargo-escape-mcp
+    ports:
+      # SECURITY: Bind to localhost only - not accessible from network
+      - "127.0.0.1:3100:3100"
+    volumes:
+      # Mount your workspace so the MCP server can access project files (read-only)
+      - ..:/workspace:ro
+      # Mount source code for live updates (development)
+      - ./src:/app/src:ro
+    environment:
+      - WORKSPACE_PATH=/workspace
+      - PORT=3100
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+      # SECURITY: API key for authentication
+      - MCP_API_KEY=${MCP_API_KEY:-CargoEscapeBigProject}
+      # SECURITY: Allowed origins for CORS
+      - ALLOWED_ORIGINS=http://localhost:3100,http://127.0.0.1:3100
+      # SECURITY: Rate limit (requests per minute)
+      - RATE_LIMIT=60
+    restart: unless-stopped
+    # Security: Run as non-root (matches Dockerfile USER)
+    user: "1001:1001"
+    # Security: Read-only root filesystem where possible
+    read_only: false
+    # Healthcheck using wget (Alpine doesn't have curl by default)
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ShipModule" load_steps=2 format=3 uid="uid://scanner_array_module"]
+
+[ext_resource type="Script" path="res://scripts/data/ship_module.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+module_id = "scanner_array"
+module_name = "Scanner Array"
+description = "Long-range sensor suite. Reveals container contents and detects hidden compartments."
+slot_type = 2
+rarity = 2
+base_value = 420
+primary_color = Color(0.2, 0.7, 0.6, 1)
+secondary_color = Color(0.4, 0.9, 0.8, 1)
+glow_color = Color(0.3, 0.8, 0.7, 0.7)
+visual_scale = 1.0
+damage = 0.0
+fire_rate = 0.0
+projectile_speed = 0.0
+energy_cost = 0.0
+thrust_bonus = 0.0
+speed_bonus = 0.0
+drag_reduction = 0.0
+shield_bonus = 0.0
+scanner_bonus = 50.0
+cargo_bonus = 0

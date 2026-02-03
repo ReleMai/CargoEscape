@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="64" viewBox="0 0 128 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ammunition Crates - 2x1 military supplies -->
+  <defs>
+    <linearGradient id="crateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A5A40"/>
+      <stop offset="100%" style="stop-color:#3A4830"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main crate body -->
+  <rect x="4" y="12" width="120" height="44" rx="3" fill="url(#crateGrad)" stroke="#2A3820" stroke-width="2"/>
+  
+  <!-- Metal reinforcement bands -->
+  <rect x="4" y="18" width="120" height="4" fill="#505850"/>
+  <rect x="4" y="48" width="120" height="4" fill="#505850"/>
+  
+  <!-- Corner brackets -->
+  <path d="M4 12 L20 12 L20 18 L10 18 L10 28 L4 28 Z" fill="#606860"/>
+  <path d="M124 12 L108 12 L108 18 L118 18 L118 28 L124 28 Z" fill="#606860"/>
+  <path d="M4 56 L20 56 L20 50 L10 50 L10 40 L4 40 Z" fill="#606860"/>
+  <path d="M124 56 L108 56 L108 50 L118 50 L118 40 L124 40 Z" fill="#606860"/>
+  
+  <!-- Warning stripes -->
+  <g fill="#C0A020">
+    <rect x="30" y="26" width="8" height="16" transform="rotate(-45 34 34)"/>
+    <rect x="42" y="26" width="8" height="16" transform="rotate(-45 46 34)"/>
+    <rect x="54" y="26" width="8" height="16" transform="rotate(-45 58 34)"/>
+  </g>
+  
+  <!-- Stencil text -->
+  <text x="90" y="38" font-family="Arial" font-size="12" font-weight="bold" fill="#1A2010">AMMO</text>
+  
+  <!-- Latch -->
+  <rect x="58" y="8" width="12" height="8" fill="#707870" rx="1"/>
+  <rect x="61" y="10" width="6" height="4" fill="#404840"/>
+  
+  <!-- Handle -->
+  <rect x="52" y="4" width="24" height="6" fill="#505850" rx="2"/>
+</svg>

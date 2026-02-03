@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Auto Shotgun - Rapid Fire Spread -->
+  <defs>
+    <linearGradient id="autoShotBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a5a5a"/>
+      <stop offset="50%" style="stop-color:#404040"/>
+      <stop offset="100%" style="stop-color:#2a2a2a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main Receiver -->
+  <rect x="5" y="13" width="14" height="6" rx="1" fill="url(#autoShotBodyGrad)" stroke="#1a1a1a" stroke-width="0.5"/>
+  
+  <!-- Barrel -->
+  <rect x="18" y="14" width="10" height="4" rx="0.5" fill="#3a3a3a" stroke="#2a2a2a" stroke-width="0.5"/>
+  
+  <!-- Wide Muzzle -->
+  <ellipse cx="28" cy="16" rx="1" ry="2" fill="#2a2a2a"/>
+  <ellipse cx="28.5" cy="16" rx="0.7" ry="1.5" fill="#1a1a1a"/>
+  
+  <!-- Gas System -->
+  <rect x="20" y="12" width="6" height="2" fill="#3a3a3a"/>
+  <rect x="21" y="11.5" width="1" height="1" fill="#4a4a4a"/>
+  <rect x="24" y="11.5" width="1" height="1" fill="#4a4a4a"/>
+  
+  <!-- Carrying Handle -->
+  <path d="M8,13 L8,9 L14,9 L14,13" fill="none" stroke="#4a4a4a" stroke-width="1.5"/>
+  
+  <!-- Drum Magazine -->
+  <circle cx="12" cy="23" r="5" fill="#3a3a3a" stroke="#2a2a2a" stroke-width="0.5"/>
+  <circle cx="12" cy="23" r="3.5" fill="#2a2a2a"/>
+  <circle cx="12" cy="23" r="1.5" fill="#3a3a3a"/>
+  
+  <!-- Shell Indicator -->
+  <rect x="9" y="21" width="1.5" height="4" fill="#8b4513" rx="0.3"/>
+  <rect x="11.5" y="20" width="1.5" height="4" fill="#8b4513" rx="0.3"/>
+  <rect x="14" y="21" width="1.5" height="4" fill="#8b4513" rx="0.3"/>
+  
+  <!-- Magazine Feed -->
+  <rect x="10" y="18" width="4" height="3" fill="#4a4a4a"/>
+  
+  <!-- Charging Handle -->
+  <rect x="15" y="12" width="3" height="1.5" rx="0.3" fill="#4a4a4a"/>
+  
+  <!-- Trigger Guard -->
+  <path d="M5,19 Q8,22 8,24 L5,24" fill="none" stroke="#3a3a3a" stroke-width="1"/>
+  
+  <!-- Trigger -->
+  <rect x="6" y="20" width="1.5" height="2" fill="#2a2a2a"/>
+  
+  <!-- Pistol Grip -->
+  <polygon points="4,19 8,19 8,28 6,29 3,27 3,20" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="0.5"/>
+  
+  <!-- Grip Texture -->
+  <line x1="4.5" y1="22" x2="7" y2="22" stroke="#3a3a3a" stroke-width="0.3"/>
+  <line x1="4.5" y1="24" x2="7" y2="24" stroke="#3a3a3a" stroke-width="0.3"/>
+  <line x1="4.5" y1="26" x2="7" y2="26" stroke="#3a3a3a" stroke-width="0.3"/>
+  
+  <!-- Folding Stock -->
+  <rect x="1" y="14" width="4" height="4" rx="0.5" fill="#3a3a3a"/>
+  <rect x="0" y="15" width="2" height="2" rx="0.3" fill="#2a2a2a"/>
+</svg>

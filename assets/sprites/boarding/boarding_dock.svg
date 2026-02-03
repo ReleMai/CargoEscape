@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 192">
+  <!-- Boarding Dock Area - Top down view -->
+  <!-- Docking Clamp Framework -->
+  <rect x="0" y="0" width="256" height="192" fill="#1a1a1a"/>
+  
+  <!-- Airlock Door Frame (left side - entry from player ship) -->
+  <rect x="0" y="70" width="24" height="52" fill="#3a3a3a"/>
+  <rect x="4" y="74" width="16" height="44" fill="#2a4a3a"/>
+  <rect x="8" y="78" width="8" height="36" fill="#1a3a2a"/>
+  
+  <!-- Docking Collar -->
+  <rect x="24" y="40" width="60" height="112" fill="#2a2a2a" stroke="#3a3a3a" stroke-width="2"/>
+  <!-- Collar inner -->
+  <rect x="30" y="50" width="48" height="92" fill="#252525"/>
+  
+  <!-- Warning Stripes on floor -->
+  <g fill="#3a3a1a">
+    <rect x="36" y="60" width="36" height="8"/>
+    <rect x="36" y="76" width="36" height="8"/>
+    <rect x="36" y="92" width="36" height="8"/>
+    <rect x="36" y="108" width="36" height="8"/>
+    <rect x="36" y="124" width="36" height="8"/>
+  </g>
+  
+  <!-- Inner Airlock Door (to ship interior) -->
+  <rect x="84" y="60" width="12" height="72" fill="#4a4a4a"/>
+  <rect x="88" y="64" width="4" height="64" fill="#3a6a4a"/>
+  
+  <!-- Control Panel -->
+  <rect x="100" y="50" width="32" height="40" fill="#2a2a2a" stroke="#3a3a3a" stroke-width="1"/>
+  <rect x="104" y="54" width="24" height="16" fill="#0a2a1a"/>
+  <circle cx="110" cy="80" r="4" fill="#4aea6a"/>
+  <circle cx="122" cy="80" r="4" fill="#eaea4a"/>
+  
+  <!-- Decontamination Area -->
+  <rect x="96" y="100" width="56" height="80" fill="#1a2a2a" stroke="#2a3a3a" stroke-width="1"/>
+  <text x="100" y="130" fill="#3a5a5a" font-size="8" font-family="monospace">DECON</text>
+  
+  <!-- Emergency Equipment -->
+  <rect x="160" y="50" width="24" height="36" fill="#5a2a2a"/>
+  <text x="164" y="70" fill="#ea6a6a" font-size="6" font-family="monospace">EVAC</text>
+  
+  <!-- Lockers -->
+  <rect x="160" y="100" width="16" height="40" fill="#3a3a3a"/>
+  <rect x="180" y="100" width="16" height="40" fill="#3a3a3a"/>
+  <rect x="200" y="100" width="16" height="40" fill="#3a3a3a"/>
+  
+  <!-- Status Lights -->
+  <circle cx="140" cy="56" r="6" fill="#4aea6a" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Floor markings -->
+  <line x1="96" y1="96" x2="220" y2="96" stroke="#3a3a3a" stroke-width="2" stroke-dasharray="8,4"/>
+  
+  <!-- Exit markers -->
+  <polygon points="220,90 230,96 220,102" fill="#4aea6a" opacity="0.5"/>
+  <polygon points="230,90 240,96 230,102" fill="#4aea6a" opacity="0.3"/>
+</svg>

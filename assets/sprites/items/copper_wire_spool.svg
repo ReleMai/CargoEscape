@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Copper Wire Spool - 1x1 electrical component -->
+  <defs>
+    <linearGradient id="copperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8A060"/>
+      <stop offset="50%" style="stop-color:#CD7F32"/>
+      <stop offset="100%" style="stop-color:#B87333"/>
+    </linearGradient>
+    <linearGradient id="spoolGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#606060"/>
+      <stop offset="100%" style="stop-color:#404040"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Spool flanges -->
+  <ellipse cx="32" cy="16" rx="22" ry="8" fill="url(#spoolGrad)" stroke="#303030" stroke-width="1"/>
+  <ellipse cx="32" cy="48" rx="22" ry="8" fill="url(#spoolGrad)" stroke="#303030" stroke-width="1"/>
+  
+  <!-- Spool core -->
+  <rect x="26" y="16" width="12" height="32" fill="#505050"/>
+  
+  <!-- Wound copper wire -->
+  <ellipse cx="32" cy="20" rx="18" ry="5" fill="url(#copperGrad)"/>
+  <ellipse cx="32" cy="26" rx="18" ry="5" fill="url(#copperGrad)"/>
+  <ellipse cx="32" cy="32" rx="18" ry="5" fill="url(#copperGrad)"/>
+  <ellipse cx="32" cy="38" rx="18" ry="5" fill="url(#copperGrad)"/>
+  <ellipse cx="32" cy="44" rx="18" ry="5" fill="url(#copperGrad)"/>
+  
+  <!-- Wire detail lines -->
+  <path d="M14 24 Q32 28 50 24" fill="none" stroke="#DDA050" stroke-width="1"/>
+  <path d="M14 32 Q32 36 50 32" fill="none" stroke="#DDA050" stroke-width="1"/>
+  <path d="M14 40 Q32 44 50 40" fill="none" stroke="#DDA050" stroke-width="1"/>
+  
+  <!-- Shine -->
+  <ellipse cx="22" cy="28" rx="4" ry="8" fill="rgba(255,255,255,0.2)"/>
+</svg>

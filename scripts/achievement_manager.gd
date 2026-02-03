@@ -228,6 +228,9 @@ func _unlock_achievement(achievement: AchievementData) -> void:
 	achievement.is_unlocked = true
 	achievement.unlock_timestamp = int(Time.get_unix_time_from_system())
 	
+	# Play achievement unlock sound
+	AudioManager.play_sfx("achievement_unlock")
+	
 	print("[AchievementManager] Achievement unlocked: %s" % achievement.title)
 	achievement_unlocked.emit(achievement)
 	save_achievements()

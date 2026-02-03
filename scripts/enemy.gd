@@ -532,6 +532,9 @@ func check_cleanup() -> void:
 
 
 func destroy() -> void:
+	# Play explosion sound with pitch variation
+	AudioManager.play_sfx_varied("explosion_small", 0.15)
+	
 	emit_signal("destroyed")
 	ObjectPool.release(self)
 
@@ -539,6 +542,9 @@ func destroy() -> void:
 ## Take damage from projectiles or other sources
 func take_damage(amount: float) -> void:
 	current_health -= amount
+	
+	# Play hit sound
+	AudioManager.play_sfx("laser_hit", -3.0)
 	
 	# Visual feedback - flash white briefly
 	_flash_damage()

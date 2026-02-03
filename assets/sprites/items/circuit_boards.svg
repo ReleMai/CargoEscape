@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Circuit Boards - Electronic PCBs -->
+  <defs>
+    <linearGradient id="pcbGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#228844"/>
+      <stop offset="100%" style="stop-color:#115522"/>
+    </linearGradient>
+  </defs>
+  <!-- Main board -->
+  <rect x="8" y="12" width="48" height="40" fill="url(#pcbGreen)" stroke="#003311" stroke-width="2"/>
+  <!-- Circuit traces -->
+  <path d="M12,20 L24,20 L24,28 L36,28" fill="none" stroke="#88cc66" stroke-width="2"/>
+  <path d="M12,36 L20,36 L20,44 L40,44" fill="none" stroke="#88cc66" stroke-width="2"/>
+  <path d="M44,16 L44,24 L52,24" fill="none" stroke="#88cc66" stroke-width="2"/>
+  <path d="M36,32 L44,32 L44,40 L52,40" fill="none" stroke="#88cc66" stroke-width="2"/>
+  <path d="M28,16 L28,24" fill="none" stroke="#88cc66" stroke-width="2"/>
+  <!-- Chips/ICs -->
+  <rect x="30" y="18" width="12" height="8" fill="#222" stroke="#111" stroke-width="1"/>
+  <rect x="14" y="38" width="8" height="6" fill="#222" stroke="#111" stroke-width="1"/>
+  <!-- Chip pins -->
+  <line x1="32" y1="16" x2="32" y2="18" stroke="#aaa" stroke-width="1"/>
+  <line x1="36" y1="16" x2="36" y2="18" stroke="#aaa" stroke-width="1"/>
+  <line x1="40" y1="16" x2="40" y2="18" stroke="#aaa" stroke-width="1"/>
+  <line x1="32" y1="26" x2="32" y2="28" stroke="#aaa" stroke-width="1"/>
+  <line x1="36" y1="26" x2="36" y2="28" stroke="#aaa" stroke-width="1"/>
+  <line x1="40" y1="26" x2="40" y2="28" stroke="#aaa" stroke-width="1"/>
+  <!-- Capacitors -->
+  <circle cx="48" cy="30" r="3" fill="#444" stroke="#333" stroke-width="1"/>
+  <circle cx="24" cy="44" r="2" fill="#444" stroke="#333" stroke-width="1"/>
+  <!-- Resistors -->
+  <rect x="46" y="44" width="6" height="3" fill="#8b4513" stroke="#5a2d0a" stroke-width="0.5"/>
+  <line x1="44" y1="45.5" x2="46" y2="45.5" stroke="#aaa" stroke-width="1"/>
+  <line x1="52" y1="45.5" x2="54" y2="45.5" stroke="#aaa" stroke-width="1"/>
+  <!-- Solder points -->
+  <circle cx="12" cy="20" r="2" fill="#ccc"/>
+  <circle cx="12" cy="36" r="2" fill="#ccc"/>
+  <circle cx="52" cy="24" r="2" fill="#ccc"/>
+  <circle cx="52" cy="40" r="2" fill="#ccc"/>
+  <!-- LED -->
+  <circle cx="16" cy="28" r="2" fill="#ff3333"/>
+  <circle cx="16" cy="28" r="1" fill="#ff6666" opacity="0.6"/>
+</svg>
