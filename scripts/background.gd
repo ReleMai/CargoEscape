@@ -90,9 +90,12 @@ extends Node2D
 ## Screen dimensions
 var screen_size: Vector2
 
-## Star data for each layer: Array[Array[Dictionary]]
+## Redraw throttle accumulator
+var _redraw_accumulator: float = 0.0
+
+## Star data for each layer
 ## Each star: {position: Vector2, size: float, color: Color, alpha: float}
-var star_layers: Array[Array[Dictionary]] = []
+var star_layers: Array = []
 
 ## External scroll speed (set by game manager)
 var external_scroll_speed: float = 0.0
@@ -140,8 +143,11 @@ func _process(delta: float) -> void:
 	if enable_shooting_stars:
 		_update_shooting_stars(delta)
 	
-	# Redraw
-	queue_redraw()
+	# Throttle redraws - background doesn't need 60fps
+	_redraw_accumulator += delta
+	if _redraw_accumulator >= 0.033:  # ~30 FPS
+		_redraw_accumulator = 0.0
+		queue_redraw()
 
 
 func _draw() -> void:

@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcw3ebt7gvj0j"]
+[gd_scene format=3 uid="uid://dcw3ebt7gvj0j"]
 
-[ext_resource type="Script" path="res://scripts/intro/intro_sequence.gd" id="1_intro_seq"]
+[ext_resource type="Script" uid="uid://c2krik5hj3tsg" path="res://scripts/intro/intro_sequence.gd" id="1_intro_seq"]
 
-[node name="IntroSequence" type="Control"]
+[node name="IntroSequence" type="Control" unique_id=1349507135]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,16 +11,20 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_intro_seq")
 
-[node name="LogoContainer" type="Control" parent="."]
+[node name="LogoContainer" type="Control" parent="." unique_id=1153301820]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 13.0
+offset_top = 4.0
+offset_right = 13.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="GlowEffect" type="ColorRect" parent="LogoContainer"]
+[node name="GlowEffect" type="ColorRect" parent="LogoContainer" unique_id=1448310824]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -37,7 +41,7 @@ pivot_offset = Vector2(350, 60)
 mouse_filter = 2
 color = Color(1, 0.85, 0.4, 0)
 
-[node name="LogoLabel" type="Label" parent="LogoContainer"]
+[node name="LogoLabel" type="Label" parent="LogoContainer" unique_id=1991578611]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -58,7 +62,7 @@ text = "CARGO ESCAPE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SceneContainer" type="Control" parent="."]
+[node name="SceneContainer" type="Control" parent="." unique_id=2139634999]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -68,7 +72,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CrawlLabel" type="Label" parent="SceneContainer"]
+[node name="CrawlLabel" type="Label" parent="SceneContainer" unique_id=1248297485]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -89,7 +93,7 @@ text = "In the lawless sectors of space..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TitleContainer" type="Control" parent="."]
+[node name="TitleContainer" type="Control" parent="." unique_id=500082156]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -99,7 +103,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="TitleContainer"]
+[node name="TitleLabel" type="Label" parent="TitleContainer" unique_id=814617040]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -121,7 +125,7 @@ text = "CARGO ESCAPE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TaglineLabel" type="Label" parent="TitleContainer"]
+[node name="TaglineLabel" type="Label" parent="TitleContainer" unique_id=1276303412]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -142,7 +146,7 @@ text = "Loot. Escape. Survive."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SkipHint" type="Label" parent="."]
+[node name="SkipHint" type="Label" parent="." unique_id=1869626413]
 visible = false
 layout_mode = 1
 anchors_preset = 7

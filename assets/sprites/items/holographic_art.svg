@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Frame -->
+  <rect x="4" y="4" width="40" height="40" rx="2" ry="2" fill="#2a2a30"/>
+  <rect x="6" y="6" width="36" height="36" rx="1" ry="1" fill="#1a1a20"/>
+  
+  <!-- Holographic display area -->
+  <defs>
+    <linearGradient id="holoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff87" stop-opacity="0.8"/>
+      <stop offset="25%" stop-color="#60efff" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#ff00ff" stop-opacity="0.4"/>
+      <stop offset="75%" stop-color="#60efff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00ff87" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="scanLines" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="49%" stop-color="transparent"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.05)"/>
+      <stop offset="51%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Display background -->
+  <rect x="8" y="8" width="32" height="32" fill="#0a0a15"/>
+  
+  <!-- Holographic image - abstract art -->
+  <circle cx="24" cy="24" r="10" fill="none" stroke="url(#holoGrad)" stroke-width="1.5" opacity="0.9"/>
+  <circle cx="24" cy="24" r="7" fill="none" stroke="#60efff" stroke-width="1" opacity="0.7"/>
+  <circle cx="24" cy="24" r="4" fill="none" stroke="#00ff87" stroke-width="1" opacity="0.8"/>
+  
+  <!-- Geometric shapes -->
+  <polygon points="24,14 30,22 24,30 18,22" fill="none" stroke="#ff00ff" stroke-width="0.8" opacity="0.6"/>
+  <line x1="14" y1="24" x2="34" y2="24" stroke="#60efff" stroke-width="0.5" opacity="0.5"/>
+  <line x1="24" y1="14" x2="24" y2="34" stroke="#60efff" stroke-width="0.5" opacity="0.5"/>
+  
+  <!-- Scan lines overlay -->
+  <rect x="8" y="8" width="32" height="32" fill="url(#scanLines)"/>
+  
+  <!-- Corner decorations -->
+  <rect x="8" y="8" width="4" height="1" fill="#00ff87" opacity="0.8"/>
+  <rect x="8" y="8" width="1" height="4" fill="#00ff87" opacity="0.8"/>
+  <rect x="36" y="8" width="4" height="1" fill="#00ff87" opacity="0.8"/>
+  <rect x="39" y="8" width="1" height="4" fill="#00ff87" opacity="0.8"/>
+  <rect x="8" y="39" width="4" height="1" fill="#00ff87" opacity="0.8"/>
+  <rect x="8" y="36" width="1" height="4" fill="#00ff87" opacity="0.8"/>
+  <rect x="36" y="39" width="4" height="1" fill="#00ff87" opacity="0.8"/>
+  <rect x="39" y="36" width="1" height="4" fill="#00ff87" opacity="0.8"/>
+  
+  <!-- Status LED -->
+  <circle cx="40" cy="8" r="1.5" fill="#00ff87">
+    <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

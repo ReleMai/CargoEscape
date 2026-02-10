@@ -31,7 +31,9 @@ enum Type {
 	SUPPLY_CABINET,
 	VAULT,
 	ARMORY,
-	SECURE_CACHE
+	SECURE_CACHE,
+	GEAR_LOCKER,
+	WEAPONS_CACHE
 }
 
 enum ItemCategory {
@@ -325,6 +327,68 @@ static func _define_containers() -> void:
 	cache.base_color = Color(0.1, 0.12, 0.15)
 	cache.sprite_size = Vector2(32, 32)
 	_containers[Type.SECURE_CACHE] = cache
+	
+	# -------------------------------------------------------------------------
+	# GEAR LOCKER - Armor, helmets, accessories
+	# -------------------------------------------------------------------------
+	var gear_locker = ContainerData.new(
+		Type.GEAR_LOCKER,
+		"Gear Locker",
+		"Equipment storage for armor and accessories. May contain protective gear."
+	)
+	gear_locker.search_time_modifier = 1.3
+	gear_locker.min_slots = 2
+	gear_locker.max_slots = 4
+	gear_locker.rarity_modifiers = {
+		0: 0.6,   # Common reduced
+		1: 1.2,   # Uncommon boosted
+		2: 1.5,   # Rare boosted
+		3: 1.0,   # Epic moderate
+		4: 0.4    # Legendary rare
+	}
+	gear_locker.category_weights = {
+		ItemCategory.SCRAP: 0.5,
+		ItemCategory.COMPONENT: 1.0,
+		ItemCategory.VALUABLE: 2.0,
+		ItemCategory.MODULE: 4.0,   # Armor counts as module
+		ItemCategory.ARTIFACT: 2.0  # Relics
+	}
+	gear_locker.sprite_path = "res://assets/sprites/containers/gear_locker.svg"
+	gear_locker.glow_color = Color(0.3, 0.7, 0.9, 0.4)
+	gear_locker.base_color = Color(0.25, 0.35, 0.45)
+	gear_locker.sprite_size = Vector2(48, 64)
+	_containers[Type.GEAR_LOCKER] = gear_locker
+	
+	# -------------------------------------------------------------------------
+	# WEAPONS CACHE - Weapons and ammo
+	# -------------------------------------------------------------------------
+	var weapons = ContainerData.new(
+		Type.WEAPONS_CACHE,
+		"Weapons Cache",
+		"Hidden weapons stash. Contains firearms, melee weapons, and ammunition."
+	)
+	weapons.search_time_modifier = 1.4
+	weapons.min_slots = 2
+	weapons.max_slots = 5
+	weapons.rarity_modifiers = {
+		0: 0.8,   # Common reduced
+		1: 1.0,   # Uncommon normal
+		2: 1.3,   # Rare boosted
+		3: 1.2,   # Epic boosted
+		4: 0.6    # Legendary moderate
+	}
+	weapons.category_weights = {
+		ItemCategory.SCRAP: 0.2,
+		ItemCategory.COMPONENT: 2.0,   # Ammo
+		ItemCategory.VALUABLE: 0.5,
+		ItemCategory.MODULE: 5.0,      # Weapons
+		ItemCategory.ARTIFACT: 1.0
+	}
+	weapons.sprite_path = "res://assets/sprites/containers/weapons_cache.svg"
+	weapons.glow_color = Color(0.9, 0.3, 0.2, 0.4)
+	weapons.base_color = Color(0.35, 0.2, 0.2)
+	weapons.sprite_size = Vector2(48, 48)
+	_containers[Type.WEAPONS_CACHE] = weapons
 
 
 # ==============================================================================
@@ -395,52 +459,62 @@ static func roll_container_type(ship_tier: int = 1) -> Type:
 		1:  # Cargo Shuttle - mostly scrap and crates
 			weights = {
 				Type.SCRAP_PILE: 40,
-				Type.CARGO_CRATE: 45,
+				Type.CARGO_CRATE: 40,
 				Type.LOCKER: 10,
 				Type.SUPPLY_CABINET: 5,
 				Type.VAULT: 0,
 				Type.ARMORY: 0,
-				Type.SECURE_CACHE: 0
+				Type.SECURE_CACHE: 0,
+				Type.GEAR_LOCKER: 3,
+				Type.WEAPONS_CACHE: 2
 			}
 		2:  # Freight Hauler - introduces lockers
 			weights = {
-				Type.SCRAP_PILE: 25,
-				Type.CARGO_CRATE: 40,
-				Type.LOCKER: 20,
+				Type.SCRAP_PILE: 22,
+				Type.CARGO_CRATE: 35,
+				Type.LOCKER: 18,
 				Type.SUPPLY_CABINET: 10,
 				Type.VAULT: 4,
 				Type.ARMORY: 1,
-				Type.SECURE_CACHE: 0
+				Type.SECURE_CACHE: 0,
+				Type.GEAR_LOCKER: 6,
+				Type.WEAPONS_CACHE: 4
 			}
 		3:  # Corporate Transport - introduces vaults
 			weights = {
-				Type.SCRAP_PILE: 10,
-				Type.CARGO_CRATE: 30,
-				Type.LOCKER: 25,
-				Type.SUPPLY_CABINET: 15,
+				Type.SCRAP_PILE: 8,
+				Type.CARGO_CRATE: 25,
+				Type.LOCKER: 20,
+				Type.SUPPLY_CABINET: 12,
 				Type.VAULT: 12,
 				Type.ARMORY: 6,
-				Type.SECURE_CACHE: 2
+				Type.SECURE_CACHE: 2,
+				Type.GEAR_LOCKER: 8,
+				Type.WEAPONS_CACHE: 7
 			}
-		4:  # Military Frigate - armory focus
+		4:  # Military Frigate - armory and weapons focus
 			weights = {
-				Type.SCRAP_PILE: 5,
-				Type.CARGO_CRATE: 20,
-				Type.LOCKER: 20,
-				Type.SUPPLY_CABINET: 15,
-				Type.VAULT: 15,
-				Type.ARMORY: 18,
-				Type.SECURE_CACHE: 7
+				Type.SCRAP_PILE: 4,
+				Type.CARGO_CRATE: 15,
+				Type.LOCKER: 15,
+				Type.SUPPLY_CABINET: 12,
+				Type.VAULT: 12,
+				Type.ARMORY: 15,
+				Type.SECURE_CACHE: 7,
+				Type.GEAR_LOCKER: 10,
+				Type.WEAPONS_CACHE: 10
 			}
-		5, _:  # Black Ops - secure cache focus
+		5, _:  # Black Ops - secure cache and weapons focus
 			weights = {
 				Type.SCRAP_PILE: 2,
-				Type.CARGO_CRATE: 10,
-				Type.LOCKER: 15,
-				Type.SUPPLY_CABINET: 10,
-				Type.VAULT: 20,
-				Type.ARMORY: 20,
-				Type.SECURE_CACHE: 23
+				Type.CARGO_CRATE: 8,
+				Type.LOCKER: 10,
+				Type.SUPPLY_CABINET: 8,
+				Type.VAULT: 15,
+				Type.ARMORY: 15,
+				Type.SECURE_CACHE: 17,
+				Type.GEAR_LOCKER: 12,
+				Type.WEAPONS_CACHE: 13
 			}
 	
 	# Calculate total weight

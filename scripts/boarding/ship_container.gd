@@ -67,6 +67,8 @@ enum LootTier { NEAR = 1, MIDDLE = 2, FAR = 3, DEEPEST = 4 }
 @export_range(0, 6) var container_type_id: int = 1  # CARGO_CRATE default
 @export var min_items: int = 2
 @export var max_items: int = 5
+## Can the player hide in this container?
+@export var can_hide_in: bool = false
 
 @export_group("Legacy Settings")
 ## Legacy loot tier (used if not using new ship tier system)
@@ -203,6 +205,17 @@ func generate_loot(tier: int, _container_type: int = -1, faction_code: String = 
 	_update_visuals()
 
 
+## Add a guaranteed item to this container (used for keycards, quest items, etc.)
+func add_guaranteed_item(item_id: String) -> void:
+	var item = ItemDB.create_item(item_id)
+	if item:
+		# Insert at beginning so it's found first
+		hidden_items.insert(0, item)
+		_update_visuals()
+	else:
+		push_warning("[ShipContainer] Failed to create guaranteed item: %s" % item_id)
+
+
 # ==============================================================================
 # SEARCH SYSTEM
 # ==============================================================================
@@ -316,12 +329,9 @@ func can_interact() -> bool:
 func get_interact_prompt() -> String:
 	match current_state:
 		ContainerState.CLOSED:
-			var item_count = hidden_items.size() + revealed_items.size()
-			if item_count > 0:
-				return "[E] Loot %s (%d items)" % [container_name, item_count]
 			return "[E] Loot %s" % container_name
 		ContainerState.OPEN:
-			return "[E] Loot %s (%d items)" % [container_name, revealed_items.size()]
+			return "[E] Loot %s" % container_name
 		ContainerState.EMPTY:
 			return "(Empty)"
 		ContainerState.LOCKED:
@@ -409,23 +419,22 @@ func _update_visuals() -> void:
 	match current_state:
 		ContainerState.CLOSED:
 			color = closed_color
-			var total = hidden_items.size() + revealed_items.size()
-			label_text = "%d items" % total if total > 0 else ""
+			label_text = ""
 		ContainerState.SEARCHING:
 			color = searching_color
 			# Add pulsing effect during search
 			var pulse = (sin(search_pulse_time * 3.0) + 1.0) / 2.0
 			color = color.lerp(Color(0.5, 0.5, 0.6), pulse * 0.3)
-			label_text = "Searching..."
+			label_text = ""
 		ContainerState.OPEN:
 			color = open_color
-			label_text = "%d items" % revealed_items.size()
+			label_text = ""
 		ContainerState.EMPTY:
 			color = empty_color
-			label_text = "Empty"
+			label_text = ""
 		ContainerState.LOCKED:
 			color = Color(0.5, 0.3, 0.3)
-			label_text = "Locked"
+			label_text = ""
 	
 	if sprite:
 		sprite.modulate = color
@@ -557,3 +566,18 @@ func _hide_highlight() -> void:
 		if highlight and not is_hovered:
 			highlight.visible = false
 	)
+
+
+# ==============================================================================
+# PLAYER HIDING
+# ==============================================================================
+
+## Check if player can currently hide in this container
+func can_player_hide() -> bool:
+	# Can only hide in empty or open containers that are marked as hideable
+	return can_hide_in and current_state in [ContainerState.OPEN, ContainerState.EMPTY]
+
+
+## Get the position for the player to hide at
+func get_hiding_position() -> Vector2:
+	return global_position

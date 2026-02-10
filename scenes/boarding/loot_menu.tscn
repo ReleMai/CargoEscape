@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dxm7wq8kp5n4"]
 
 [ext_resource type="Script" path="res://scripts/boarding/loot_menu.gd" id="1_menu"]
-[ext_resource type="PackedScene" uid="uid://dmn6xk2rav4qy" path="res://scenes/loot/inventory.tscn" id="2_inventory"]
+[ext_resource type="PackedScene" uid="uid://c6slot1nvent0ry" path="res://scenes/loot/slot_inventory.tscn" id="2_inventory"]
 
 [node name="LootMenu" type="Control"]
 layout_mode = 3

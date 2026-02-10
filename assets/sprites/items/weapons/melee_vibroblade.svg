@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Vibroblade - High-Tech Melee -->
+  <defs>
+    <linearGradient id="vibroBladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c0c0d0"/>
+      <stop offset="50%" style="stop-color:#e0e0f0"/>
+      <stop offset="100%" style="stop-color:#a0a0b0"/>
+    </linearGradient>
+    <linearGradient id="vibroGlowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00aaff"/>
+      <stop offset="50%" style="stop-color:#00ffff"/>
+      <stop offset="100%" style="stop-color:#00aaff"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Blade -->
+  <polygon points="16,2 13,8 13,20 15,22 17,22 19,20 19,8" 
+           fill="url(#vibroBladeGrad)" stroke="#808090" stroke-width="0.5"/>
+  
+  <!-- Blade Tip -->
+  <polygon points="16,1 14,4 18,4" fill="#d0d0e0" stroke="#808090" stroke-width="0.3"/>
+  
+  <!-- Vibration Lines -->
+  <line x1="11" y1="6" x2="12.5" y2="6" stroke="#00ffff" stroke-width="0.3" opacity="0.6"/>
+  <line x1="19.5" y1="6" x2="21" y2="6" stroke="#00ffff" stroke-width="0.3" opacity="0.6"/>
+  <line x1="11" y1="10" x2="12.5" y2="10" stroke="#00ffff" stroke-width="0.3" opacity="0.6"/>
+  <line x1="19.5" y1="10" x2="21" y2="10" stroke="#00ffff" stroke-width="0.3" opacity="0.6"/>
+  <line x1="11" y1="14" x2="12.5" y2="14" stroke="#00ffff" stroke-width="0.3" opacity="0.6"/>
+  <line x1="19.5" y1="14" x2="21" y2="14" stroke="#00ffff" stroke-width="0.3" opacity="0.6"/>
+  
+  <!-- Edge Glow -->
+  <line x1="13" y1="8" x2="13" y2="20" stroke="url(#vibroGlowGrad)" stroke-width="0.8" opacity="0.5"/>
+  <line x1="19" y1="8" x2="19" y2="20" stroke="url(#vibroGlowGrad)" stroke-width="0.8" opacity="0.5"/>
+  
+  <!-- Blade Groove -->
+  <line x1="16" y1="5" x2="16" y2="19" stroke="#9090a0" stroke-width="1"/>
+  <line x1="16" y1="5" x2="16" y2="19" stroke="#00aaff" stroke-width="0.5" opacity="0.4"/>
+  
+  <!-- Tech Guard -->
+  <rect x="12" y="21" width="8" height="3" rx="0.5" fill="#3a3a4a" stroke="#2a2a3a" stroke-width="0.5"/>
+  <rect x="13" y="21.5" width="6" height="2" fill="#2a2a3a"/>
+  
+  <!-- Guard Lights -->
+  <circle cx="14" cy="22.5" r="0.5" fill="#00ffff" opacity="0.8"/>
+  <circle cx="18" cy="22.5" r="0.5" fill="#00ffff" opacity="0.8"/>
+  
+  <!-- Handle -->
+  <rect x="14" y="24" width="4" height="6" rx="0.5" fill="#2a2a3a" stroke="#1a1a2a" stroke-width="0.5"/>
+  
+  <!-- Handle Grip Texture -->
+  <line x1="14.5" y1="25" x2="17.5" y2="25" stroke="#3a3a4a" stroke-width="0.3"/>
+  <line x1="14.5" y1="26.5" x2="17.5" y2="26.5" stroke="#3a3a4a" stroke-width="0.3"/>
+  <line x1="14.5" y1="28" x2="17.5" y2="28" stroke="#3a3a4a" stroke-width="0.3"/>
+  
+  <!-- Power Indicator -->
+  <rect x="15" y="25.5" width="2" height="0.8" rx="0.2" fill="#00ff00" opacity="0.8"/>
+  
+  <!-- Activation Button -->
+  <circle cx="16" cy="27.5" r="0.8" fill="#4a4a5a" stroke="#3a3a4a" stroke-width="0.3"/>
+  <circle cx="16" cy="27.3" r="0.3" fill="#00ffff" opacity="0.6"/>
+  
+  <!-- Pommel -->
+  <ellipse cx="16" cy="30.5" rx="2.5" ry="1" fill="#3a3a4a" stroke="#2a2a3a" stroke-width="0.3"/>
+  <ellipse cx="16" cy="30.5" rx="1.5" ry="0.6" fill="#2a2a3a"/>
+</svg>

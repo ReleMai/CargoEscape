@@ -65,8 +65,14 @@ signal drag_started(item: LootItem)
 ## Emitted when drag ends (with drop position for placement check)
 signal drag_ended(item: LootItem, drop_position: Vector2)
 
-## Emitted when user requests item destruction (right-click)
+## Emitted when user requests item destruction (via context menu)
 signal destroy_requested(item: LootItem)
+
+## Emitted when user requests item rotation (via context menu)
+signal rotate_requested(item: LootItem)
+
+## Emitted when user requests to examine item (via context menu)
+signal examine_requested(item: LootItem)
 
 ## Emitted when item search is completed (for containers)
 signal search_completed(item: LootItem)
@@ -142,6 +148,11 @@ var search_duration: float = 1.5  # Default search time
 var is_being_searched: bool = false
 var pulse_time: float = 0.0
 
+## Grid snap state (set by inventory when dragging over it)
+var should_snap: bool = false
+var snap_position: Vector2 = Vector2.ZERO
+var snap_scale: Vector2 = Vector2.ONE
+
 
 # ==============================================================================
 # NODE REFERENCES (created dynamically)
@@ -153,6 +164,18 @@ var rarity_glow: ColorRect = null
 var value_label: Label = null
 var question_mark: Label = null
 var search_progress_overlay: ColorRect = null
+var context_menu: PopupMenu = null
+
+
+# ==============================================================================
+# CONTEXT MENU IDS
+# ==============================================================================
+
+enum ContextMenuAction {
+	ROTATE = 0,
+	DESTROY = 1,
+	EXAMINE = 2
+}
 
 
 # ==============================================================================
@@ -168,14 +191,21 @@ func _ready() -> void:
 		_create_visuals()
 		_setup_tooltip()
 	
-	# Default to hidden state
-	set_state(ItemState.HIDDEN)
+	# Only default to hidden state if not already set to IN_INVENTORY (loaded items)
+	if current_state != ItemState.IN_INVENTORY:
+		set_state(ItemState.HIDDEN)
 
 
 func _process(delta: float) -> void:
-	# Follow mouse while dragging
+	# Follow mouse while dragging (with optional grid snap)
 	if is_dragging:
-		global_position = get_global_mouse_position() + drag_offset
+		if should_snap:
+			# When snapping to grid, use exact position and scale to fit slot
+			global_position = snap_position
+			scale = snap_scale
+		else:
+			global_position = get_global_mouse_position() + drag_offset
+			scale = Vector2.ONE * DRAG_SCALE
 	
 	# Update search progress
 	if is_being_searched and current_state == ItemState.HIDDEN:
@@ -331,7 +361,7 @@ func _create_value_label(_w: float, h: float) -> void:
 
 
 ## Create the search progress overlay (simpler approach using ColorRect)
-func _create_search_progress_overlay(w: float, h: float) -> void:
+func _create_search_progress_overlay(_w: float, h: float) -> void:
 	search_progress_overlay = ColorRect.new()
 	search_progress_overlay.name = "SearchProgressOverlay"
 	search_progress_overlay.position = Vector2(0, h - 4)
@@ -368,6 +398,10 @@ func set_state(new_state: ItemState) -> void:
 
 ## Mark as placed in inventory
 func set_in_inventory() -> void:
+	# Ensure visuals exist before setting state (needed when loading from GameManager)
+	if is_node_ready() and not visual_container and item_data:
+		_create_visuals()
+		_setup_tooltip()
 	set_state(ItemState.IN_INVENTORY)
 
 
@@ -417,10 +451,46 @@ func _handle_search_click(event: InputEventMouseButton) -> void:
 		cancel_search()
 
 
-## Handle right mouse button
+## Handle right mouse button - show context menu
 func _handle_right_click(event: InputEventMouseButton) -> void:
 	if event.pressed and current_state == ItemState.IN_INVENTORY:
-		destroy_requested.emit(self)
+		_show_context_menu(event.global_position)
+
+
+## Create context menu if needed
+func _create_context_menu() -> void:
+	if context_menu:
+		return
+	
+	context_menu = PopupMenu.new()
+	context_menu.add_item("Rotate", ContextMenuAction.ROTATE)
+	context_menu.add_separator()
+	context_menu.add_item("Destroy", ContextMenuAction.DESTROY)
+	context_menu.add_separator()
+	context_menu.add_item("Examine", ContextMenuAction.EXAMINE)
+	
+	# Note: Godot 4.x doesn't have direct item coloring for menu items
+	
+	context_menu.id_pressed.connect(_on_context_menu_selected)
+	add_child(context_menu)
+
+
+## Show context menu at position
+func _show_context_menu(at_position: Vector2) -> void:
+	_create_context_menu()
+	context_menu.position = at_position
+	context_menu.popup()
+
+
+## Handle context menu selection
+func _on_context_menu_selected(id: int) -> void:
+	match id:
+		ContextMenuAction.ROTATE:
+			rotate_requested.emit(self)
+		ContextMenuAction.DESTROY:
+			destroy_requested.emit(self)
+		ContextMenuAction.EXAMINE:
+			examine_requested.emit(self)
 
 
 # ==============================================================================
@@ -483,13 +553,18 @@ func _start_drag() -> void:
 	if tooltip:
 		tooltip.hide_tooltip()
 	
-	# Store original state
-	original_position = global_position
+	# Store original state (use local position for return)
+	original_position = position
 	original_parent = get_parent()
 	original_scale = scale
 	
-	# Calculate offset so item doesn't jump to mouse
-	drag_offset = global_position - get_global_mouse_position()
+	# Center item on cursor for precise grid placement
+	# Use the visual size of the item for proper centering
+	if item_data:
+		var item_visual_size = custom_minimum_size if custom_minimum_size != Vector2.ZERO else size
+		drag_offset = -item_visual_size / 2.0
+	else:
+		drag_offset = -size / 2.0
 	
 	# Reparent to top-level for visibility during drag
 	var top_parent := _find_top_level_control()
@@ -500,7 +575,7 @@ func _start_drag() -> void:
 	
 	# Visual feedback
 	z_index = DRAG_Z_INDEX
-	scale = Vector2.ONE * DRAG_SCALE
+	# Scale is now handled in _process based on snap state
 	
 	# Notify listeners
 	drag_started.emit(self)
@@ -556,7 +631,7 @@ func cancel_drag() -> void:
 	if original_parent and get_parent() != original_parent:
 		reparent(original_parent)
 	
-	global_position = original_position
+	position = original_position
 
 
 ## Animate return to original position
@@ -564,15 +639,13 @@ func cancel_drag() -> void:
 func return_to_original() -> void:
 	# Reparent first
 	if original_parent and get_parent() != original_parent:
-		var saved_pos := global_position
 		reparent(original_parent)
-		global_position = saved_pos
 	
-	# Animate back
+	# Animate back to original local position
 	var tween := create_tween()
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self, "global_position", original_position, RETURN_DURATION)
+	tween.tween_property(self, "position", original_position, RETURN_DURATION)
 
 
 ## Get the grid size of this item

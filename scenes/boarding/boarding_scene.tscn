@@ -1,12 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://b7xm4wq9kp3n2"]
+[gd_scene load_steps=9 format=3 uid="uid://b7xm4wq9kp3n2"]
 
 [ext_resource type="Script" path="res://scripts/boarding/boarding_manager.gd" id="1_manager"]
 [ext_resource type="PackedScene" uid="uid://bkp2xnq7fm4y3" path="res://scenes/boarding/boarding_player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://dqw8m3x6np2k4" path="res://scenes/boarding/exit_point.tscn" id="4_exit"]
-[ext_resource type="PackedScene" uid="uid://dmn6xk2rav4qy" path="res://scenes/loot/inventory.tscn" id="5_inventory"]
+[ext_resource type="PackedScene" uid="uid://c6slot1nvent0ry" path="res://scenes/loot/slot_inventory.tscn" id="5_inventory"]
 [ext_resource type="Script" path="res://scripts/boarding/loot_menu.gd" id="6_lootmenu"]
 [ext_resource type="PackedScene" uid="uid://bpaxn8mxmxdmdc" path="res://scenes/ui/pause_manager.tscn" id="7_pause"]
 [ext_resource type="PackedScene" uid="uid://bpm8n3k5qx7ry" path="res://scenes/boarding/minimap.tscn" id="7_minimap"]
+[ext_resource type="PackedScene" uid="uid://cpanelcombined1" path="res://scenes/ui/character_panel.tscn" id="8_charpanel"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_boundary"]
 size = Vector2(50, 1000)
@@ -122,33 +123,12 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.6, 0.7, 0.6, 0.8)
 theme_override_font_sizes/font_size = 14
-text = "WASD: Move | E: Interact/Loot | TAB: Inventory | Right-click: Destroy Item | Escape through AIRLOCK!"
+text = "WASD: Move | E: Interact/Loot | TAB: Character Menu | Escape through AIRLOCK!"
 horizontal_alignment = 1
 
-[node name="InventoryPanel" type="PanelContainer" parent="UI"]
+[node name="CharacterPanel" parent="UI" instance=ExtResource("8_charpanel")]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -350.0
-offset_top = -250.0
-offset_right = 350.0
-offset_bottom = 250.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="UI/InventoryPanel"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Header" type="Label" parent="UI/InventoryPanel/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "INVENTORY (TAB to close, Right-click to destroy items)"
-horizontal_alignment = 1
 
 [node name="LootMenu" type="Control" parent="UI"]
 unique_name_in_owner = true

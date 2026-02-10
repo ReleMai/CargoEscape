@@ -44,6 +44,8 @@ class LayoutData:
 	var accent_color: Color = Color.WHITE
 	var interior_color: Color = Color.DIM_GRAY
 	var layout_variant: int = 0  # Which variant was chosen
+	var locked_doors: Array = []  # Array of {room_idx: int, tier: int}
+	var keycard_spawns: Array = []  # Array of {position: Vector2, tier: int, for_room: int}
 
 
 # ==============================================================================
@@ -510,11 +512,11 @@ static func _place_containers_safely(layout: LayoutData, count: int, ship_tier: 
 
 static func _add_room_walls(layout: LayoutData, room: Rect2) -> void:
 	var tl = room.position
-	var tr = Vector2(room.end.x, room.position.y)
+	var top_right = Vector2(room.end.x, room.position.y)
 	var br = room.end
 	var bl = Vector2(room.position.x, room.end.y)
 	
-	layout.wall_segments.append({"start": tl, "end": tr})
-	layout.wall_segments.append({"start": tr, "end": br})
+	layout.wall_segments.append({"start": tl, "end": top_right})
+	layout.wall_segments.append({"start": top_right, "end": br})
 	layout.wall_segments.append({"start": br, "end": bl})
 	layout.wall_segments.append({"start": bl, "end": tl})

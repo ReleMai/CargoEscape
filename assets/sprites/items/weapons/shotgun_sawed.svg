@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Sawed-Off Shotgun - Close Range Devastation -->
+  <defs>
+    <linearGradient id="sawedBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a5048"/>
+      <stop offset="50%" style="stop-color:#403830"/>
+      <stop offset="100%" style="stop-color:#2a2420"/>
+    </linearGradient>
+    <linearGradient id="sawedWoodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5a2b"/>
+      <stop offset="50%" style="stop-color:#6b4423"/>
+      <stop offset="100%" style="stop-color:#4a3018"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Double Barrels -->
+  <rect x="14" y="12" width="14" height="3" rx="0.5" fill="url(#sawedBodyGrad)" stroke="#1a1a1a" stroke-width="0.5"/>
+  <rect x="14" y="16" width="14" height="3" rx="0.5" fill="url(#sawedBodyGrad)" stroke="#1a1a1a" stroke-width="0.5"/>
+  
+  <!-- Barrel Separation -->
+  <line x1="14" y1="15.5" x2="28" y2="15.5" stroke="#2a2420" stroke-width="0.5"/>
+  
+  <!-- Rough Cut Muzzle -->
+  <path d="M27,12 L28,11 L28,13 L27,12" fill="#3a3028"/>
+  <path d="M27,16 L28,15 L28,17 L27,16" fill="#3a3028"/>
+  <ellipse cx="28" cy="13" rx="0.8" ry="1.2" fill="#1a1a1a"/>
+  <ellipse cx="28" cy="17" rx="0.8" ry="1.2" fill="#1a1a1a"/>
+  
+  <!-- Receiver -->
+  <rect x="8" y="12" width="7" height="8" rx="0.5" fill="#3a3028" stroke="#2a2420" stroke-width="0.5"/>
+  
+  <!-- Break Action Hinge -->
+  <circle cx="9" cy="16" r="2" fill="#4a4038" stroke="#2a2420" stroke-width="0.5"/>
+  <circle cx="9" cy="16" r="1" fill="#3a3028"/>
+  
+  <!-- Top Lever -->
+  <rect x="12" y="11" width="3" height="2" rx="0.5" fill="#4a4038"/>
+  
+  <!-- Hammers -->
+  <rect x="10" y="10" width="1.5" height="2" rx="0.3" fill="#3a3028"/>
+  
+  <!-- Cut Grip -->
+  <polygon points="5,14 9,14 9,24 7,26 4,24 4,16" fill="url(#sawedWoodGrad)" stroke="#4a3018" stroke-width="0.5"/>
+  
+  <!-- Grip Checkering -->
+  <line x1="5.5" y1="17" x2="8" y2="17" stroke="#5a4020" stroke-width="0.3"/>
+  <line x1="5.5" y1="19" x2="8" y2="19" stroke="#5a4020" stroke-width="0.3"/>
+  <line x1="5.5" y1="21" x2="8" y2="21" stroke="#5a4020" stroke-width="0.3"/>
+  <line x1="5.5" y1="23" x2="8" y2="23" stroke="#5a4020" stroke-width="0.3"/>
+  
+  <!-- Trigger Guard -->
+  <path d="M8,20 Q10,22 10,24 L8,24" fill="none" stroke="#4a4038" stroke-width="0.8"/>
+  
+  <!-- Double Triggers -->
+  <rect x="8.5" y="18" width="1" height="2" rx="0.2" fill="#2a2420"/>
+  <rect x="8.5" y="20.5" width="1" height="2" rx="0.2" fill="#2a2420"/>
+  
+  <!-- Scratches/Wear -->
+  <line x1="16" y1="13" x2="20" y2="14" stroke="#5a5048" stroke-width="0.2" opacity="0.5"/>
+  <line x1="18" y1="17" x2="24" y2="17.5" stroke="#5a5048" stroke-width="0.2" opacity="0.5"/>
+  
+  <!-- No Stock - Just Buffer -->
+  <rect x="3" y="15" width="3" height="3" rx="1" fill="#3a3028"/>
+</svg>

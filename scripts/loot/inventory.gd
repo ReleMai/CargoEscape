@@ -272,6 +272,8 @@ func place_item(item: LootItem, pos: Vector2i) -> bool:
 	item.is_dragging = false
 	item.z_index = 0
 	item.scale = Vector2.ONE
+	item.should_snap = false
+	item.snap_position = Vector2.ZERO
 	
 	# Reparent item to inventory items layer
 	if item.get_parent() != items_layer:
@@ -284,13 +286,22 @@ func place_item(item: LootItem, pos: Vector2i) -> bool:
 		item.drag_ended.connect(_on_inventory_item_drag_ended)
 	if not item.destroy_requested.is_connected(_on_inventory_item_destroy):
 		item.destroy_requested.connect(_on_inventory_item_destroy)
+	if not item.rotate_requested.is_connected(_on_inventory_item_rotate):
+		item.rotate_requested.connect(_on_inventory_item_rotate)
+	if not item.examine_requested.is_connected(_on_inventory_item_examine):
+		item.examine_requested.connect(_on_inventory_item_examine)
 	
 	# Position item at grid cell (use local position since we're in items_layer)
 	var target_pos = Vector2(pos.x * (cell_size + cell_gap), pos.y * (cell_size + cell_gap))
 	item.position = target_pos
 	
+	# Force the item to stay at this position by updating original position
+	# Use call_deferred to ensure position is applied after frame processing
+	item.set_deferred("position", target_pos)
+	
 	# Update item's original position/parent for future drags
-	item.original_position = item.global_position
+	# Set to the local position since that's what we want to preserve
+	item.original_position = target_pos
 	item.original_parent = items_layer
 	
 	item.set_in_inventory()
@@ -370,15 +381,20 @@ func start_hover(item: LootItem) -> void:
 	hover_item = item
 	
 	if hover_preview and item and item.item_data:
-		hover_preview.visible = true
+		# Size the preview based on item dimensions
 		hover_preview.size = Vector2(
 			item.item_data.grid_width * cell_size,
 			item.item_data.grid_height * cell_size
 		)
+		# Visibility will be managed by _update_hover_preview based on cursor position
 
 
 func stop_hover() -> void:
 	"""Stop showing hover preview"""
+	# Reset snap state on the item
+	if hover_item:
+		hover_item.should_snap = false
+	
 	hover_item = null
 	hover_pos = Vector2i(-1, -1)
 	
@@ -390,6 +406,19 @@ func _update_hover_preview() -> void:
 	if not hover_item or not hover_preview or not grid_container:
 		return
 	
+	# Check if cursor is over the grid
+	var over_grid = is_cursor_over_grid()
+	
+	if not over_grid:
+		# Cursor not over grid - hide preview and disable snap
+		hover_preview.visible = false
+		if hover_item:
+			hover_item.should_snap = false
+		return
+	
+	# Show preview when over grid
+	hover_preview.visible = true
+	
 	# Get mouse position in grid space
 	var local_pos = grid_container.get_local_mouse_position()
 	var gx = int(local_pos.x / (cell_size + cell_gap))
@@ -398,9 +427,17 @@ func _update_hover_preview() -> void:
 	hover_pos = Vector2i(gx, gy)
 	hover_valid = can_place_at(hover_item, hover_pos)
 	
-	# Position preview
-	hover_preview.position = Vector2(gx * (cell_size + cell_gap), gy * (cell_size + cell_gap))
+	# Calculate grid cell position (relative to grid_container)
+	var cell_pos = Vector2(gx * (cell_size + cell_gap), gy * (cell_size + cell_gap))
+	
+	# Position hover preview - add grid_container's position since preview is a sibling
+	hover_preview.position = grid_container.position + cell_pos
 	hover_preview.color = hover_valid_color if hover_valid else hover_invalid_color
+	
+	# Update the item's snap position so it aligns with the grid
+	if hover_item and hover_item.is_dragging:
+		hover_item.snap_position = grid_container.global_position + cell_pos
+		hover_item.should_snap = true
 
 
 func try_place_at_cursor(item: LootItem) -> bool:
@@ -626,6 +663,25 @@ func _on_inventory_item_destroy(item: LootItem) -> void:
 	if dragging_from_inventory == item:
 		return
 	destroy_item(item)
+
+
+func _on_inventory_item_rotate(item: LootItem) -> void:
+	"""Handle rotate request from item in inventory"""
+	# Can't rotate while dragging
+	if dragging_from_inventory == item:
+		return
+	# Note: Basic inventory doesn't support rotation - it uses free placement
+	# Just show a message or do nothing
+	pass
+
+
+func _on_inventory_item_examine(item: LootItem) -> void:
+	"""Handle examine request from item in inventory"""
+	# Show tooltip for the item
+	var tooltip := ItemTooltip.get_instance()
+	if tooltip and item.item_data:
+		var item_rect = item.get_global_rect()
+		tooltip.show_tooltip(item.item_data, item_rect.position + item_rect.size / 2)
 
 
 # ==============================================================================

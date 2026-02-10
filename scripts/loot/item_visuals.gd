@@ -109,7 +109,7 @@ static func create_item_visual(item_data: ItemData, cell_size: int = 64) -> Cont
 
 
 ## Add sprite-based icon (no background)
-static func _add_sprite_icon(container: Control, sprite: Texture2D, width: float, height: float, rarity_color: Color, rarity: int) -> void:
+static func _add_sprite_icon(container: Control, sprite: Texture2D, width: float, height: float, _rarity_color: Color, _rarity: int) -> void:
 	# Icon takes up most of the cell with small padding
 	var padding = 4.0
 	
@@ -124,7 +124,7 @@ static func _add_sprite_icon(container: Control, sprite: Texture2D, width: float
 
 
 ## Create procedural icon based on category
-static func _add_procedural_icon(container: Control, category: ItemCategory, width: float, height: float, base_color: Color, rarity_color: Color, rarity: int) -> void:
+static func _add_procedural_icon(container: Control, category: ItemCategory, width: float, height: float, base_color: Color, _rarity_color: Color, _rarity: int) -> void:
 	var padding = 6.0
 	var icon_w = width - padding * 2
 	var icon_h = height - padding * 2
@@ -269,7 +269,7 @@ static func _add_legendary_particles(container: Control, width: float, height: f
 	particles.preprocess = 0.5
 	particles.explosiveness = 0.0
 	particles.randomness = 0.5
-	particles.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Note: GPUParticles2D doesn't block mouse events by default
 	
 	# Create process material
 	var particle_mat = ParticleProcessMaterial.new()

@@ -88,14 +88,19 @@ func acquire(scene: PackedScene) -> Node:
 	if scene_path not in pools:
 		create_pool(scene, 10)
 	
-	var pool := pools[scene_path]
-	var obj: Node
+	var pool: Dictionary = pools[scene_path]
+	var obj: Node = null
 	
 	# Reuse from available pool if possible
-	if pool["available"].size() > 0:
-		obj = pool["available"].pop_back()
-	else:
-		# Create new instance if pool is empty
+	while pool["available"].size() > 0 and obj == null:
+		var candidate = pool["available"].pop_back()
+		# Check if the instance is still valid (not freed)
+		if is_instance_valid(candidate):
+			obj = candidate
+		# If invalid, just skip it (don't add back to pool)
+	
+	# Create new instance if no valid pooled object found
+	if obj == null:
 		obj = scene.instantiate()
 		_prepare_pooled_object(obj)
 	
@@ -126,10 +131,10 @@ func release(obj: Node) -> void:
 		obj.queue_free()
 		return
 	
-	var pool := pools[scene_path]
+	var pool: Dictionary = pools[scene_path]
 	
 	# Remove from in_use
-	var idx := pool["in_use"].find(obj)
+	var idx: int = pool["in_use"].find(obj)
 	if idx >= 0:
 		pool["in_use"].remove_at(idx)
 	
@@ -166,7 +171,7 @@ func clear_pool(scene: PackedScene) -> void:
 	if scene_path not in pools:
 		return
 	
-	var pool := pools[scene_path]
+	var pool: Dictionary = pools[scene_path]
 	
 	# Free all objects
 	for obj in pool["available"]:
@@ -184,7 +189,7 @@ func clear_pool(scene: PackedScene) -> void:
 ## Clear all pools
 func clear_all_pools() -> void:
 	for scene_path in pools.keys():
-		var pool := pools[scene_path]
+		var pool: Dictionary = pools[scene_path]
 		
 		# Free all objects
 		for obj in pool["available"]:
@@ -221,7 +226,7 @@ func get_stats(scene: PackedScene = null) -> Dictionary:
 		if scene_path not in pools:
 			return {}
 		
-		var pool := pools[scene_path]
+		var pool: Dictionary = pools[scene_path]
 		return {
 			"scene_path": scene_path,
 			"available": pool["available"].size(),
@@ -246,21 +251,22 @@ func _prepare_pooled_object(obj: Node) -> void:
 
 ## Deactivate an object when returning to pool
 func _deactivate_object(obj: Node) -> void:
+	# Use call_deferred to avoid physics callback issues
 	# Remove from current parent (but keep in scene tree under ObjectPool)
 	if obj.get_parent() != self and obj.get_parent() != null:
-		obj.get_parent().remove_child(obj)
-		add_child(obj)
+		obj.get_parent().call_deferred("remove_child", obj)
+		call_deferred("add_child", obj)
 	
-	# Hide and disable processing
-	obj.visible = false
-	obj.process_mode = Node.PROCESS_MODE_DISABLED
+	# Hide and disable processing using deferred calls for physics safety
+	obj.set_deferred("visible", false)
+	obj.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 
 
 ## Find which pool an object belongs to
 func _get_scene_path_for_object(obj: Node) -> String:
 	# Check each pool to see if object is in use
 	for scene_path in pools.keys():
-		var pool := pools[scene_path]
+		var pool: Dictionary = pools[scene_path]
 		if pool["in_use"].has(obj):
 			return scene_path
 	

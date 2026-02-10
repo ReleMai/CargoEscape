@@ -25,8 +25,8 @@ extends RefCounted
 # ==============================================================================
 
 const CELL_SIZE: int = 40  # Grid cell size in pixels
-const MIN_ROOM_GAP: int = 1  # Minimum cells between rooms
-const MIN_CORRIDOR_WIDTH: int = 2  # Minimum corridor width in cells
+const MIN_ROOM_GAP: int = 2  # Minimum cells between rooms
+const MIN_CORRIDOR_WIDTH: int = 3  # Minimum corridor width in cells
 
 # Cell states
 enum CellState {
@@ -59,6 +59,8 @@ class RoomInstance:
 	var display_name: String
 	var container_placements: Array = []  # [{position: Vector2, type: int}]
 	var connected_to: Array = []  # Other room indices
+	var is_locked: bool = false  # Room requires keycard to enter
+	var lock_tier: int = 1  # Keycard tier required (1-3)
 	var center: Vector2:
 		get: return rect.position + rect.size / 2.0
 
@@ -80,6 +82,8 @@ class GeneratedLayout:
 	var entry_position: Vector2 = Vector2.ZERO
 	var exit_position: Vector2 = Vector2.ZERO
 	var container_positions: Array = []  # Combined from all rooms
+	var keycard_spawns: Array = []  # [{position: Vector2, tier: int}] - guaranteed keycards
+	var locked_doors: Array = []  # [{room_idx: int, tier: int}] - rooms with locked doors
 	var time_limit: float = 90.0
 	var generation_seed: int = 0
 	
@@ -195,20 +199,24 @@ func generate_layout(
 	# 5. Place containers within rooms
 	_place_containers()
 	
-	# 6. Copy rooms to layout
+	# 6. Place locked doors and keycard spawns (tier 2+ only)
+	if tier >= 2:
+		_place_locked_doors_and_keycards(layout)
+	
+	# 7. Copy rooms to layout
 	layout.rooms = _placed_rooms.duplicate()
 	
-	# 7. Compile container positions
+	# 8. Compile container positions
 	for room in _placed_rooms:
 		layout.container_positions.append_array(room.container_placements)
 	
-	# 8. Get corridor rects and walkable grid for rendering/collision
+	# 9. Get corridor rects and walkable grid for rendering/collision
 	layout.corridor_rects = get_corridor_rects()
 	layout.walkable_grid = get_walkable_grid()
 	
-	# 9. Validate path exists
+	# 10. Validate path exists
 	if not _validate_path(layout):
-		print("[ShipGenerator] Warning: Generated layout may have unreachable areas")
+		push_warning("[ShipGenerator] Generated layout may have unreachable areas")
 	
 	return layout
 
@@ -234,17 +242,25 @@ func _init_grid() -> void:
 
 
 func _place_entry_exit(layout: GeneratedLayout) -> void:
-	var entry_data = RoomTypesClass.get_room(RoomTypesClass.Type.ENTRY_AIRLOCK)
+	# Use BOARDING_DOCK as the entry point (new large starting area)
+	var dock_type = RoomTypesClass.Type.BOARDING_DOCK
+	var entry_data = RoomTypesClass.get_room(dock_type)
+	
+	# Fall back to ENTRY_AIRLOCK if BOARDING_DOCK not available
+	if not entry_data:
+		dock_type = RoomTypesClass.Type.ENTRY_AIRLOCK
+		entry_data = RoomTypesClass.get_room(dock_type)
+	
 	var exit_data = RoomTypesClass.get_room(RoomTypesClass.Type.EXIT_AIRLOCK)
 	
-	# Entry: left side of ship
+	# Entry: left side of ship (larger boarding dock)
 	var entry_size = entry_data.preferred_size
 	var entry_pos = Vector2(
 		CELL_SIZE * 2,  # Near left edge
 		(_ship_size.y - entry_size.y) / 2.0  # Vertical center
 	)
 	
-	var entry_room = _create_room(RoomTypesClass.Type.ENTRY_AIRLOCK, entry_pos, entry_size)
+	var entry_room = _create_room(dock_type, entry_pos, entry_size)
 	if entry_room:
 		_placed_rooms.append(entry_room)
 		layout.entry_position = entry_room.center
@@ -571,16 +587,20 @@ func _get_room_edge_point(room: RoomInstance, target: Vector2) -> Vector2:
 	# Determine which edge is closest to target
 	var dir = (target - center).normalized()
 	
+	# Offset corridors INTO the room by 1 cell to ensure connection
+	# This prevents gaps between corridor and room walkable areas
+	var inset = float(CELL_SIZE)
+	
 	if abs(dir.x) > abs(dir.y):
 		# Horizontal edge
 		if dir.x > 0:
-			return Vector2(rect.end.x, center.y)  # Right edge
-		return Vector2(rect.position.x, center.y)  # Left edge
+			return Vector2(rect.end.x - inset, center.y)  # Right edge (inside room)
+		return Vector2(rect.position.x + inset, center.y)  # Left edge (inside room)
 	
 	# Vertical edge
 	if dir.y > 0:
-		return Vector2(center.x, rect.end.y)  # Bottom edge
-	return Vector2(center.x, rect.position.y)  # Top edge
+		return Vector2(center.x, rect.end.y - inset)  # Bottom edge (inside room)
+	return Vector2(center.x, rect.position.y + inset)  # Top edge (inside room)
 
 
 func _mark_corridor_segment(start: Vector2, end: Vector2, width: int) -> void:
@@ -601,6 +621,8 @@ func _mark_corridor_segment(start: Vector2, end: Vector2, width: int) -> void:
 				var cx = current.x + wx
 				var cy = current.y + wy
 				if cx >= 0 and cx < _grid_width and cy >= 0 and cy < _grid_height:
+					# Mark EMPTY cells as CORRIDOR
+					# Don't overwrite ROOM cells - they're already walkable
 					if _grid[cx][cy] == CellState.EMPTY:
 						_grid[cx][cy] = CellState.CORRIDOR
 		
@@ -646,6 +668,36 @@ func _add_extra_connections() -> void:
 # CONTAINER PLACEMENT
 # ==============================================================================
 
+## Placement strategies for different room types
+enum PlacementStrategy {
+	WALL_ADJACENT,   # Along walls (default for most rooms)
+	GRID,            # Grid pattern (cargo bays)
+	CORNER,          # In corners (storage rooms)
+	SCATTERED,       # Random but spaced (generic)
+	CENTER_CLUSTER   # Clustered near center (vaults)
+}
+
+## Get placement strategy for room type
+func _get_placement_strategy(room_type: RoomTypesClass.Type) -> PlacementStrategy:
+	match room_type:
+		RoomTypesClass.Type.CARGO_BAY:
+			return PlacementStrategy.GRID
+		RoomTypesClass.Type.STORAGE:
+			return PlacementStrategy.CORNER
+		RoomTypesClass.Type.VAULT:
+			return PlacementStrategy.CENTER_CLUSTER
+		RoomTypesClass.Type.ARMORY:
+			return PlacementStrategy.WALL_ADJACENT
+		RoomTypesClass.Type.CREW_QUARTERS:
+			return PlacementStrategy.WALL_ADJACENT
+		RoomTypesClass.Type.ENGINE_ROOM:
+			return PlacementStrategy.CORNER
+		RoomTypesClass.Type.BRIDGE:
+			return PlacementStrategy.WALL_ADJACENT
+		_:
+			return PlacementStrategy.SCATTERED
+
+
 func _place_containers() -> void:
 	for room in _placed_rooms:
 		var room_data = RoomTypesClass.get_room(room.type)
@@ -656,43 +708,500 @@ func _place_containers() -> void:
 		if count == 0:
 			continue
 		
-		var placed_positions: Array = []
-		var margin = 40.0
+		var strategy = _get_placement_strategy(room.type)
+		var positions = _generate_container_positions(room, count, strategy)
 		
-		for container_idx in range(count):
-			var attempts = 0
-			while attempts < 20:
-				attempts += 1
-				
-				# Random position within room
-				var pos = Vector2(
-					_rng.randf_range(room.rect.position.x + margin, room.rect.end.x - margin),
-					_rng.randf_range(room.rect.position.y + margin, room.rect.end.y - margin)
-				)
-				
-				# Check distance from other containers
-				var valid = true
-				for existing_pos in placed_positions:
-					if pos.distance_to(existing_pos) < 60:
-						valid = false
-						break
-				
-				if valid:
-					placed_positions.append(pos)
-					
-					# Roll container type
-					var container_type: int
-					if room_data.container_types.is_empty():
-						container_type = ContainerTypesClass.roll_container_type(_current_tier)
-					else:
-						var type_idx = _rng.randi() % room_data.container_types.size()
-						container_type = room_data.container_types[type_idx]
-					
-					room.container_placements.append({
-						"position": pos,
-						"type": container_type
-					})
+		for pos in positions:
+			# Roll container type
+			var container_type: int
+			if room_data.container_types.is_empty():
+				container_type = ContainerTypesClass.roll_container_type(_current_tier)
+			else:
+				var type_idx = _rng.randi() % room_data.container_types.size()
+				container_type = room_data.container_types[type_idx]
+			
+			room.container_placements.append({
+				"position": pos,
+				"type": container_type
+			})
+
+
+## Generate container positions based on placement strategy
+func _generate_container_positions(
+	room: RoomInstance, count: int, strategy: PlacementStrategy
+) -> Array:
+	var positions: Array = []
+	var margin = 35.0
+	var min_spacing = 55.0
+	var rect = room.rect
+	
+	match strategy:
+		PlacementStrategy.WALL_ADJACENT:
+			positions = _place_wall_adjacent(rect, count, margin, min_spacing)
+		PlacementStrategy.GRID:
+			positions = _place_grid_pattern(rect, count, margin, min_spacing)
+		PlacementStrategy.CORNER:
+			positions = _place_corners(rect, count, margin, min_spacing)
+		PlacementStrategy.CENTER_CLUSTER:
+			positions = _place_center_cluster(rect, count, margin, min_spacing)
+		PlacementStrategy.SCATTERED:
+			positions = _place_scattered(rect, count, margin, min_spacing)
+	
+	return positions
+
+
+## Place containers along walls
+func _place_wall_adjacent(
+	rect: Rect2, count: int, margin: float, min_spacing: float
+) -> Array:
+	var positions: Array = []
+	var wall_positions: Array = []
+	
+	# Generate candidate positions along all 4 walls
+	var inset = margin + 15.0  # How far from wall
+	
+	# Top wall (left to right)
+	var top_y = rect.position.y + inset
+	for x in range(int(rect.position.x + margin), int(rect.end.x - margin), 50):
+		wall_positions.append(Vector2(x, top_y))
+	
+	# Bottom wall (left to right)
+	var bot_y = rect.end.y - inset
+	for x in range(int(rect.position.x + margin), int(rect.end.x - margin), 50):
+		wall_positions.append(Vector2(x, bot_y))
+	
+	# Left wall (top to bottom)
+	var left_x = rect.position.x + inset
+	for y in range(int(rect.position.y + margin + 40), int(rect.end.y - margin - 40), 50):
+		wall_positions.append(Vector2(left_x, y))
+	
+	# Right wall (top to bottom)
+	var right_x = rect.end.x - inset
+	for y in range(int(rect.position.y + margin + 40), int(rect.end.y - margin - 40), 50):
+		wall_positions.append(Vector2(right_x, y))
+	
+	# Shuffle and pick positions with spacing
+	wall_positions.shuffle()
+	
+	for candidate in wall_positions:
+		if positions.size() >= count:
+			break
+		
+		var valid = true
+		for existing in positions:
+			if candidate.distance_to(existing) < min_spacing:
+				valid = false
+				break
+		
+		if valid:
+			positions.append(candidate)
+	
+	return positions
+
+
+## Place containers in a grid pattern (cargo bays)
+func _place_grid_pattern(
+	rect: Rect2, count: int, margin: float, min_spacing: float
+) -> Array:
+	var positions: Array = []
+	
+	# Calculate grid dimensions
+	var usable_width = rect.size.x - margin * 2
+	var usable_height = rect.size.y - margin * 2
+	
+	# Aim for roughly square cells
+	var cell_size = max(min_spacing + 20, 70.0)
+	var cols = int(usable_width / cell_size)
+	var rows = int(usable_height / cell_size)
+	
+	if cols < 1:
+		cols = 1
+	if rows < 1:
+		rows = 1
+	
+	# Generate grid positions
+	var all_positions: Array = []
+	var actual_cell_w = usable_width / cols
+	var actual_cell_h = usable_height / rows
+	
+	for col in range(cols):
+		for row in range(rows):
+			var pos = Vector2(
+				rect.position.x + margin + actual_cell_w * (col + 0.5),
+				rect.position.y + margin + actual_cell_h * (row + 0.5)
+			)
+			# Add slight random offset for natural look
+			pos.x += _rng.randf_range(-10, 10)
+			pos.y += _rng.randf_range(-10, 10)
+			all_positions.append(pos)
+	
+	# Pick random positions from grid
+	all_positions.shuffle()
+	for i in range(min(count, all_positions.size())):
+		positions.append(all_positions[i])
+	
+	return positions
+
+
+## Place containers in corners
+func _place_corners(
+	rect: Rect2, count: int, margin: float, _min_spacing: float
+) -> Array:
+	var positions: Array = []
+	var corner_inset = margin + 20.0
+	
+	# Define corner positions
+	var corners = [
+		Vector2(rect.position.x + corner_inset, rect.position.y + corner_inset),
+		Vector2(rect.end.x - corner_inset, rect.position.y + corner_inset),
+		Vector2(rect.position.x + corner_inset, rect.end.y - corner_inset),
+		Vector2(rect.end.x - corner_inset, rect.end.y - corner_inset),
+	]
+	
+	# Shuffle corners
+	corners.shuffle()
+	
+	# Add corner positions first
+	for i in range(min(count, corners.size())):
+		positions.append(corners[i])
+	
+	# If need more, add wall-adjacent positions
+	if count > corners.size():
+		var extra = _place_wall_adjacent(rect, count - corners.size(), margin, 60.0)
+		for pos in extra:
+			var valid = true
+			for existing in positions:
+				if pos.distance_to(existing) < 50:
+					valid = false
 					break
+			if valid:
+				positions.append(pos)
+	
+	return positions
+
+
+## Place containers clustered near center (vaults)
+func _place_center_cluster(
+	rect: Rect2, count: int, margin: float, min_spacing: float
+) -> Array:
+	var positions: Array = []
+	var center = rect.position + rect.size / 2
+	
+	# Cluster radius based on room size
+	var cluster_radius = min(rect.size.x, rect.size.y) * 0.25
+	
+	var attempts = 0
+	while positions.size() < count and attempts < 50:
+		attempts += 1
+		
+		# Random position within cluster
+		var angle = _rng.randf() * TAU
+		var dist = _rng.randf_range(20, cluster_radius)
+		var pos = center + Vector2(cos(angle), sin(angle)) * dist
+		
+		# Clamp to room bounds
+		pos.x = clamp(pos.x, rect.position.x + margin, rect.end.x - margin)
+		pos.y = clamp(pos.y, rect.position.y + margin, rect.end.y - margin)
+		
+		# Check spacing
+		var valid = true
+		for existing in positions:
+			if pos.distance_to(existing) < min_spacing:
+				valid = false
+				break
+		
+		if valid:
+			positions.append(pos)
+	
+	return positions
+
+
+## Place containers with random scatter (fallback)
+func _place_scattered(
+	rect: Rect2, count: int, margin: float, min_spacing: float
+) -> Array:
+	var positions: Array = []
+	
+	var attempts = 0
+	while positions.size() < count and attempts < 50:
+		attempts += 1
+		
+		var pos = Vector2(
+			_rng.randf_range(rect.position.x + margin, rect.end.x - margin),
+			_rng.randf_range(rect.position.y + margin, rect.end.y - margin)
+		)
+		
+		# Check spacing
+		var valid = true
+		for existing in positions:
+			if pos.distance_to(existing) < min_spacing:
+				valid = false
+				break
+		
+		if valid:
+			positions.append(pos)
+	
+	return positions
+
+
+# ==============================================================================
+# LOCKED DOORS AND KEYCARDS
+# ==============================================================================
+
+## Place locked doors on high-value rooms and ensure keycards spawn in accessible areas
+## IMPORTANT: Never lock rooms on the critical path to the exit!
+func _place_locked_doors_and_keycards(layout: GeneratedLayout) -> void:
+	if _placed_rooms.size() < 4:
+		return  # Not enough rooms for locked door gameplay
+	
+	# Determine how many locked doors based on tier
+	var num_locked_doors = 0
+	match _current_tier:
+		2: num_locked_doors = 1
+		3: num_locked_doors = _rng.randi_range(1, 2)
+		4: num_locked_doors = _rng.randi_range(2, 3)
+		_: num_locked_doors = _rng.randi_range(2, 4) if _current_tier >= 5 else 0
+	
+	if num_locked_doors == 0:
+		return
+	
+	# Find rooms on the critical path from entry (0) to exit (1) - NEVER lock these
+	var critical_path_rooms = _find_critical_path(0, 1)
+	
+	# Find candidate rooms for locked doors (skip entry/exit and critical path)
+	var lockable_rooms: Array = []
+	for i in range(2, _placed_rooms.size()):
+		# Skip rooms on critical path to exit
+		if i in critical_path_rooms:
+			continue
+		
+		var room = _placed_rooms[i]
+		# High-value rooms are good candidates
+		var room_data = RoomTypesClass.get_room(room.type)
+		if room_data and room_data.max_containers > 0:
+			lockable_rooms.append(i)
+	
+	if lockable_rooms.is_empty():
+		print("[ShipGenerator] No rooms available for locking (all on critical path)")
+		return
+	
+	# Shuffle and select rooms to lock
+	lockable_rooms.shuffle()
+	var rooms_to_lock = min(num_locked_doors, lockable_rooms.size())
+	
+	for i in range(rooms_to_lock):
+		var room_idx = lockable_rooms[i]
+		var room = _placed_rooms[room_idx]
+		
+		# Determine lock tier (higher tiers have higher chance of higher tier locks)
+		var lock_tier = _determine_lock_tier()
+		room.is_locked = true
+		room.lock_tier = lock_tier
+		
+		# Boost container count and quality for locked rooms
+		_boost_locked_room_loot(room)
+		
+		# Add to layout's locked doors list
+		layout.locked_doors.append({
+			"room_idx": room_idx,
+			"tier": lock_tier
+		})
+		
+		# Spawn a keycard for this lock in an accessible room
+		var keycard_spawned = _spawn_keycard_for_lock(layout, room_idx, lock_tier)
+		if not keycard_spawned:
+			# Failed to spawn keycard - unlock this room
+			room.is_locked = false
+			layout.locked_doors.pop_back()
+			var msg = "[ShipGenerator] No keycard spawn for room %d, unlocking"
+			push_warning(msg % room_idx)
+	
+	var log_msg = "[ShipGenerator] Placed %d locked doors with keycards"
+	print(log_msg % layout.locked_doors.size())
+
+
+## Find the critical path between two rooms (BFS shortest path)
+func _find_critical_path(start_idx: int, end_idx: int) -> Array:
+	var visited: Dictionary = {}
+	var parent: Dictionary = {}
+	var queue: Array = [start_idx]
+	visited[start_idx] = true
+	parent[start_idx] = -1
+	
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		
+		if current == end_idx:
+			# Reconstruct path
+			var path: Array = []
+			var node = end_idx
+			while node != -1:
+				path.append(node)
+				node = parent.get(node, -1)
+			return path
+		
+		for connected in _placed_rooms[current].connected_to:
+			if not visited.get(connected, false):
+				visited[connected] = true
+				parent[connected] = current
+				queue.append(connected)
+	
+	# No path found - return empty
+	return []
+
+
+## Boost loot quantity and quality for locked rooms
+func _boost_locked_room_loot(room: RoomInstance) -> void:
+	var room_data = RoomTypesClass.get_room(room.type)
+	if not room_data:
+		return
+	
+	# Add extra containers to locked rooms (50% more)
+	var current_count = room.container_placements.size()
+	@warning_ignore("integer_division")
+	var extra_containers = maxi(1, current_count / 2)
+	
+	# Generate additional container positions
+	var strategy = _get_placement_strategy(room.type)
+	var new_positions = _generate_container_positions(room, extra_containers, strategy)
+	
+	# Filter out positions too close to existing containers
+	for pos in new_positions:
+		var valid = true
+		for existing in room.container_placements:
+			if pos.distance_to(existing["position"]) < 45:
+				valid = false
+				break
+		
+		if valid:
+			# Use better container types for locked rooms
+			var container_type: int
+			if room_data.container_types.is_empty():
+				# Default to vault or armory type for locked rooms
+				if _rng.randf() > 0.5:
+					container_type = ContainerTypesClass.Type.VAULT
+				else:
+					container_type = ContainerTypesClass.Type.ARMORY
+			else:
+				# Pick from room's container types, biased toward better ones
+				var type_idx = _rng.randi() % room_data.container_types.size()
+				container_type = room_data.container_types[type_idx]
+			
+			room.container_placements.append({
+				"position": pos,
+				"type": container_type,
+				"is_bonus": true  # Mark as bonus loot
+			})
+
+
+## Determine what tier lock to use based on current ship tier
+func _determine_lock_tier() -> int:
+	var roll = _rng.randf()
+	
+	match _current_tier:
+		2:
+			return 1  # Always tier 1 keycards on tier 2 ships
+		3:
+			if roll < 0.7:
+				return 1
+			return 2
+		4:
+			if roll < 0.4:
+				return 1
+			if roll < 0.8:
+				return 2
+			return 3
+		_:
+			if roll < 0.3:
+				return 1
+			if roll < 0.6:
+				return 2
+			return 3
+
+
+## Spawn a keycard in an accessible room for a specific lock
+## Returns true if keycard was spawned successfully
+func _spawn_keycard_for_lock(layout: GeneratedLayout, locked_room_idx: int, tier: int) -> bool:
+	# Find rooms that are accessible without going through the locked room
+	# Simple approach: use rooms closer to entry (index 0)
+	var accessible_rooms: Array = []
+	
+	# BFS from entry to find rooms reachable without the locked room
+	var visited: Array = []
+	var queue: Array = [0]  # Start from entry
+	
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		if current in visited or current == locked_room_idx:
+			continue
+		visited.append(current)
+		accessible_rooms.append(current)
+		
+		for connected in _placed_rooms[current].connected_to:
+			if connected not in visited and connected != locked_room_idx:
+				queue.append(connected)
+	
+	if accessible_rooms.is_empty():
+		push_warning("[ShipGenerator] No accessible rooms for keycard spawn!")
+		return false
+	
+	# Prefer rooms with containers, sorted by distance from entry
+	var rooms_with_containers: Array = []
+	var rooms_without_containers: Array = []
+	
+	for room_idx in accessible_rooms:
+		var room = _placed_rooms[room_idx]
+		if not room.container_placements.is_empty():
+			rooms_with_containers.append(room_idx)
+		else:
+			rooms_without_containers.append(room_idx)
+	
+	# Pick the best room for keycard
+	var keycard_room_idx: int = -1
+	
+	if not rooms_with_containers.is_empty():
+		# Prefer rooms with containers - shuffle for variety
+		rooms_with_containers.shuffle()
+		keycard_room_idx = rooms_with_containers[0]
+	elif not rooms_without_containers.is_empty():
+		rooms_without_containers.shuffle()
+		keycard_room_idx = rooms_without_containers[0]
+	else:
+		push_warning("[ShipGenerator] No rooms available for keycard spawn!")
+		return false
+	
+	var keycard_room = _placed_rooms[keycard_room_idx]
+	
+	# Determine keycard spawn position
+	var spawn_pos: Vector2
+	var spawn_in_container: bool = false
+	var container_idx: int = -1
+	
+	if not keycard_room.container_placements.is_empty():
+		# Spawn IN a container (will be added to container's loot)
+		container_idx = _rng.randi() % keycard_room.container_placements.size()
+		spawn_pos = keycard_room.container_placements[container_idx]["position"]
+		spawn_in_container = true
+	else:
+		# Spawn loose in the room center
+		var margin = 40.0
+		spawn_pos = keycard_room.center
+		# Clamp to room bounds
+		var room_rect = keycard_room.rect
+		spawn_pos.x = clampf(spawn_pos.x, room_rect.position.x + margin, room_rect.end.x - margin)
+		spawn_pos.y = clampf(spawn_pos.y, room_rect.position.y + margin, room_rect.end.y - margin)
+	
+	# Add keycard spawn to layout
+	layout.keycard_spawns.append({
+		"position": spawn_pos,
+		"tier": tier,
+		"for_room": locked_room_idx,
+		"in_container": spawn_in_container,
+		"container_idx": container_idx,
+		"room_idx": keycard_room_idx
+	})
+	
+	return true
 
 
 # ==============================================================================

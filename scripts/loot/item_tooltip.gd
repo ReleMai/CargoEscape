@@ -63,6 +63,7 @@ var rarity_label: Label
 var value_label: Label
 var weight_label: Label
 var desc_label: Label
+var lore_label: Label
 var border_panel: Panel
 
 
@@ -197,6 +198,16 @@ func _create_content() -> void:
 	desc_label.custom_minimum_size.x = 200
 	desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(desc_label)
+	
+	# Lore text (italic, different color)
+	lore_label = Label.new()
+	lore_label.add_theme_font_size_override("font_size", 10)
+	lore_label.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
+	lore_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lore_label.custom_minimum_size.x = 200
+	lore_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lore_label.visible = false
+	vbox.add_child(lore_label)
 
 
 # ==============================================================================
@@ -264,6 +275,13 @@ func _update_content() -> void:
 		desc_label.visible = true
 	else:
 		desc_label.visible = false
+	
+	# Lore text (if available)
+	if current_item.lore_text != "":
+		lore_label.text = "\"" + current_item.lore_text + "\""
+		lore_label.visible = true
+	else:
+		lore_label.visible = false
 
 
 func _update_rarity_style() -> void:

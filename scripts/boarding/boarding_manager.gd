@@ -8,11 +8,13 @@
 # GAMEPLAY LOOP:
 # 1. Ship tier determines time limit and loot quality
 # 2. Player spawns in procedurally generated ship layout
-# 3. Timer starts counting down
-# 4. Player explores, finds containers, searches them for loot
-# 5. Each container type affects search time and loot quality
-# 6. Player must reach exit before timer runs out
-# 7. Score based on loot value
+# 3. Fog of war hides undiscovered areas
+# 4. Player vision cone reveals areas as they look around
+# 5. Timer starts counting down
+# 6. Player explores, finds containers, searches them for loot
+# 7. Each container type affects search time and loot quality
+# 8. Player must reach exit before timer runs out
+# 9. Score based on loot value
 #
 # ==============================================================================
 
@@ -40,6 +42,9 @@ const ShipLayoutClass = preload("res://scripts/boarding/ship_layout.gd")
 const ShipGeneratorClass = preload("res://scripts/boarding/ship_generator.gd")
 const ShipInteriorRendererClass = preload("res://scripts/boarding/ship_interior_renderer.gd")
 const LootMenuClass = preload("res://scripts/boarding/loot_menu.gd")
+const VisionSystemClass = preload("res://scripts/boarding/vision_system.gd")
+const EscapeGateClass = preload("res://scripts/boarding/escape_gate.gd")
+const EscapeTrackerClass = preload("res://scripts/ui/escape_tracker.gd")
 const GameOverScene = preload("res://scenes/boarding/game_over.tscn")
 const ShipContainerScene = preload("res://scenes/boarding/ship_container.tscn")
 const EscapeCutsceneScene = preload("res://scenes/boarding/escape_cutscene.tscn")
@@ -54,9 +59,21 @@ const EscapeCutsceneScene = preload("res://scenes/boarding/escape_cutscene.tscn"
 ## Base warning time before timer ends
 @export var warning_time: float = 20.0
 
+@export_group("Escape Requirements")
+## Enable kill requirement to escape
+@export var require_kills_to_escape: bool = true
+## Kill requirements by tier (index 0 = tier 1)
+@export var kills_by_tier: Array[int] = [2, 3, 4, 5, 7]
+
 @export_group("Layout")
 ## Enable procedural layout generation
 @export var use_procedural_layout: bool = true
+
+@export_group("Vision System")
+## Enable fog of war and vision cone
+@export var enable_fog_of_war: bool = true
+## Reveal radius around player that's always visible
+@export var always_visible_radius: float = 80.0
 
 # ==============================================================================
 # NODE REFERENCES
@@ -72,8 +89,8 @@ const EscapeCutsceneScene = preload("res://scenes/boarding/escape_cutscene.tscn"
 # UI References
 @onready var timer_label: Label = %TimerLabel
 @onready var loot_value_label: Label = %LootValueLabel
-@onready var inventory_panel: Control = %InventoryPanel
-@onready var inventory: GridInventory = null  # Set in _ready
+@onready var character_panel: Control = %CharacterPanel  # CharacterPanel type
+@onready var inventory: SlotInventory = null  # Set in _ready
 @onready var loot_menu: Control = %LootMenu
 @onready var escape_prompt: Control = %EscapePrompt
 @onready var ship_tier_label: Label = %ShipTierLabel  # Shows current ship tier
@@ -92,8 +109,6 @@ var looting_container: Node2D = null
 
 # Ship data
 var current_ship_tier: int = 1
-var current_ship_data = null
-var current_layout = null
 var current_faction_code: String = ""  # Faction code (CCG, NEX, GDF, SYN, IND)
 var current_ship_data: ShipTypesClass.ShipData = null
 var current_layout: ShipLayoutClass.LayoutData = null
@@ -104,6 +119,9 @@ var collected_items: Array[ItemData] = []
 # Container tracking
 var containers_searched: int = 0
 var total_containers: int = 0
+
+# Achievement tracking
+var boarding_start_time: float = 0.0
 
 # Camera and centering
 var layout_offset: Vector2 = Vector2.ZERO  # Offset to center the ship
@@ -120,12 +138,19 @@ var camera_shake: float = 0.0
 var camera_shake_decay: float = 8.0
 
 # Animation constants
-const ENTRANCE_INITIAL_ZOOM: float = 0.4
-const ENTRANCE_FINAL_ZOOM: float = 0.8
-const EXIT_ZOOM: float = 0.5
+const ENTRANCE_INITIAL_ZOOM: float = 0.5
+const ENTRANCE_FINAL_ZOOM: float = 1.0
+const EXIT_ZOOM: float = 0.6
 
 # Animation layer tracking for cleanup
 var active_animation_layers: Array[CanvasLayer] = []
+
+# Vision system
+var vision_system = null  # VisionSystem instance
+
+# Escape gate system
+var escape_gate: EscapeGateClass = null
+var escape_tracker: EscapeTrackerClass = null
 
 # ==============================================================================
 # LIFECYCLE
@@ -137,10 +162,12 @@ func _ready() -> void:
 	
 	# Get inventory reference from loot menu (single shared inventory)
 	if loot_menu:
-		inventory = loot_menu.get_node_or_null("Panel/VBox/ContentArea/InventorySide/InventoryGrid")
+		inventory = loot_menu.get_node_or_null(
+			"Panel/VBox/ContentArea/InventorySide/InventoryGrid")
 	
 	_setup_connections()
 	_generate_ship()
+	_setup_vision_system()  # Initialize fog of war
 	_start_boarding()
 	
 	# Start entrance animation
@@ -151,6 +178,11 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	# Clean up vision system
+	if vision_system:
+		vision_system.queue_free()
+		vision_system = null
+	
 	# Clean up any active animation layers to prevent memory leaks
 	_cleanup_animation_layers()
 
@@ -176,12 +208,21 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not is_active:
 		return
 	
-	# Escape key to pause/menu
+	# TAB key to toggle character panel (inventory + character)
+	if event.is_action_pressed("inventory"):
+		if looting_container:
+			_close_loot_menu()
+		else:
+			_toggle_character_panel()
+		get_viewport().set_input_as_handled()
+		return
+	
+	# Escape key to close menus
 	if event.is_action_pressed("ui_cancel"):
 		if looting_container:
 			_close_loot_menu()
 		elif inventory_open:
-			_toggle_inventory()
+			_toggle_character_panel()
 
 
 # ==============================================================================
@@ -189,23 +230,40 @@ func _unhandled_input(event: InputEvent) -> void:
 # ==============================================================================
 
 func _setup_connections() -> void:
+	print("[BoardingManager] _setup_connections() called")
 	if player:
 		player.interaction_requested.connect(_on_player_interact)
 		player.reached_exit.connect(_on_player_reached_exit)
-		player.inventory_toggled.connect(_toggle_inventory)
+		player.inventory_toggled.connect(_toggle_character_panel)
 		player.tutorial_movement_detected.connect(_on_player_moved)
+		print("[BoardingManager] Player signals connected")
 	
 	if exit_point:
 		exit_point.escape_triggered.connect(_on_escape_triggered)
+		print("[BoardingManager] Exit point signals connected")
 	
 	if loot_menu:
 		loot_menu.item_transferred.connect(_on_item_transferred)
 		loot_menu.menu_closed.connect(_on_loot_menu_closed)
 		loot_menu.container_emptied.connect(_on_container_emptied)
+		print("[BoardingManager] LootMenu signals connected (item_transferred -> _on_item_transferred)")
+	else:
+		print("[BoardingManager] WARNING: loot_menu is null, cannot connect signals!")
 	
 	# Connect to inventory item_destroyed to update loot value
 	if inventory:
 		inventory.item_destroyed.connect(_on_item_destroyed)
+		print("[BoardingManager] Inventory signals connected")
+	
+	# Connect character panel to player and set inventory
+	if character_panel:
+		if player:
+			character_panel.set_player(player)
+		if inventory:
+			character_panel.set_inventory(inventory)
+		character_panel.closed.connect(_on_character_panel_closed)
+		character_panel.opened.connect(_on_character_panel_opened)
+		print("[BoardingManager] Character panel connected to player and inventory")
 
 
 ## Generate ship layout based on tier
@@ -214,14 +272,14 @@ func _generate_ship() -> void:
 	if forced_ship_tier > 0:
 		current_ship_tier = forced_ship_tier
 	else:
-		current_ship_tier = ShipTypesClass.roll_ship_tier()
+		current_ship_tier = ShipTypes.roll_ship_tier()
 	
 	# Get ship data
-	current_ship_data = ShipTypesClass.get_ship_by_number(current_ship_tier)
+	current_ship_data = ShipTypes.get_ship_by_number(current_ship_tier)
 	if not current_ship_data:
 		push_warning("Invalid ship tier %d, defaulting to tier 1" % current_ship_tier)
 		current_ship_tier = 1
-		current_ship_data = ShipTypesClass.get_ship_by_number(1)
+		current_ship_data = ShipTypes.get_ship_by_number(1)
 	
 	# Set time limit from ship data
 	total_time = current_ship_data.time_limit
@@ -231,6 +289,7 @@ func _generate_ship() -> void:
 		# Try new generator first, fall back to legacy if it fails
 		var generated = ShipGeneratorClass.generate(current_ship_tier)
 		if generated:
+			print("[BoardingManager] Generated tier %d ship with %d rooms" % [current_ship_tier, generated.rooms.size()])
 			# Extract faction code from generated layout
 			var faction = FactionsClass.get_faction(generated.faction_type)
 			if faction:
@@ -241,9 +300,15 @@ func _generate_ship() -> void:
 			# Convert GeneratedLayout to legacy LayoutData format for compatibility
 			current_layout = _convert_generated_layout(generated)
 		else:
+			print("[BoardingManager] ShipGenerator failed, using legacy")
 			# Fallback to legacy generator
 			current_layout = ShipLayoutClass.generate_layout(current_ship_tier)
 			current_faction_code = ""  # Legacy doesn't have faction
+		_apply_layout()
+	else:
+		# Procedural layout disabled - use legacy generation
+		current_layout = ShipLayoutClass.generate_layout(current_ship_tier)
+		current_faction_code = ""
 		_apply_layout()
 	
 	# Update UI with ship info
@@ -282,6 +347,10 @@ func _convert_generated_layout(generated: ShipGeneratorClass.GeneratedLayout) ->
 	# Convert container positions
 	layout.container_positions = generated.container_positions
 	
+	# Copy locked door and keycard data
+	layout.locked_doors = generated.locked_doors
+	layout.keycard_spawns = generated.keycard_spawns
+	
 	# Generate wall segments from room rects
 	for room_rect in layout.room_rects:
 		var top_left = room_rect.position
@@ -300,6 +369,7 @@ func _convert_generated_layout(generated: ShipGeneratorClass.GeneratedLayout) ->
 ## Apply the generated layout to the scene
 func _apply_layout() -> void:
 	if not current_layout:
+		push_error("[BoardingManager] _apply_layout: current_layout is null!")
 		return
 	
 	# Calculate offset to center the ship interior in the viewport
@@ -309,6 +379,8 @@ func _apply_layout() -> void:
 	# Apply offset to ShipInterior node
 	if ship_interior:
 		ship_interior.position = layout_offset
+	else:
+		push_error("[BoardingManager] ship_interior is null!")
 	
 	# Apply offset to Containers parent
 	if containers_parent:
@@ -338,15 +410,36 @@ func _apply_layout() -> void:
 	
 	# Spawn containers at validated positions (already offset since containers_parent is offset)
 	for container_data in current_layout.container_positions:
-		_spawn_container(container_data.position, container_data.type)
+		# Check if this container should have a guaranteed keycard
+		var keycard_tier = _get_keycard_for_position(container_data.position)
+		_spawn_container(container_data.position, container_data.type, keycard_tier)
 	
 	# Initialize minimap with layout
 	_setup_minimap()
 
 
+## Get keycard tier for a container position (0 if none)
+func _get_keycard_for_position(pos: Vector2) -> int:
+	if not current_layout.get("keycard_spawns"):
+		return 0
+	
+	# Check if any keycard spawn is near this container position
+	for spawn in current_layout.keycard_spawns:
+		var spawn_pos = spawn.get("position", Vector2.ZERO)
+		if pos.distance_to(spawn_pos) < 50:  # Within 50 pixels
+			return spawn.get("tier", 1)
+	
+	return 0
+
+
 ## Render the ship interior based on layout
 func _render_ship_interior() -> void:
 	if not ship_interior:
+		push_error("[BoardingManager] ship_interior node is null!")
+		return
+	
+	if not current_layout:
+		push_error("[BoardingManager] current_layout is null!")
 		return
 	
 	# Clear existing interior children
@@ -363,13 +456,14 @@ func _render_ship_interior() -> void:
 	renderer.create_room_labels()
 
 
-## Spawn a container at position with type
-func _spawn_container(pos: Vector2, container_type: int) -> void:
+## Spawn a container at position with type and optional guaranteed keycard
+func _spawn_container(pos: Vector2, container_type: int, keycard_tier: int = 0) -> void:
 	if not containers_parent:
 		return
 	
 	var container = ShipContainerScene.instantiate()
 	container.position = pos
+	container.z_index = 5  # Above decorations, below player
 	
 	# Set container type if it supports it
 	if container.has_method("set_container_type"):
@@ -378,6 +472,12 @@ func _spawn_container(pos: Vector2, container_type: int) -> void:
 	# Generate loot for this container with faction support
 	if container.has_method("generate_loot"):
 		container.generate_loot(current_ship_tier, container_type, current_faction_code)
+	
+	# Add guaranteed keycard if specified
+	if keycard_tier > 0 and container.has_method("add_guaranteed_item"):
+		var keycard_id = "keycard_tier%d" % keycard_tier
+		container.add_guaranteed_item(keycard_id)
+		print("[BoardingManager] Added %s to container at %s" % [keycard_id, pos])
 	
 	# Connect to container signals to track search completion
 	if container.has_signal("container_opened"):
@@ -395,9 +495,18 @@ func _start_boarding() -> void:
 	containers_searched = 0
 	total_containers = 0
 	
+	# Start boarding music and ambient sounds
+	AudioManager.play_music("boarding_tension")
+	AudioManager.start_ambient("ship_ambience")
+	AudioManager.start_ambient("ventilation")
+	
 	# Position player at start (if not using procedural layout)
 	if player and not use_procedural_layout:
-		player.position = Vector2(100, current_layout.ship_size.y / 2 if current_layout else 400)
+		var y_pos: float = current_layout.ship_size.y / 2.0 if current_layout else 400.0
+		player.position = Vector2(100, y_pos)
+	
+	# Initialize escape gate system (kill requirement)
+	_setup_escape_gate()
 	
 	# Update UI
 	_update_ui()
@@ -407,10 +516,57 @@ func _start_boarding() -> void:
 	containers_searched = 0
 	total_containers = current_layout.container_positions.size() if current_layout else 0
 	
+	# Log boarding start
+	if DebugLogger:
+		DebugLogger.log_boarding_start(current_ship_tier, 
+			current_layout.room_rects.size() if current_layout else 0,
+			total_containers, total_time)
+	
 	if AchievementManager:
 		AchievementManager.on_boarding_started(total_containers)
 	
 	emit_signal("boarding_started")
+
+
+## Setup the escape gate kill requirement system
+func _setup_escape_gate() -> void:
+	if not require_kills_to_escape:
+		return
+	
+	# Create escape gate
+	escape_gate = EscapeGateClass.new()
+	escape_gate.kills_by_tier = kills_by_tier
+	add_child(escape_gate)
+	
+	# Initialize with current tier and exit point
+	escape_gate.initialize(current_ship_tier, exit_point)
+	
+	# Connect gate unlocked signal
+	escape_gate.gate_unlocked.connect(_on_escape_gate_unlocked)
+	
+	# Create and add escape tracker UI
+	escape_tracker = EscapeTrackerClass.new()
+	
+	# Add to a CanvasLayer so it stays on screen
+	var ui_layer = CanvasLayer.new()
+	ui_layer.layer = 10
+	add_child(ui_layer)
+	ui_layer.add_child(escape_tracker)
+	
+	# Connect tracker to gate
+	escape_tracker.connect_to_gate(escape_gate)
+	
+	print("[BoardingManager] Escape gate initialized - require %d kills for tier %d" % [
+		escape_gate.kills_required, current_ship_tier])
+
+
+func _on_escape_gate_unlocked() -> void:
+	print("[BoardingManager] Escape gate unlocked!")
+	
+	# Show notification
+	if has_node("/root/PopupManager"):
+		get_node("/root/PopupManager").show_popup("ESCAPE UNLOCKED", 
+			"Exit is now accessible!", Color(0.3, 1.0, 0.5))
 
 
 # ==============================================================================
@@ -423,16 +579,21 @@ func _update_timer(delta: float) -> void:
 	
 	_update_timer_display()
 	
-	# Time warnings with shake
+	# Time warnings with shake and audio
 	if time_remaining <= warning_time and int(time_remaining) != int(time_remaining + delta):
 		var secs_left = int(time_remaining)
 		emit_signal("time_warning", secs_left)
 		
+		# Play countdown beep for each second
+		AudioManager.play_sfx("countdown_beep")
+		
 		# Shake on specific thresholds
 		if secs_left == 10 or secs_left == 5:
 			shake_camera(4.0)
+			AudioManager.play_sfx("alert_warning")
 		elif secs_left <= 3:
 			shake_camera(6.0)
+			AudioManager.play_sfx("alert_warning")
 	
 	# Time's up!
 	if time_remaining <= 0:
@@ -523,6 +684,9 @@ func _open_loot_menu(container: Node2D) -> void:
 	
 	if player:
 		player.set_movement_enabled(false)
+		# Start searching animation
+		if player.has_method("start_searching_animation"):
+			player.start_searching_animation()
 	
 	if loot_menu:
 		loot_menu.open_with_container(container)
@@ -535,6 +699,9 @@ func _close_loot_menu() -> void:
 	
 	if player:
 		player.set_movement_enabled(true)
+		# Stop searching animation
+		if player.has_method("stop_searching_animation"):
+			player.stop_searching_animation()
 	
 	if loot_menu:
 		loot_menu.close_menu()
@@ -544,6 +711,9 @@ func _on_loot_menu_closed() -> void:
 	looting_container = null
 	if player:
 		player.set_movement_enabled(true)
+		# Stop searching animation
+		if player.has_method("stop_searching_animation"):
+			player.stop_searching_animation()
 
 
 func _on_container_emptied() -> void:
@@ -560,9 +730,16 @@ func _on_container_searched() -> void:
 
 func _on_item_transferred(item_data: ItemData) -> void:
 	# Item was successfully dragged to inventory
+	print("[BoardingManager] _on_item_transferred: %s ($%d)" % [item_data.name, item_data.value])
+	
 	collected_items.append(item_data)
 	total_loot_value += item_data.value
+	print("[BoardingManager] Total loot now: $%d (%d items)" % [total_loot_value, collected_items.size()])
 	_update_ui()
+	
+	# Log the loot
+	if DebugLogger:
+		DebugLogger.log_container_looted(item_data.name, item_data.value, item_data.rarity)
 	
 	# Check for legendary item (rarity 4)
 	if item_data.rarity == 4 and AchievementManager:
@@ -582,34 +759,39 @@ func _on_item_destroyed(item: LootItem) -> void:
 # INVENTORY
 # ==============================================================================
 
-func _toggle_inventory() -> void:
+func _toggle_character_panel() -> void:
 	inventory_open = not inventory_open
 	
-	# Notify tutorial when inventory is opened
+	# Notify tutorial when panel is opened
 	if inventory_open:
 		_on_inventory_opened()
 	
-	if inventory_panel:
-		inventory_panel.visible = inventory_open
-		
-		# Reparent the shared inventory to the standalone panel when showing
-		if inventory_open and inventory:
-			var target_container = inventory_panel.get_node_or_null("VBox")
-			if target_container:
-				# Reparent shared inventory from loot menu
-				if inventory.get_parent() != target_container:
-					inventory.reparent(target_container)
-		elif not inventory_open and inventory and loot_menu:
-			# Return inventory to loot menu
-			var inv_path = "Panel/VBox/ContentArea/InventorySide"
-			var loot_menu_container = loot_menu.get_node_or_null(inv_path)
-			if loot_menu_container and inventory.get_parent() != loot_menu_container:
-				inventory.reparent(loot_menu_container)
-				# Move after label
-				loot_menu_container.move_child(inventory, 1)
+	if character_panel:
+		if inventory_open:
+			character_panel.open_panel()
+		else:
+			character_panel.close_panel()
 	
 	if player:
 		player.set_movement_enabled(not inventory_open)
+
+
+func _on_character_panel_opened() -> void:
+	inventory_open = true
+	if player:
+		player.set_movement_enabled(false)
+
+
+func _on_character_panel_closed() -> void:
+	inventory_open = false
+	# Return inventory to loot menu for when looting
+	if character_panel and loot_menu:
+		var inv_path = "Panel/VBox/ContentArea/InventorySide"
+		var loot_menu_container = loot_menu.get_node_or_null(inv_path)
+		if loot_menu_container:
+			character_panel.return_inventory_to(loot_menu_container)
+	if player:
+		player.set_movement_enabled(true)
 
 
 # ==============================================================================
@@ -642,23 +824,54 @@ func _trigger_escape() -> void:
 	# Notify tutorial
 	_on_exit_interacted()
 	
+	# Start escape animation on player
+	if player and player.has_method("start_escape_animation"):
+		player.start_escape_animation()
+	
 	_end_boarding(true)
 
 
 func _on_escape_triggered() -> void:
+	# Check if escape gate is locked
+	if escape_gate and not escape_gate.can_escape():
+		# Gate is still locked - show feedback
+		AudioManager.play_sfx("error")
+		var progress = escape_gate.get_progress()
+		if has_node("/root/PopupManager"):
+			get_node("/root/PopupManager").show_popup("EXIT LOCKED", 
+				"Eliminate %d more crew members!" % progress.remaining, Color(1.0, 0.4, 0.4))
+		return
+	
+	# Play escape music
+	AudioManager.play_music("boarding_escape")
+	AudioManager.play_sfx("escape")
 	_trigger_escape()
 
 
 func _on_time_expired() -> void:
 	# Player failed to escape in time
+	AudioManager.play_sfx("alert_warning")
+	AudioManager.play_music("defeat")
 	_end_boarding(false)
 
 
 func _end_boarding(success: bool) -> void:
 	is_active = false
 	
+	# Stop ambient sounds
+	AudioManager.stop_all_ambient()
+	
+	# Log boarding end
+	if DebugLogger:
+		DebugLogger.log_boarding_end(
+			success, total_loot_value, time_remaining, collected_items.size()
+		)
+	
 	if player:
 		player.set_movement_enabled(false)
+		# Stop escape animation
+		if player.has_method("stop_escape_animation"):
+			player.stop_escape_animation()
 	
 	# Hide escape prompt with animation if visible
 	if escape_prompt and escape_prompt.visible:
@@ -695,9 +908,11 @@ func _transfer_inventory_to_game_manager() -> void:
 	var items = inventory.get_all_items()
 	print("[Boarding] Transferring %d items to ship inventory" % items.size())
 	
-	for item in items:
-		if item and item.item_data:
-			GameManager.add_to_ship_inventory(item.item_data)
+	# Note: SlotInventory already saves to GameManager with slot positions
+	# via _save_to_game_manager(), so we don't need to do it again here
+	# Just verify the count
+	var gm_items = GameManager.get_ship_inventory()
+	print("[Boarding] GameManager already has %d items saved" % gm_items.size())
 	
 	# Clear the boarding inventory after transfer
 	inventory.clear_all()
@@ -867,7 +1082,7 @@ func _create_exit_scan_effect(parent_layer: CanvasLayer) -> void:
 
 ## Fades out UI elements smoothly
 func _fade_ui_elements() -> void:
-	var ui_elements = [timer_label, loot_value_label, ship_tier_label, inventory_panel]
+	var ui_elements = [timer_label, loot_value_label, ship_tier_label, character_panel]
 	
 	for element in ui_elements:
 		if element and element.visible:
@@ -927,6 +1142,11 @@ func _remove_tracked_layer(layer: CanvasLayer) -> void:
 		layer.queue_free()
 
 
+## Get the player's inventory (used by doors for keycard checking)
+func get_inventory() -> SlotInventory:
+	return inventory
+
+
 # ==============================================================================
 # ENTRANCE ANIMATION
 # ==============================================================================
@@ -954,7 +1174,7 @@ func _start_entrance_animation() -> void:
 
 func _process_entrance(delta: float) -> void:
 	entrance_timer += delta
-	var t = minf(entrance_timer / entrance_duration, 1.0)
+	var _t = minf(entrance_timer / entrance_duration, 1.0)
 	
 	# Phase 0: Initial zoom and fade (0.0 - 0.4s)
 	if entrance_phase == 0 and entrance_timer > 0.4:
@@ -998,6 +1218,7 @@ func _process_entrance(delta: float) -> void:
 	# End entrance
 	if entrance_timer >= entrance_duration:
 		entrance_active = false
+		print("[BoardingManager] Entrance animation complete, enabling player movement")
 		if player:
 			player.set_movement_enabled(true)
 			player.modulate = Color.WHITE
@@ -1029,9 +1250,11 @@ func _create_scan_line_effect() -> void:
 	var scan_line = ColorRect.new()
 	scan_line.name = "ScanLine"
 	scan_line.color = Color(0.3, 0.8, 1.0, 0.6)  # Cyan scan beam
-	scan_line.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	scan_line.size.y = 3
-	scan_line.position.y = 0
+	scan_line.anchor_left = 0.0
+	scan_line.anchor_right = 1.0
+	scan_line.anchor_top = 0.0
+	scan_line.anchor_bottom = 0.0
+	scan_line.offset_bottom = 3  # Height of scan line
 	scan_layer.add_child(scan_line)
 	
 	var screen_height = get_viewport_rect().size.y
@@ -1050,7 +1273,7 @@ func _create_boarding_text_overlay() -> void:
 	var label = Label.new()
 	label.name = "BoardingLabel"
 	# Safe ship name handling with simplified fallback
-	var ship_name = current_ship_data.get("display_name", "UNKNOWN").to_upper() if current_ship_data else "UNKNOWN"
+	var ship_name = current_ship_data.display_name.to_upper() if current_ship_data else "UNKNOWN"
 	label.text = "BOARDING %s..." % ship_name
 	label.add_theme_font_size_override("font_size", 24)
 	label.add_theme_color_override("font_color", Color(0.3, 0.8, 1.0, 0.0))
@@ -1117,8 +1340,7 @@ func _trigger_ui_slide_in() -> void:
 		ship_tier_label.modulate.a = 0.0
 		
 		var tween3 = create_tween()
-		tween3.set_delay(0.1)  # Slight delay for stagger effect
-		tween3.tween_property(ship_tier_label, "position:x", original_pos.x, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		tween3.tween_property(ship_tier_label, "position:x", original_pos.x, 0.4).set_delay(0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)  # Slight delay for stagger effect
 		tween3.parallel().tween_property(ship_tier_label, "modulate:a", 1.0, 0.3)
 
 
@@ -1128,7 +1350,8 @@ func _trigger_ui_slide_in() -> void:
 
 func _update_ui() -> void:
 	if loot_value_label:
-		loot_value_label.text = "$%d" % total_loot_value
+		# Value display moved to inventory only
+		loot_value_label.visible = false
 
 
 # ==============================================================================
@@ -1191,6 +1414,11 @@ func _setup_minimap() -> void:
 	if not renderer:
 		return
 	
+	# Get the SubViewportContainer to determine minimap size
+	var container = minimap.get_node_or_null("MarginContainer/SubViewportContainer")
+	if container and renderer.has_method("set_minimap_size"):
+		renderer.set_minimap_size(container.size)
+	
 	# Set the layout data
 	renderer.set_layout(current_layout)
 	
@@ -1200,6 +1428,48 @@ func _setup_minimap() -> void:
 	
 	# Build container list with positions and searched states
 	_update_minimap_containers()
+
+
+## Setup the fog of war vision system
+func _setup_vision_system() -> void:
+	if not enable_fog_of_war:
+		return
+	
+	if not player:
+		push_warning("[BoardingManager] Cannot setup vision system: no player")
+		return
+	
+	# Create vision system
+	vision_system = VisionSystemClass.new()
+	vision_system.name = "VisionSystem"
+	
+	# Configure vision parameters
+	vision_system.always_visible_radius = always_visible_radius
+	
+	# Add to scene tree
+	add_child(vision_system)
+	
+	# Initialize with player and ship bounds - use layout_offset to match ship position
+	var ship_size = current_layout.ship_size if current_layout else Vector2(2000, 1500)
+	var ship_origin = layout_offset if layout_offset != Vector2.ZERO else Vector2.ZERO
+	var ship_bounds = Rect2(ship_origin, ship_size)
+	vision_system.initialize(player, ship_bounds)
+	
+	# Connect player to vision system
+	if player.has_method("set_vision_system"):
+		player.set_vision_system(vision_system)
+	else:
+		# Manual connection if method doesn't exist
+		vision_system.set_player(player)
+	
+	# Set initial look direction
+	vision_system.set_look_direction(Vector2.RIGHT)
+	
+	# Reveal starting area (boarding dock)
+	if current_layout:
+		vision_system.reveal_area(current_layout.entry_position, always_visible_radius * 2)
+	
+	print("[BoardingManager] Vision system initialized")
 
 
 ## Update minimap every frame

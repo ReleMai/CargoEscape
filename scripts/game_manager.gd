@@ -139,6 +139,7 @@ signal stash_inventory_changed
 # ==============================================================================
 
 ## Items currently on the ship (the player's active inventory)
+## Stored as Array of {item_data: ItemData, slot: int} dictionaries
 var ship_inventory: Array = []
 
 ## Maximum ship inventory slots (upgradeable)
@@ -149,6 +150,40 @@ var ship_inventory_upgrade: int = 0
 
 ## Slots per upgrade
 const SHIP_INVENTORY_PER_UPGRADE: int = 5
+
+
+## Set the entire ship inventory with slot positions
+func set_ship_inventory(items: Array) -> void:
+	ship_inventory = items.duplicate()
+	ship_inventory_changed.emit()
+
+
+## Get ship inventory data for loading
+func get_ship_inventory() -> Array:
+	return ship_inventory
+
+
+# ==============================================================================
+# KEYCARD STORAGE (separate from main inventory)
+# ==============================================================================
+
+## Current keycard data (doesn't count toward weight)
+var keycard_data: Dictionary = {}
+
+
+## Set the keycard data
+func set_keycard_data(data: Dictionary) -> void:
+	keycard_data = data.duplicate()
+
+
+## Get keycard data for loading
+func get_keycard_data() -> Dictionary:
+	return keycard_data
+
+
+## Clear keycard (after using at a door or on death)
+func clear_keycard() -> void:
+	keycard_data = {}
 
 
 # ==============================================================================
@@ -606,8 +641,9 @@ func get_current_station() -> Resource:
 
 ## Set the escape station (station we're fleeing from)
 func set_escape_station(station: Resource) -> void:
-	escape_station = station
-	print("[GameManager] Escape station set: ", station.station_name if station else "None")
+	if escape_station != station:
+		escape_station = station
+		print("[GameManager] Escape station set: ", station.station_name if station else "None")
 
 
 ## Get the escape station

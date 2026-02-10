@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Perfume Collection - Luxury fragrance bottles -->
+  <defs>
+    <linearGradient id="bottle1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff99cc"/>
+      <stop offset="100%" style="stop-color:#cc6699"/>
+    </linearGradient>
+    <linearGradient id="bottle2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc99ff"/>
+      <stop offset="100%" style="stop-color:#9966cc"/>
+    </linearGradient>
+    <linearGradient id="goldCap" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#b8860b"/>
+    </linearGradient>
+  </defs>
+  <!-- Bottle 1 - Tall pink -->
+  <rect x="10" y="28" width="14" height="26" rx="2" fill="url(#bottle1)" stroke="#aa4477" stroke-width="1"/>
+  <rect x="12" y="22" width="10" height="8" fill="url(#goldCap)" stroke="#996600" stroke-width="1"/>
+  <rect x="15" y="16" width="4" height="8" fill="url(#goldCap)"/>
+  <ellipse cx="17" cy="38" rx="4" ry="6" fill="#ffccdd" opacity="0.4"/>
+  <!-- Bottle 2 - Round purple -->
+  <ellipse cx="40" cy="40" rx="12" ry="14" fill="url(#bottle2)" stroke="#7744aa" stroke-width="1"/>
+  <rect x="36" y="22" width="8" height="6" fill="url(#goldCap)" stroke="#996600" stroke-width="1"/>
+  <rect x="38" y="16" width="4" height="8" fill="url(#goldCap)"/>
+  <ellipse cx="36" cy="36" rx="4" ry="5" fill="#ddbbff" opacity="0.4"/>
+  <!-- Spray mist -->
+  <circle cx="17" cy="12" r="2" fill="#ffccdd" opacity="0.3"/>
+  <circle cx="40" cy="12" r="2" fill="#ccbbff" opacity="0.3"/>
+  <circle cx="14" cy="10" r="1" fill="#ffccdd" opacity="0.2"/>
+  <circle cx="43" cy="10" r="1" fill="#ccbbff" opacity="0.2"/>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Heavy LMG - Suppressive Fire Weapon -->
+  <defs>
+    <linearGradient id="lmgBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a5a5a"/>
+      <stop offset="50%" style="stop-color:#3a3a3a"/>
+      <stop offset="100%" style="stop-color:#2a2a2a"/>
+    </linearGradient>
+    <linearGradient id="drumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a4a4a"/>
+      <stop offset="100%" style="stop-color:#2a2a2a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main Receiver -->
+  <rect x="6" y="12" width="20" height="6" rx="1" fill="url(#lmgBodyGrad)" stroke="#1a1a1a" stroke-width="0.5"/>
+  
+  <!-- Heavy Barrel -->
+  <rect x="25" y="13" width="6" height="4" rx="0.5" fill="#3a3a3a" stroke="#2a2a2a" stroke-width="0.5"/>
+  
+  <!-- Barrel Heat Shield -->
+  <rect x="26" y="12" width="4" height="1" fill="#2a2a2a"/>
+  <rect x="26" y="17" width="4" height="1" fill="#2a2a2a"/>
+  
+  <!-- Muzzle -->
+  <rect x="30" y="13.5" width="2" height="3" fill="#2a2a2a"/>
+  <circle cx="31" cy="15" r="1" fill="#1a1a1a"/>
+  
+  <!-- Drum Magazine -->
+  <circle cx="12" cy="22" r="5" fill="url(#drumGrad)" stroke="#2a2a2a" stroke-width="0.5"/>
+  <circle cx="12" cy="22" r="3" fill="#3a3a3a"/>
+  <circle cx="12" cy="22" r="1.5" fill="#2a2a2a"/>
+  
+  <!-- Magazine Feed -->
+  <rect x="10" y="17" width="4" height="3" fill="#4a4a4a"/>
+  
+  <!-- Carry Handle -->
+  <path d="M8,12 L8,8 L14,8 L14,12" fill="none" stroke="#4a4a4a" stroke-width="2"/>
+  <path d="M8,12 L8,9 L14,9 L14,12" fill="none" stroke="#3a3a3a" stroke-width="1"/>
+  
+  <!-- Rear Sight -->
+  <rect x="7" y="10" width="2" height="2" fill="#2a2a2a"/>
+  
+  <!-- Front Sight -->
+  <rect x="23" y="11" width="1" height="1.5" fill="#2a2a2a"/>
+  
+  <!-- Pistol Grip -->
+  <rect x="8" y="17" width="4" height="8" rx="1" fill="#2a2a2a"/>
+  
+  <!-- Trigger Guard -->
+  <path d="M12,17 Q14,19 14,21 L12,21" fill="none" stroke="#3a3a3a" stroke-width="1"/>
+  
+  <!-- Trigger -->
+  <rect x="12.5" y="18" width="1" height="2" fill="#1a1a1a"/>
+  
+  <!-- Bipod (folded) -->
+  <rect x="18" y="18" width="1" height="4" fill="#3a3a3a" transform="rotate(-20,18,18)"/>
+  <rect x="21" y="18" width="1" height="4" fill="#3a3a3a" transform="rotate(20,21,18)"/>
+  
+  <!-- Stock -->
+  <polygon points="2,11 6,11 6,18 4,20 2,18" fill="#3a3a3a" stroke="#2a2a2a" stroke-width="0.5"/>
+  <rect x="3" y="13" width="2" height="3" rx="0.5" fill="#2a2a2a"/>
+</svg>

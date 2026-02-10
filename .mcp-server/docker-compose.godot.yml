@@ -1,0 +1,82 @@
+# ==========================================
+# Ultimate MCP Project Hub - Docker Compose
+# Features: Godot 4.6, Health Checks, Metrics
+# ==========================================
+#
+# Usage:
+#   docker-compose -f docker-compose.godot.yml up -d --build
+#
+# Features:
+#   - Godot 4.6 headless for tests/validation
+#   - Plugin-based tool architecture
+#   - MCP Resources & Prompts support
+#   - Structured logging & metrics
+#   - Result caching
+#   - Security hardened
+
+services:
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.godot
+      args:
+        - GODOT_VERSION=4.6
+    container_name: cargo-escape-mcp-hub
+    
+    # SECURITY: Bind to localhost only
+    ports:
+      - "127.0.0.1:3100:3000"
+    
+    volumes:
+      # Workspace access (not read-only for Godot cache)
+      - ..:/workspace
+      # Persistent cache
+      - mcp-cache:/app/cache
+    
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - WORKSPACE_PATH=/workspace
+      - GODOT_PATH=/usr/local/bin/godot
+      # SECURITY: API key for authentication
+      - API_KEY=${API_KEY:-CargoEscapeBigProject}
+      # Project name for dashboard
+      - PROJECT_NAME=${PROJECT_NAME:-Cargo Escape}
+      # Logging level (debug, info, warn, error)
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    
+    restart: unless-stopped
+    
+    # Run as non-root
+    user: "1001:1001"
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Named volumes
+volumes:
+  mcp-cache:
+    driver: local

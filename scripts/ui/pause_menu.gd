@@ -58,6 +58,8 @@ func _connect_signals() -> void:
 # ==============================================================================
 
 func show_pause_menu() -> void:
+	AudioManager.play_sfx("ui_open", -3.0)
+	AudioManager.play_music("pause_menu")
 	show()
 	get_tree().paused = true
 	if resume_button:
@@ -65,6 +67,7 @@ func show_pause_menu() -> void:
 
 
 func hide_pause_menu() -> void:
+	AudioManager.play_sfx("ui_close", -3.0)
 	hide()
 	get_tree().paused = false
 
@@ -74,21 +77,26 @@ func hide_pause_menu() -> void:
 # ==============================================================================
 
 func _on_resume_pressed() -> void:
+	AudioManager.play_sfx("ui_confirm", -3.0)
 	hide_pause_menu()
 	resume_requested.emit()
 
 
 func _on_settings_pressed() -> void:
+	AudioManager.play_sfx("ui_click", -3.0)
 	settings_requested.emit()
 
 
 func _on_main_menu_pressed() -> void:
+	AudioManager.play_sfx("ui_click", -3.0)
 	main_menu_requested.emit()
 	hide_pause_menu()
-	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	# Go to the animated intro scene (the main menu with spaceship background)
+	get_tree().change_scene_to_file("res://scenes/intro/intro_scene.tscn")
 
 
 func _on_quit_pressed() -> void:
+	AudioManager.play_sfx("ui_cancel", -3.0)
 	quit_requested.emit()
 	hide_pause_menu()
 	get_tree().quit()

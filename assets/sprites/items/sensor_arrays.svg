@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="128" viewBox="0 0 64 128">
+  <!-- Sensor Arrays - Advanced detection systems (1x2 size) -->
+  <defs>
+    <linearGradient id="sensorCase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a4a5a"/>
+      <stop offset="100%" style="stop-color:#2a2a3a"/>
+    </linearGradient>
+    <linearGradient id="lensGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#66aaee"/>
+      <stop offset="50%" style="stop-color:#3388cc"/>
+      <stop offset="100%" style="stop-color:#226699"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#aaddff;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#66aaee;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <!-- Main housing -->
+  <rect x="8" y="8" width="48" height="112" rx="4" fill="url(#sensorCase)" stroke="#222" stroke-width="2"/>
+  <!-- Primary sensor dish -->
+  <circle cx="32" cy="36" r="20" fill="#333344" stroke="#222" stroke-width="2"/>
+  <circle cx="32" cy="36" r="16" fill="url(#lensGrad)" stroke="#225588" stroke-width="1"/>
+  <circle cx="32" cy="36" r="10" fill="url(#glowGrad)"/>
+  <circle cx="32" cy="36" r="4" fill="#aaddff"/>
+  <!-- Secondary sensor array -->
+  <rect x="14" y="64" width="36" height="24" rx="2" fill="#333344" stroke="#222" stroke-width="1"/>
+  <circle cx="22" cy="76" r="6" fill="url(#lensGrad)" stroke="#225588" stroke-width="1"/>
+  <circle cx="42" cy="76" r="6" fill="url(#lensGrad)" stroke="#225588" stroke-width="1"/>
+  <circle cx="22" cy="76" r="2" fill="#88ccff"/>
+  <circle cx="42" cy="76" r="2" fill="#88ccff"/>
+  <!-- Status indicators -->
+  <rect x="14" y="96" width="8" height="4" fill="#44dd44"/>
+  <rect x="28" y="96" width="8" height="4" fill="#44dd44"/>
+  <rect x="42" y="96" width="8" height="4" fill="#44dd44"/>
+  <!-- Antenna elements -->
+  <rect x="12" y="104" width="4" height="12" fill="#555566"/>
+  <rect x="26" y="104" width="4" height="10" fill="#555566"/>
+  <rect x="34" y="104" width="4" height="10" fill="#555566"/>
+  <rect x="48" y="104" width="4" height="12" fill="#555566"/>
+  <!-- Scanning beam effect -->
+  <line x1="32" y1="36" x2="16" y2="12" stroke="#66aaee" stroke-width="1" opacity="0.5"/>
+  <line x1="32" y1="36" x2="48" y2="12" stroke="#66aaee" stroke-width="1" opacity="0.5"/>
+  <!-- Label -->
+  <text x="18" y="60" font-size="5" fill="#88aacc" font-family="monospace">ARRAY</text>
+</svg>

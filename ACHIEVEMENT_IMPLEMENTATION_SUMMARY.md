@@ -59,9 +59,9 @@ Successfully implemented a complete achievement/trophy system for Cargo Escape t
 
 ### Documentation
 10. **ACHIEVEMENT_SYSTEM.md**
-    - Complete system documentation
-    - API reference
-    - Integration guide
+	- Complete system documentation
+	- API reference
+	- Integration guide
 
 ## Files Modified
 
@@ -73,10 +73,10 @@ Successfully implemented a complete achievement/trophy system for Cargo Escape t
 2. **scripts/boarding/boarding_manager.gd**
    - Added achievement tracking variables (faction, time, containers)
    - Integrated achievement event triggers:
-     - Boarding start/completion with timing
-     - Container search tracking
-     - Legendary item detection (rarity 4)
-     - Faction code extraction
+	 - Boarding start/completion with timing
+	 - Container search tracking
+	 - Legendary item detection (rarity 4)
+	 - Faction code extraction
 
 3. **scripts/game_manager.gd**
    - Integrated credit tracking for Big Spender achievement

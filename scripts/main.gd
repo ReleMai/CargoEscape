@@ -186,8 +186,8 @@ func _process(delta: float) -> void:
 	if not game_manager or not game_manager.is_game_active:
 		return
 	
-	# DEV CHEAT: Press F1 to skip to hideout
-	if Input.is_key_pressed(KEY_F1):
+	# DEV CHEAT: Press F1 to skip to hideout (only once)
+	if Input.is_key_pressed(KEY_F1) and not reached_destination:
 		print("[DEV] Skipping to hideout...")
 		_on_destination_reached()
 		return
@@ -295,6 +295,11 @@ func start_game() -> void:
 		game_manager.reset_game()
 		game_manager.start_game()
 	
+	# Start space exploration music and ambient sounds
+	AudioManager.play_music("space_exploration")
+	AudioManager.start_ambient("space_hum")
+	AudioManager.start_ambient("engine_rumble")
+	
 	# Load station-specific enemy configuration
 	_load_station_data()
 	
@@ -380,6 +385,12 @@ func _on_destination_reached() -> void:
 	reached_destination = true
 	print("=== HIDEOUT REACHED! ===")
 	
+	# Play arrival sound and switch to station music
+	AudioManager.play_sfx("ui_confirm")
+	AudioManager.stop_all_ambient()
+	AudioManager.play_music("station_ambient")
+	AudioManager.start_ambient("station_bustle")
+	
 	# Stop spawning
 	spawn_timer.stop()
 	
@@ -431,11 +442,9 @@ func _transition_to_hideout() -> void:
 
 func _go_to_hideout() -> void:
 	# Auto-save progress before transitioning to hideout
-	if has_node("/root/SaveManager"):
-		var save_manager = get_node("/root/SaveManager")
-		save_manager.auto_save()
+	if SaveManager:
+		SaveManager.save_game()
 	
-	get_tree().change_scene_to_file("res://scenes/hideout/hideout_scene.tscn")
 	LoadingScreen.start_transition("res://scenes/hideout/hideout_scene.tscn")
 
 
@@ -761,6 +770,9 @@ func _on_game_over() -> void:
 	print("=== GAME OVER ===")
 	spawn_timer.stop()
 	game_over_screen.visible = true
+	
+	# Play game over music
+	AudioManager.play_music("defeat")
 
 
 func _on_game_reset() -> void:

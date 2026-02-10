@@ -273,7 +273,7 @@ func flash_health_bar() -> void:
 # ------------------------------------------------------------------------------
 # animate_score_popup(amount) - Show floating score text (bonus feature)
 # ------------------------------------------------------------------------------
-func animate_score_popup(amount: int, world_position: Vector2) -> void:
+func animate_score_popup(_amount: int, _world_position: Vector2) -> void:
 	# This could show "+100" floating up from where points were earned
 	# For now, just a placeholder for future implementation
 	pass
@@ -321,25 +321,25 @@ func _apply_text_size() -> void:
 	if not has_node("/root/AccessibilityManager"):
 		return
 	
-	var scale = AccessibilityManager.get_text_scale()
+	var text_scale = AccessibilityManager.get_text_scale()
 	
 	# Apply to all labels using stored base sizes
 	if health_label and base_font_sizes.has("health_label"):
-		_scale_label_font(health_label, "health_label", scale)
+		_scale_label_font(health_label, "health_label", text_scale)
 	if score_label and base_font_sizes.has("score_label"):
-		_scale_label_font(score_label, "score_label", scale)
+		_scale_label_font(score_label, "score_label", text_scale)
 	if speed_label and base_font_sizes.has("speed_label"):
-		_scale_label_font(speed_label, "speed_label", scale)
+		_scale_label_font(speed_label, "speed_label", text_scale)
 	if distance_text and base_font_sizes.has("distance_text"):
-		_scale_label_font(distance_text, "distance_text", scale)
+		_scale_label_font(distance_text, "distance_text", text_scale)
 	if distance_label and base_font_sizes.has("distance_label"):
-		_scale_label_font(distance_label, "distance_label", scale)
+		_scale_label_font(distance_label, "distance_label", text_scale)
 
 
-func _scale_label_font(label: Label, key: String, scale: float) -> void:
+func _scale_label_font(label: Label, key: String, font_scale: float) -> void:
 	# Use stored base size to prevent compounding
 	var base_size = base_font_sizes.get(key, 16)
-	label.add_theme_font_size_override("font_size", int(base_size * scale))
+	label.add_theme_font_size_override("font_size", int(base_size * font_scale))
 
 
 func _apply_high_contrast() -> void:

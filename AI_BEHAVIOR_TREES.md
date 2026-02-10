@@ -166,10 +166,10 @@ Enable debug output in the behavior tree:
 ```gdscript
 # In enemy script
 func _process(delta):
-    if behavior_tree:
-        var status = behavior_tree.tick(delta)
-        if OS.is_debug_build():
-            print("AI Status: ", status)
+	if behavior_tree:
+		var status = behavior_tree.tick(delta)
+		if OS.is_debug_build():
+			print("AI Status: ", status)
 ```
 
 ## Example Enemy Configurations

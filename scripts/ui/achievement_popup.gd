@@ -47,6 +47,9 @@ func show_achievement(achievement: AchievementData) -> void:
 	if not achievement:
 		return
 	
+	# Play achievement sound
+	AudioManager.play_sfx("achievement_unlock")
+	
 	# Set achievement data
 	if title_label:
 		title_label.text = achievement.title

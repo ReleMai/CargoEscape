@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="64" viewBox="0 0 128 64">
+  <!-- Iron Ore - Raw iron ore chunks (2x1 size) -->
+  <defs>
+    <linearGradient id="oreGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6a5a5a"/>
+      <stop offset="100%" style="stop-color:#4a3a3a"/>
+    </linearGradient>
+    <linearGradient id="oreGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7a6666"/>
+      <stop offset="100%" style="stop-color:#5a4444"/>
+    </linearGradient>
+    <linearGradient id="rustGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#aa6644"/>
+      <stop offset="100%" style="stop-color:#774422"/>
+    </linearGradient>
+  </defs>
+  <!-- Crate/container base -->
+  <rect x="6" y="10" width="116" height="44" rx="2" fill="#3a3a3a" stroke="#222" stroke-width="2"/>
+  <!-- Large ore chunk 1 -->
+  <polygon points="20,45 35,20 55,22 60,45" fill="url(#oreGrad1)" stroke="#333" stroke-width="1"/>
+  <polygon points="28,40 40,25 50,28 48,40" fill="url(#rustGrad)" opacity="0.6"/>
+  <!-- Large ore chunk 2 -->
+  <polygon points="50,48 62,18 85,20 90,48" fill="url(#oreGrad2)" stroke="#333" stroke-width="1"/>
+  <polygon points="58,42 70,22 80,26 76,42" fill="url(#rustGrad)" opacity="0.5"/>
+  <!-- Smaller chunk 3 -->
+  <polygon points="85,46 95,26 110,30 108,46" fill="url(#oreGrad1)" stroke="#333" stroke-width="1"/>
+  <polygon points="90,42 98,30 104,34 102,42" fill="url(#rustGrad)" opacity="0.4"/>
+  <!-- Small chunk 4 -->
+  <polygon points="12,42 18,28 30,32 28,42" fill="url(#oreGrad2)" stroke="#333" stroke-width="1"/>
+  <!-- Metal flecks/sheen -->
+  <circle cx="38" cy="32" r="2" fill="#aaaaaa" opacity="0.5"/>
+  <circle cx="72" cy="30" r="2" fill="#aaaaaa" opacity="0.4"/>
+  <circle cx="100" cy="36" r="1.5" fill="#aaaaaa" opacity="0.5"/>
+  <circle cx="55" cy="38" r="1.5" fill="#aaaaaa" opacity="0.3"/>
+  <!-- Label strip -->
+  <rect x="10" y="50" width="40" height="6" fill="#222" stroke="#333" stroke-width="1"/>
+  <text x="14" y="55" font-size="5" fill="#aa8866" font-family="monospace">Fe ORE</text>
+</svg>

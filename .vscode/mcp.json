@@ -1,0 +1,19 @@
+{
+  // Cargo Escape MCP Server Configuration
+  // 
+  // SECURITY: The API key is used for HTTP endpoints.
+  // The stdio transport (used by VS Code) doesn't require a key.
+  //
+  // For the Docker HTTP server, set MCP_API_KEY in your environment
+  // or change the default in docker-compose.godot.yml
+  
+  "servers": {
+    "cargo-escape": {
+      "command": "node",
+      "args": ["${workspaceFolder}/.mcp-server/src/index.js"],
+      "env": {
+        "WORKSPACE_PATH": "${workspaceFolder}"
+      }
+    }
+  }
+}

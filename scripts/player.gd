@@ -440,6 +440,9 @@ func _fire_laser() -> void:
 	if laser_scene == null:
 		return
 	
+	# Play laser fire sound
+	AudioManager.play_sfx("laser_fire", -3.0)
+	
 	# Acquire laser from pool
 	var laser = ObjectPool.acquire(laser_scene)
 	
@@ -619,6 +622,9 @@ func _take_damage(damage: float = 15.0) -> void:
 		dmg_reduction = game_manager.get_damage_reduction()
 	
 	var final_damage = damage * (1.0 - dmg_reduction)
+	
+	# Play damage sound
+	AudioManager.play_sfx("ship_damage", 0.0)
 	
 	# Apply damage to GameManager
 	if game_manager and game_manager.has_method("take_damage"):

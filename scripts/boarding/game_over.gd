@@ -56,6 +56,9 @@ func _ready() -> void:
 	get_tree().paused = true
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	
+	# Play game over music
+	AudioManager.play_music("defeat")
+	
 	# Start dramatic entrance animation
 	_play_entrance_animation()
 
