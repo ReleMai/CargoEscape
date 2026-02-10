@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Cracked Viewport - Salvaged window glass -->
+  <defs>
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8d8f0"/>
+      <stop offset="50%" style="stop-color:#7ab8d8"/>
+      <stop offset="100%" style="stop-color:#4a88a8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Metal frame -->
+  <rect x="8" y="18" width="48" height="28" fill="#5a5a5a" stroke="#3a3a3a" stroke-width="2" rx="2"/>
+  
+  <!-- Glass pane -->
+  <rect x="12" y="22" width="40" height="20" fill="url(#glassGrad)" stroke="#2a5a7a" stroke-width="2" opacity="0.7"/>
+  
+  <!-- Crack pattern -->
+  <path d="M 32 22 L 28 32 L 35 42" stroke="#ffffff" stroke-width="2" opacity="0.8" fill="none"/>
+  <path d="M 32 22 L 38 28 L 42 35" stroke="#ffffff" stroke-width="1.5" opacity="0.7" fill="none"/>
+  <path d="M 28 32 L 20 35" stroke="#ffffff" stroke-width="1.5" opacity="0.6" fill="none"/>
+  <path d="M 38 28 L 48 30" stroke="#ffffff" stroke-width="1" opacity="0.6" fill="none"/>
+  <path d="M 35 42 L 40 42" stroke="#ffffff" stroke-width="1" opacity="0.5" fill="none"/>
+  
+  <!-- Reinforcing mesh layer -->
+  <path d="M 15 25 L 49 25" stroke="#4a4a4a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+  <path d="M 15 32 L 49 32" stroke="#4a4a4a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+  <path d="M 15 39 L 49 39" stroke="#4a4a4a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+  <path d="M 20 22 L 20 42" stroke="#4a4a4a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+  <path d="M 32 22 L 32 42" stroke="#4a4a4a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+  <path d="M 44 22 L 44 42" stroke="#4a4a4a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+  
+  <!-- Highlights -->
+  <path d="M 14 24 L 48 24" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+  <circle cx="18" cy="28" r="2" fill="#ffffff" opacity="0.3"/>
+</svg>

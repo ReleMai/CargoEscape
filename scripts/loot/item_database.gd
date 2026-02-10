@@ -118,53 +118,53 @@ const SCRAP_ITEMS = {
 	},
 	"rusted_grate": {
 		"name": "Rusted Grate",
-		"description": "Corroded floor grating. The metal still has some value.",
+		"description": "Corroded floor grating. Heavy oxidation but still salvageable.",
 		"width": 1, "height": 1,
 		"base_value": 8,
-		"weight": 3.0,
+		"weight": 6.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_metal.svg"
+		"icon": "res://assets/sprites/items/cargo/rusted_grate.png"
 	},
 	"broken_console": {
 		"name": "Broken Console",
-		"description": "Damaged control interface. Salvageable components inside.",
+		"description": "Damaged control interface. Circuit boards might have value.",
 		"width": 2, "height": 2,
 		"base_value": 45,
 		"weight": 12.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_electronics.svg"
+		"icon": "res://assets/sprites/items/cargo/broken_console.png"
 	},
 	"burnt_circuitry": {
 		"name": "Burnt Circuitry",
-		"description": "Fire-damaged electronics. Some trace metals remain.",
+		"description": "Fire-damaged electronics. Trace amounts of precious metals remain.",
 		"width": 1, "height": 1,
 		"base_value": 14,
-		"weight": 0.8,
+		"weight": 1.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_electronics.svg"
+		"icon": "res://assets/sprites/items/cargo/burnt_circuitry.png"
 	},
 	"cracked_viewport": {
 		"name": "Cracked Viewport",
-		"description": "Salvaged window glass from an observation deck. Heavy but recyclable.",
+		"description": "Salvaged window glass from observation deck. Still has reinforcing layer.",
 		"width": 2, "height": 1,
 		"base_value": 22,
-		"weight": 6.0,
+		"weight": 7.0,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/broken_lens.svg"
+		"icon": "res://assets/sprites/items/cargo/cracked_viewport.png"
 	},
 	"worn_gasket": {
 		"name": "Worn Gasket",
-		"description": "Used sealing material from airlocks. Rubber compounds are always needed.",
+		"description": "Used sealing material. Better than nothing in an emergency.",
 		"width": 1, "height": 1,
 		"base_value": 6,
 		"weight": 0.3,
 		"rarity": 0,
 		"category": ItemCategory.SCRAP,
-		"icon": "res://assets/sprites/items/scrap_plastics.svg"
+		"icon": "res://assets/sprites/items/cargo/worn_gasket.png"
 	}
 }
 
@@ -266,73 +266,73 @@ const COMPONENT_ITEMS = {
 	},
 	"quantum_capacitor": {
 		"name": "Quantum Capacitor",
-		"description": "Energy storage using quantum effects. Powers advanced ship systems.",
+		"description": "Energy storage device utilizing quantum tunneling. Powers advanced systems.",
 		"width": 1, "height": 2,
-		"base_value": 140,
-		"weight": 2.0,
+		"base_value": 145,
+		"weight": 3.5,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/quantum_core.svg"
+		"icon": "res://assets/sprites/items/tech/quantum_capacitor.png"
 	},
 	"holographic_emitter": {
 		"name": "Holographic Emitter",
-		"description": "Projection hardware for displays and decoys. Versatile tech.",
+		"description": "Projection hardware for 3D displays. Used in command centers.",
 		"width": 2, "height": 1,
-		"base_value": 125,
-		"weight": 1.8,
-		"rarity": 1,
-		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/holographic_projector.svg"
-	},
-	"cryo_injector": {
-		"name": "Cryo Injector",
-		"description": "Coolant delivery system for reactors and weapons. Essential for heat management.",
-		"width": 1, "height": 2,
-		"base_value": 95,
-		"weight": 3.0,
-		"rarity": 1,
-		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/coolant_tube.svg"
-	},
-	"magnetic_bearing": {
-		"name": "Magnetic Bearing",
-		"description": "Frictionless mechanical component. Used in gyroscopes and turbines.",
-		"width": 1, "height": 1,
-		"base_value": 85,
-		"weight": 1.2,
-		"rarity": 1,
-		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/scrap_mechanical.svg"
-	},
-	"neural_interface_chip": {
-		"name": "Neural Interface Chip",
-		"description": "Bio-tech connector for direct neural link. Gray market item.",
-		"width": 1, "height": 1,
-		"base_value": 160,
-		"weight": 0.1,
-		"rarity": 1,
-		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/data_chip.svg"
-	},
-	"power_regulator": {
-		"name": "Power Regulator",
-		"description": "Voltage control unit preventing power surges. Every ship needs spares.",
-		"width": 2, "height": 1,
-		"base_value": 75,
+		"base_value": 130,
 		"weight": 2.5,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/fuel_cell.svg"
+		"icon": "res://assets/sprites/items/tech/holographic_emitter.png"
+	},
+	"cryo_injector": {
+		"name": "Cryo Injector",
+		"description": "Coolant delivery system for cryogenic storage. Medical grade.",
+		"width": 1, "height": 2,
+		"base_value": 115,
+		"weight": 4.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/medical/cryo_injector.png"
+	},
+	"magnetic_bearing": {
+		"name": "Magnetic Bearing",
+		"description": "Frictionless mechanical component. Essential for gyroscope systems.",
+		"width": 1, "height": 1,
+		"base_value": 90,
+		"weight": 2.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/magnetic_bearing.png"
+	},
+	"neural_interface": {
+		"name": "Neural Interface",
+		"description": "Bio-tech connector for direct brain-computer link. Highly regulated.",
+		"width": 1, "height": 1,
+		"base_value": 160,
+		"weight": 0.5,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/neural_interface.png"
+	},
+	"power_regulator": {
+		"name": "Power Regulator",
+		"description": "Voltage control unit. Prevents power surges in ship systems.",
+		"width": 2, "height": 1,
+		"base_value": 105,
+		"weight": 3.0,
+		"rarity": 1,
+		"category": ItemCategory.COMPONENT,
+		"icon": "res://assets/sprites/items/tech/power_regulator.png"
 	},
 	"shield_capacitor": {
 		"name": "Shield Capacitor",
-		"description": "Energy buffer for defensive shields. High demand on military markets.",
+		"description": "Energy buffer for shield generators. Extends shield uptime.",
 		"width": 2, "height": 2,
-		"base_value": 180,
-		"weight": 5.0,
+		"base_value": 175,
+		"weight": 6.0,
 		"rarity": 1,
 		"category": ItemCategory.COMPONENT,
-		"icon": "res://assets/sprites/items/gravity_dampener.svg"
+		"icon": "res://assets/sprites/items/tech/shield_capacitor.png"
 	}
 }
 
@@ -424,53 +424,53 @@ const VALUABLE_ITEMS = {
 	},
 	"platinum_ingot": {
 		"name": "Platinum Ingot",
-		"description": "Precious metal bar. Rarer than gold and twice as valuable.",
+		"description": "Precious metal bar of exceptional purity. Rare and valuable.",
 		"width": 2, "height": 1,
-		"base_value": 650,
-		"weight": 14.0,
+		"base_value": 520,
+		"weight": 10.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/gold_bar.svg"
+		"icon": "res://assets/sprites/items/luxury/platinum_ingot.png"
 	},
 	"prototype_chip": {
 		"name": "Prototype Chip",
-		"description": "Experimental processor from a research lab. Cutting-edge tech.",
+		"description": "Experimental processor design. Tech corporations would pay handsomely.",
 		"width": 1, "height": 1,
-		"base_value": 420,
+		"base_value": 340,
 		"weight": 0.2,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/prototype_chip.svg"
+		"icon": "res://assets/sprites/items/tech/prototype_chip.png"
 	},
 	"antimatter_vial": {
 		"name": "Antimatter Vial",
-		"description": "Contained antimatter particles. Extremely dangerous, extremely valuable.",
+		"description": "Magnetically contained antimatter. Extremely dangerous but invaluable.",
 		"width": 1, "height": 2,
-		"base_value": 580,
+		"base_value": 480,
 		"weight": 0.5,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/dark_matter_vial.svg"
+		"icon": "res://assets/sprites/items/tech/antimatter_vial.png"
 	},
 	"executive_datapad": {
 		"name": "Executive Datapad",
-		"description": "Corporate executive's personal device. Full of trade secrets and blackmail.",
+		"description": "Corporate executive's personal device. Contains sensitive business data.",
 		"width": 1, "height": 2,
-		"base_value": 380,
-		"weight": 0.4,
+		"base_value": 360,
+		"weight": 0.8,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/encrypted_drive.svg"
+		"icon": "res://assets/sprites/items/tech/executive_datapad.png"
 	},
 	"alien_artifact_shard": {
 		"name": "Alien Artifact Shard",
-		"description": "Fragment of unknown origin technology. Collectors pay handsomely.",
+		"description": "Fragment of unknown origin technology. Pulses with strange energy.",
 		"width": 2, "height": 1,
-		"base_value": 450,
-		"weight": 1.5,
+		"base_value": 420,
+		"weight": 2.0,
 		"rarity": 2,
 		"category": ItemCategory.VALUABLE,
-		"icon": "res://assets/sprites/items/alien_artifact.svg"
+		"icon": "res://assets/sprites/items/luxury/alien_artifact_shard.png"
 	}
 }
 
@@ -542,53 +542,23 @@ const EPIC_ITEMS = {
 	},
 	"void_crystal": {
 		"name": "Void Crystal",
-		"description": "Crystallized space anomaly. Pulses with otherworldly energy.",
+		"description": "Crystalline formation from deep space anomaly. Defies known physics.",
 		"width": 1, "height": 2,
-		"base_value": 1100,
-		"weight": 2.0,
+		"base_value": 800,
+		"weight": 3.0,
 		"rarity": 3,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/void_shard.svg"
+		"icon": "res://assets/sprites/items/luxury/void_crystal.png"
 	},
 	"precursor_relic": {
 		"name": "Precursor Relic",
-		"description": "Ancient alien technology. Scientists would kill for this.",
+		"description": "Ancient alien technology. Predates known civilizations by millennia.",
 		"width": 2, "height": 2,
-		"base_value": 1500,
-		"weight": 4.0,
-		"rarity": 4,
+		"base_value": 920,
+		"weight": 8.0,
+		"rarity": 3,
 		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/ancient_relic.svg"
-	},
-	"singularity_core": {
-		"name": "Singularity Core",
-		"description": "Miniature black hole power source. Handle with extreme caution.",
-		"width": 2, "height": 2,
-		"base_value": 2000,
-		"weight": 100.0,
-		"rarity": 4,
-		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/singularity_gem.svg"
-	},
-	"time_fragment": {
-		"name": "Time Fragment",
-		"description": "Shard of frozen time from a temporal anomaly. Defies physics.",
-		"width": 1, "height": 1,
-		"base_value": 1800,
-		"weight": 0.0,
-		"rarity": 4,
-		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/quantum_core.svg"
-	},
-	"consciousness_drive": {
-		"name": "Consciousness Drive",
-		"description": "AI core containing a digital personality. May still be aware.",
-		"width": 2, "height": 1,
-		"base_value": 1200,
-		"weight": 3.0,
-		"rarity": 4,
-		"category": ItemCategory.ARTIFACT,
-		"icon": "res://assets/sprites/items/ai_core_fragment.svg"
+		"icon": "res://assets/sprites/items/luxury/precursor_relic.png"
 	}
 }
 
@@ -933,6 +903,36 @@ const LEGENDARY_ITEMS = {
 		"rarity": 4,
 		"category": ItemCategory.ARTIFACT,
 		"icon": "res://assets/sprites/items/luxury/singularity_gem.png"
+	},
+	"singularity_core": {
+		"name": "Singularity Core",
+		"description": "Contained micro black hole. Power source beyond comprehension.",
+		"width": 2, "height": 2,
+		"base_value": 4500,
+		"weight": 30.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/tech/singularity_core.png"
+	},
+	"time_fragment": {
+		"name": "Time Fragment",
+		"description": "Temporal anomaly crystallized into matter. Exists in multiple timelines.",
+		"width": 1, "height": 1,
+		"base_value": 3800,
+		"weight": 0.01,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/luxury/time_fragment.png"
+	},
+	"consciousness_drive": {
+		"name": "Consciousness Drive",
+		"description": "AI core containing a digital personality. Exhibits true sentience.",
+		"width": 2, "height": 1,
+		"base_value": 4200,
+		"weight": 4.0,
+		"rarity": 4,
+		"category": ItemCategory.ARTIFACT,
+		"icon": "res://assets/sprites/items/tech/consciousness_drive.png"
 	}
 }
 
