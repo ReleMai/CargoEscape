@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="40" viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hydroponic Grow Bed -->
+  <defs>
+    <linearGradient id="bedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#506050;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#304030;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Base frame -->
+  <rect x="5" y="25" width="70" height="12" fill="#3a4a3a" rx="2"/>
+  
+  <!-- Grow bed container -->
+  <rect x="8" y="12" width="64" height="13" fill="url(#bedGradient)" rx="2"/>
+  
+  <!-- Soil/growing medium -->
+  <rect x="10" y="16" width="60" height="7" fill="#40503a" rx="1"/>
+  
+  <!-- Plants (simplified leaf shapes) -->
+  <ellipse cx="20" cy="15" rx="3" ry="5" fill="#60a050" transform="rotate(-20 20 15)"/>
+  <ellipse cx="25" cy="14" rx="2.5" ry="4" fill="#70b060" transform="rotate(15 25 14)"/>
+  <ellipse cx="35" cy="13" rx="3" ry="6" fill="#60a050" transform="rotate(-10 35 13)"/>
+  <ellipse cx="42" cy="15" rx="2.5" ry="4.5" fill="#70b060" transform="rotate(20 42 15)"/>
+  <ellipse cx="50" cy="14" rx="3" ry="5" fill="#60a050" transform="rotate(-15 50 14)"/>
+  <ellipse cx="58" cy="13" rx="2.5" ry="5" fill="#70b060" transform="rotate(10 58 13)"/>
+  <ellipse cx="65" cy="15" rx="3" ry="4.5" fill="#60a050" transform="rotate(-5 65 15)"/>
+  
+  <!-- Irrigation pipes -->
+  <rect x="8" y="9" width="64" height="2" fill="#607080" rx="1"/>
+  <circle cx="20" cy="10" r="1.5" fill="#5080a0"/>
+  <circle cx="40" cy="10" r="1.5" fill="#5080a0"/>
+  <circle cx="60" cy="10" r="1.5" fill="#5080a0"/>
+  
+  <!-- Grow lights (LED strips) -->
+  <rect x="12" y="5" width="56" height="2" fill="#70e070" opacity="0.6" rx="1"/>
+  <rect x="15" y="6" width="3" height="1" fill="#ffffff" opacity="0.8"/>
+  <rect x="30" y="6" width="3" height="1" fill="#ffffff" opacity="0.8"/>
+  <rect x="45" y="6" width="3" height="1" fill="#ffffff" opacity="0.8"/>
+  <rect x="60" y="6" width="3" height="1" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Status indicators -->
+  <circle cx="72" cy="30" r="2" fill="#20e080"/>
+  <circle cx="10" cy="30" r="2" fill="#e0a020"/>
+</svg>

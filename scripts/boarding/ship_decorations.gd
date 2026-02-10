@@ -206,6 +206,55 @@ func generate_for_room(
 			_generate_corridor_decorations(room_rect)
 		"airlock", "entry_airlock", "exit_airlock":
 			_generate_airlock_decorations(room_rect)
+		# Tier 1 additions
+		"maintenance bay", "maintenance_bay":
+			_generate_maintenance_bay_decorations(room_rect)
+		"pilot cabin", "pilot_cabin":
+			_generate_pilot_cabin_decorations(room_rect)
+		"fuel storage", "fuel_storage":
+			_generate_fuel_storage_decorations(room_rect)
+		# Tier 2 additions
+		"galley":
+			_generate_galley_decorations(room_rect)
+		"hydroponic bay", "hydroponic_bay":
+			_generate_hydroponic_bay_decorations(room_rect)
+		"communications":
+			_generate_communications_decorations(room_rect)
+		"recreation room", "recreation_room":
+			_generate_recreation_room_decorations(room_rect)
+		# Tier 3 additions
+		"boardroom":
+			_generate_boardroom_decorations(room_rect)
+		"executive bedroom", "executive_bedroom":
+			_generate_executive_bedroom_decorations(room_rect)
+		"private bar", "private_bar":
+			_generate_private_bar_decorations(room_rect)
+		"art gallery", "art_gallery":
+			_generate_art_gallery_decorations(room_rect)
+		"spa":
+			_generate_spa_decorations(room_rect)
+		# Tier 4 additions
+		"tactical operations", "tactical_operations":
+			_generate_tactical_operations_decorations(room_rect)
+		"brig":
+			_generate_brig_decorations(room_rect)
+		"training room", "training_room":
+			_generate_training_room_decorations(room_rect)
+		"drone bay", "drone_bay":
+			_generate_drone_bay_decorations(room_rect)
+		"mess hall", "mess_hall":
+			_generate_mess_hall_decorations(room_rect)
+		# Tier 5 additions
+		"interrogation":
+			_generate_interrogation_decorations(room_rect)
+		"specimen lab", "specimen_lab":
+			_generate_specimen_lab_decorations(room_rect)
+		"secure communications", "secure_comms", "secure comms":
+			_generate_secure_comms_decorations(room_rect)
+		"experimental weapons", "experimental_weapons":
+			_generate_experimental_weapons_decorations(room_rect)
+		"escape pods", "escape_pods":
+			_generate_escape_pods_decorations(room_rect)
 		_:
 			_generate_generic_decorations(room_rect)
 	
@@ -495,6 +544,777 @@ func _generate_generic_decorations(rect: Rect2) -> void:
 				_rng.randf_range(rect.position.y + 30, rect.end.y - 30)
 			)
 		)
+
+
+# ==============================================================================
+# TIER 1 DECORATION GENERATORS
+# ==============================================================================
+
+func _generate_maintenance_bay_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	var center = rect.get_center()
+	
+	# Tool benches
+	add_decoration(
+		DecorationType.DESK,
+		Vector2(rect.position.x + margin + 35, center.y),
+		0, Color(0.5, 0.5, 0.55)
+	)
+	
+	# Spare parts crates
+	add_decoration(
+		DecorationType.CRATE_SMALL,
+		Vector2(rect.end.x - margin - 15, rect.position.y + margin + 15),
+		0, Color(0.6, 0.5, 0.3)
+	)
+	
+	# Wall-mounted tools
+	add_decoration(
+		DecorationType.CONTROL_PANEL,
+		Vector2(center.x, rect.position.y + margin),
+		0, Color(0.45, 0.5, 0.5)
+	)
+	
+	# Floor vent
+	add_decoration(
+		DecorationType.VENT,
+		Vector2(center.x, rect.end.y - margin)
+	)
+
+
+func _generate_pilot_cabin_decorations(rect: Rect2) -> void:
+	var center = rect.get_center()
+	var margin = 20.0
+	
+	# Pilot console (front)
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(center.x, rect.position.y + margin + 10),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Side screens
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.position.x + margin, center.y),
+		PI / 2, Color(0.6, 0.7, 0.9)
+	)
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.end.x - margin, center.y),
+		-PI / 2, Color(0.6, 0.7, 0.9)
+	)
+	
+	# Pilot chair
+	add_decoration(
+		DecorationType.CHAIR,
+		Vector2(center.x, center.y + 20),
+		0, Color(0.5, 0.5, 0.55)
+	)
+
+
+func _generate_fuel_storage_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	
+	# Warning stripes
+	_add_wall_stripes(rect)
+	
+	# Fuel tanks (represented as barrels)
+	var tank_count = _rng.randi_range(2, 4)
+	for i in range(tank_count):
+		add_decoration(
+			DecorationType.BARREL,
+			Vector2(
+				rect.position.x + margin + i * 35 + _rng.randf_range(-5, 5),
+				rect.get_center().y + _rng.randf_range(-20, 20)
+			),
+			0, Color(0.6, 0.5, 0.2)
+		)
+	
+	# Warning signs
+	add_decoration(
+		DecorationType.SIGN_DANGER,
+		Vector2(rect.get_center().x, rect.position.y + 20),
+		0, Color(1.0, 0.4, 0.1)
+	)
+	
+	# Emergency lights
+	add_decoration(
+		DecorationType.EMERGENCY_LIGHT,
+		Vector2(rect.position.x + 15, rect.position.y + 15),
+		0, Color(1.0, 0.6, 0.2)
+	)
+
+
+# ==============================================================================
+# TIER 2 DECORATION GENERATORS
+# ==============================================================================
+
+func _generate_galley_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	var center = rect.get_center()
+	
+	# Kitchen counter/prep area
+	add_decoration(
+		DecorationType.DESK,
+		Vector2(rect.position.x + margin + 35, center.y),
+		0, Color(0.6, 0.6, 0.65)
+	)
+	
+	# Dining table
+	add_decoration(
+		DecorationType.TABLE,
+		Vector2(center.x + 20, rect.end.y - margin - 20),
+		0, Color(0.5, 0.5, 0.55)
+	)
+	
+	# Chairs
+	add_decoration(
+		DecorationType.CHAIR,
+		Vector2(center.x - 10, rect.end.y - margin - 30)
+	)
+	add_decoration(
+		DecorationType.CHAIR,
+		Vector2(center.x + 50, rect.end.y - margin - 30)
+	)
+	
+	# Storage cabinets
+	add_decoration(
+		DecorationType.LOCKER_ROW,
+		Vector2(rect.end.x - margin - 40, rect.position.y + margin + 15),
+		0, Color(0.5, 0.55, 0.6)
+	)
+
+
+func _generate_hydroponic_bay_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Grow beds (represented as tables with green tint)
+	var bed_count = _rng.randi_range(2, 3)
+	for i in range(bed_count):
+		add_decoration(
+			DecorationType.TABLE,
+			Vector2(
+				rect.position.x + margin + 40,
+				rect.position.y + margin + 30 + i * 50
+			),
+			0, Color(0.4, 0.6, 0.4)
+		)
+	
+	# Irrigation pipes
+	add_decoration(
+		DecorationType.PIPE_HORIZONTAL,
+		Vector2(center.x, rect.position.y + 15),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Control panel
+	add_decoration(
+		DecorationType.CONTROL_PANEL,
+		Vector2(rect.end.x - margin - 20, center.y)
+	)
+	
+	# Floor vent for drainage
+	add_decoration(
+		DecorationType.VENT,
+		Vector2(center.x, rect.end.y - margin)
+	)
+
+
+func _generate_communications_decorations(rect: Rect2) -> void:
+	var margin = 20.0
+	var center = rect.get_center()
+	
+	# Comm stations
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(rect.position.x + margin + 25, center.y),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Monitors
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(center.x, rect.position.y + margin),
+		0, Color(0.5, 0.7, 0.9)
+	)
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.end.x - margin - 15, center.y),
+		0, Color(0.5, 0.7, 0.9)
+	)
+	
+	# Server rack for signal processing
+	add_decoration(
+		DecorationType.SERVER_RACK,
+		Vector2(rect.end.x - margin - 15, rect.end.y - margin - 30),
+		0, Color(0.35, 0.4, 0.45)
+	)
+
+
+func _generate_recreation_room_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Gaming/recreation table
+	add_decoration(
+		DecorationType.TABLE,
+		Vector2(center.x - 20, center.y),
+		0, Color(0.5, 0.55, 0.5)
+	)
+	
+	# Seating area
+	add_decoration(
+		DecorationType.COUCH,
+		Vector2(rect.position.x + margin + 40, rect.end.y - margin - 15),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Entertainment screen
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(center.x, rect.position.y + margin + 15),
+		0, Color(0.6, 0.7, 0.8)
+	)
+	
+	# Lockers for personal items
+	add_decoration(
+		DecorationType.LOCKER_ROW,
+		Vector2(rect.end.x - margin - 40, center.y),
+		0, Color(0.45, 0.5, 0.55)
+	)
+
+
+# ==============================================================================
+# TIER 3 DECORATION GENERATORS
+# ==============================================================================
+
+func _generate_boardroom_decorations(rect: Rect2) -> void:
+	var center = rect.get_center()
+	var margin = 30.0
+	
+	# Large conference table
+	add_decoration(
+		DecorationType.LAB_TABLE,  # Repurpose for large table
+		Vector2(center.x, center.y),
+		0, Color(0.6, 0.55, 0.5)
+	)
+	
+	# Executive chairs around table
+	for i in range(4):
+		var angle = i * PI / 2
+		var offset = Vector2(cos(angle), sin(angle)) * 50
+		add_decoration(
+			DecorationType.CHAIR,
+			center + offset,
+			angle, Color(0.5, 0.5, 0.55)
+		)
+	
+	# Display screens
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(center.x, rect.position.y + margin),
+		0, Color(0.7, 0.8, 0.9)
+	)
+	
+	# Side desk
+	add_decoration(
+		DecorationType.DESK,
+		Vector2(rect.end.x - margin - 35, rect.end.y - margin - 20),
+		0, Color(0.55, 0.5, 0.45)
+	)
+
+
+func _generate_executive_bedroom_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	var center = rect.get_center()
+	
+	# Luxury bed
+	add_decoration(
+		DecorationType.BED,
+		Vector2(rect.position.x + margin + 40, center.y),
+		0, Color(0.7, 0.65, 0.6)
+	)
+	
+	# Personal desk
+	add_decoration(
+		DecorationType.DESK,
+		Vector2(rect.end.x - margin - 35, rect.position.y + margin + 20),
+		0, Color(0.6, 0.55, 0.5)
+	)
+	
+	# Locker/wardrobe
+	add_decoration(
+		DecorationType.LOCKER_ROW,
+		Vector2(center.x, rect.end.y - margin - 15),
+		0, Color(0.55, 0.55, 0.6)
+	)
+	
+	# Luxury amenities
+	add_decoration(
+		DecorationType.COUCH,
+		Vector2(rect.end.x - margin - 40, center.y),
+		0, Color(0.6, 0.5, 0.5)
+	)
+
+
+func _generate_private_bar_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	var center = rect.get_center()
+	
+	# Bar counter
+	add_decoration(
+		DecorationType.DESK,
+		Vector2(rect.position.x + margin + 35, center.y),
+		0, Color(0.5, 0.45, 0.4)
+	)
+	
+	# Bar stools
+	add_decoration(
+		DecorationType.CHAIR,
+		Vector2(rect.position.x + margin + 60, center.y + 25)
+	)
+	add_decoration(
+		DecorationType.CHAIR,
+		Vector2(rect.position.x + margin + 80, center.y + 25)
+	)
+	
+	# Seating area
+	add_decoration(
+		DecorationType.COUCH,
+		Vector2(rect.end.x - margin - 40, rect.end.y - margin - 15),
+		0, Color(0.6, 0.5, 0.5)
+	)
+	
+	# Table
+	add_decoration(
+		DecorationType.TABLE,
+		Vector2(rect.end.x - margin - 30, center.y)
+	)
+
+
+func _generate_art_gallery_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	
+	# Display pedestals (represented as small tables)
+	var pedestal_count = _rng.randi_range(3, 5)
+	for i in range(pedestal_count):
+		add_decoration(
+			DecorationType.TABLE,
+			Vector2(
+				rect.position.x + margin + (i % 2) * 80 + 40,
+				rect.position.y + margin + 30 + int(i / 2) * 60
+			),
+			0, Color(0.7, 0.7, 0.75)
+		)
+	
+	# Screens showing digital art
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.get_center().x, rect.position.y + margin),
+		0, Color(0.8, 0.8, 0.9)
+	)
+
+
+func _generate_spa_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Massage/treatment tables
+	add_decoration(
+		DecorationType.MED_BED,  # Repurpose for spa bed
+		Vector2(rect.position.x + margin + 45, center.y),
+		0, Color(0.8, 0.85, 0.9)
+	)
+	
+	# Relaxation couch
+	add_decoration(
+		DecorationType.COUCH,
+		Vector2(rect.end.x - margin - 40, center.y),
+		0, Color(0.7, 0.75, 0.8)
+	)
+	
+	# Plant decoration (represented as small crate with green tint)
+	add_decoration(
+		DecorationType.CRATE_SMALL,
+		Vector2(rect.position.x + margin + 15, rect.position.y + margin + 15),
+		0, Color(0.4, 0.7, 0.4)
+	)
+	
+	# Ambient lighting
+	add_decoration(
+		DecorationType.CEILING_LIGHT,
+		Vector2(center.x, rect.position.y + 15),
+		0, Color(0.9, 0.95, 1.0)
+	)
+
+
+# ==============================================================================
+# TIER 4 DECORATION GENERATORS
+# ==============================================================================
+
+func _generate_tactical_operations_decorations(rect: Rect2) -> void:
+	var center = rect.get_center()
+	var margin = 30.0
+	
+	# Central tactical table (holo table)
+	add_decoration(
+		DecorationType.LAB_TABLE,
+		Vector2(center.x, center.y),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Command stations
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(rect.position.x + margin + 25, rect.position.y + margin + 15),
+		0, Color(0.5, 0.4, 0.4)
+	)
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(rect.end.x - margin - 25, rect.position.y + margin + 15),
+		0, Color(0.5, 0.4, 0.4)
+	)
+	
+	# Tactical displays
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(center.x, rect.position.y + margin),
+		0, Color(0.7, 0.5, 0.5)
+	)
+	
+	# Map screens
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.position.x + margin, center.y),
+		PI / 2, Color(0.7, 0.5, 0.5)
+	)
+
+
+func _generate_brig_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	var center = rect.get_center()
+	
+	# Holding cells (represented as rectangular areas)
+	add_decoration(
+		DecorationType.LOCKER_ROW,
+		Vector2(rect.position.x + margin + 40, center.y),
+		0, Color(0.4, 0.4, 0.45)
+	)
+	
+	# Security panel
+	add_decoration(
+		DecorationType.CONTROL_PANEL,
+		Vector2(rect.end.x - margin - 20, rect.position.y + margin + 10),
+		0, Color(0.5, 0.4, 0.4)
+	)
+	
+	# Restraints storage
+	add_decoration(
+		DecorationType.CRATE_SMALL,
+		Vector2(rect.end.x - margin - 15, rect.end.y - margin - 15),
+		0, Color(0.45, 0.45, 0.5)
+	)
+	
+	# Emergency light
+	add_decoration(
+		DecorationType.EMERGENCY_LIGHT,
+		Vector2(center.x, rect.position.y + 10),
+		0, Color(1.0, 0.4, 0.4)
+	)
+
+
+func _generate_training_room_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	
+	# Training dummies (represented as crates with specific spacing)
+	var dummy_count = _rng.randi_range(2, 3)
+	for i in range(dummy_count):
+		add_decoration(
+			DecorationType.BARREL,
+			Vector2(
+				rect.position.x + margin + 40 + i * 60,
+				rect.get_center().y
+			),
+			0, Color(0.5, 0.5, 0.55)
+		)
+	
+	# Weapon racks
+	add_decoration(
+		DecorationType.WEAPON_RACK,
+		Vector2(rect.get_center().x, rect.position.y + margin),
+		0, Color(0.5, 0.5, 0.55)
+	)
+	
+	# Equipment storage
+	add_decoration(
+		DecorationType.LOCKER_ROW,
+		Vector2(rect.get_center().x, rect.end.y - margin),
+		0, Color(0.45, 0.5, 0.5)
+	)
+
+
+func _generate_drone_bay_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Drone docking stations (represented as specialized platforms)
+	var dock_count = _rng.randi_range(2, 4)
+	for i in range(dock_count):
+		add_decoration(
+			DecorationType.PALLET,
+			Vector2(
+				rect.position.x + margin + 30 + i * 70,
+				center.y + _rng.randf_range(-15, 15)
+			),
+			0, Color(0.4, 0.45, 0.5)
+		)
+	
+	# Launch rail (represented as pipes)
+	add_decoration(
+		DecorationType.PIPE_HORIZONTAL,
+		Vector2(center.x, rect.position.y + 20),
+		0, Color(0.5, 0.55, 0.6)
+	)
+	
+	# Control station
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(rect.end.x - margin - 25, center.y),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Maintenance equipment
+	add_decoration(
+		DecorationType.CRATE_SMALL,
+		Vector2(rect.position.x + margin + 15, rect.end.y - margin - 15),
+		0, Color(0.5, 0.5, 0.55)
+	)
+
+
+func _generate_mess_hall_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Dining tables in rows
+	var table_count = _rng.randi_range(2, 3)
+	for i in range(table_count):
+		var table_y = rect.position.y + margin + 40 + i * 60
+		add_decoration(
+			DecorationType.TABLE,
+			Vector2(center.x - 30, table_y),
+			0, Color(0.5, 0.5, 0.55)
+		)
+		# Chairs around table
+		add_decoration(
+			DecorationType.CHAIR,
+			Vector2(center.x - 50, table_y)
+		)
+		add_decoration(
+			DecorationType.CHAIR,
+			Vector2(center.x - 10, table_y)
+		)
+	
+	# Food service area
+	add_decoration(
+		DecorationType.DESK,
+		Vector2(rect.end.x - margin - 35, center.y),
+		0, Color(0.55, 0.55, 0.6)
+	)
+
+
+# ==============================================================================
+# TIER 5 DECORATION GENERATORS
+# ==============================================================================
+
+func _generate_interrogation_decorations(rect: Rect2) -> void:
+	var center = rect.get_center()
+	var margin = 25.0
+	
+	# Restraint chair (central)
+	add_decoration(
+		DecorationType.CHAIR,
+		Vector2(center.x, center.y),
+		0, Color(0.4, 0.4, 0.45)
+	)
+	
+	# Monitoring equipment
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(rect.end.x - margin - 25, rect.position.y + margin + 15),
+		0, Color(0.5, 0.4, 0.4)
+	)
+	
+	# Recording screens
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.position.x + margin + 15, center.y),
+		PI / 2, Color(0.6, 0.4, 0.4)
+	)
+	
+	# Harsh lighting
+	add_decoration(
+		DecorationType.CEILING_LIGHT,
+		Vector2(center.x, rect.position.y + 10),
+		0, Color(1.0, 0.7, 0.7)
+	)
+
+
+func _generate_specimen_lab_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Containment pods (represented as special crates)
+	var pod_count = _rng.randi_range(2, 4)
+	for i in range(pod_count):
+		add_decoration(
+			DecorationType.CRATE_LARGE,
+			Vector2(
+				rect.position.x + margin + 40 + (i % 2) * 80,
+				rect.position.y + margin + 40 + int(i / 2) * 70
+			),
+			0, Color(0.4, 0.6, 0.5)
+		)
+	
+	# Research stations
+	add_decoration(
+		DecorationType.LAB_TABLE,
+		Vector2(center.x + 30, center.y),
+		0, Color(0.5, 0.6, 0.6)
+	)
+	
+	# Monitoring screens
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.end.x - margin - 15, center.y),
+		0, Color(0.5, 0.7, 0.6)
+	)
+	
+	# Biohazard warning
+	add_decoration(
+		DecorationType.SIGN_DANGER,
+		Vector2(rect.get_center().x, rect.position.y + 20),
+		0, Color(0.6, 0.9, 0.4)
+	)
+
+
+func _generate_secure_comms_decorations(rect: Rect2) -> void:
+	var margin = 25.0
+	var center = rect.get_center()
+	
+	# Encryption stations
+	add_decoration(
+		DecorationType.CONSOLE,
+		Vector2(rect.position.x + margin + 25, center.y),
+		0, Color(0.4, 0.5, 0.6)
+	)
+	
+	# Server racks for signal processing
+	var rack_count = mini(3, int(rect.size.x / 60))
+	for i in range(rack_count):
+		add_decoration(
+			DecorationType.SERVER_RACK,
+			Vector2(
+				rect.position.x + margin + 20 + i * 45,
+				rect.end.y - margin - 30
+			),
+			0, Color(0.3, 0.35, 0.4)
+		)
+	
+	# Communication screens
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(center.x, rect.position.y + margin),
+		0, Color(0.5, 0.7, 0.9)
+	)
+	add_decoration(
+		DecorationType.SCREEN,
+		Vector2(rect.end.x - margin - 15, center.y),
+		0, Color(0.5, 0.7, 0.9)
+	)
+
+
+func _generate_experimental_weapons_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Weapon containment units
+	var unit_count = _rng.randi_range(3, 5)
+	for i in range(unit_count):
+		add_decoration(
+			DecorationType.CRATE_LARGE,
+			Vector2(
+				rect.position.x + margin + 40 + (i % 2) * 90,
+				rect.position.y + margin + 40 + int(i / 2) * 70
+			),
+			0, Color(0.6, 0.5, 0.3)
+		)
+	
+	# Test equipment
+	add_decoration(
+		DecorationType.LAB_TABLE,
+		Vector2(rect.end.x - margin - 40, center.y),
+		0, Color(0.5, 0.5, 0.55)
+	)
+	
+	# Weapon racks
+	add_decoration(
+		DecorationType.WEAPON_RACK,
+		Vector2(center.x, rect.position.y + margin),
+		0, Color(0.5, 0.5, 0.55)
+	)
+	
+	# Warning signs
+	add_decoration(
+		DecorationType.SIGN_DANGER,
+		Vector2(rect.position.x + margin + 20, rect.position.y + margin),
+		0, Color(1.0, 0.6, 0.2)
+	)
+	
+	# Security warning stripes
+	_add_wall_stripes(rect)
+
+
+func _generate_escape_pods_decorations(rect: Rect2) -> void:
+	var margin = 30.0
+	var center = rect.get_center()
+	
+	# Pod bays (represented as specialized lockers)
+	var pod_count = _rng.randi_range(2, 3)
+	for i in range(pod_count):
+		add_decoration(
+			DecorationType.LOCKER_ROW,
+			Vector2(
+				rect.position.x + margin + 40,
+				rect.position.y + margin + 30 + i * 50
+			),
+			0, Color(0.5, 0.5, 0.55)
+		)
+	
+	# Launch controls
+	add_decoration(
+		DecorationType.CONTROL_PANEL,
+		Vector2(rect.end.x - margin - 20, center.y),
+		0, Color(0.5, 0.5, 0.55)
+	)
+	
+	# Emergency equipment storage
+	add_decoration(
+		DecorationType.CRATE_SMALL,
+		Vector2(rect.end.x - margin - 15, rect.end.y - margin - 15),
+		0, Color(0.6, 0.5, 0.3)
+	)
+	
+	# Emergency lighting
+	add_decoration(
+		DecorationType.EMERGENCY_LIGHT,
+		Vector2(center.x, rect.position.y + 10),
+		0, Color(1.0, 0.5, 0.2)
+	)
+	
+	# Warning stripes
+	_add_wall_stripes(rect)
 
 
 # ==============================================================================

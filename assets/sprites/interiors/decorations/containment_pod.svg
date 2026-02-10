@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50" height="60" viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Specimen Containment Pod -->
+  <defs>
+    <linearGradient id="podGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3a4a50;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#5a6a70;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a4a50;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="specimenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#40ff80;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#40ff80;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Pod base -->
+  <rect x="5" y="50" width="40" height="8" fill="#2a3a40" rx="2"/>
+  
+  <!-- Main pod body -->
+  <rect x="8" y="10" width="34" height="40" fill="url(#podGradient)" rx="4"/>
+  
+  <!-- Glass viewing window -->
+  <rect x="12" y="15" width="26" height="30" fill="#205060" rx="3" opacity="0.7"/>
+  <rect x="14" y="17" width="22" height="26" fill="#406080" rx="2" opacity="0.3"/>
+  
+  <!-- Specimen silhouette (abstract alien form) -->
+  <ellipse cx="25" cy="30" rx="8" ry="12" fill="#60ffa0" opacity="0.4"/>
+  <circle cx="25" cy="30" r="15" fill="url(#specimenGlow)"/>
+  
+  <!-- Warning stripes -->
+  <rect x="10" y="12" width="3" height="3" fill="#e0c020"/>
+  <rect x="37" y="12" width="3" height="3" fill="#e0c020"/>
+  
+  <!-- Control panel -->
+  <rect x="15" y="48" width="20" height="6" fill="#3a4550" rx="1"/>
+  <circle cx="18" cy="51" r="1" fill="#20e080"/>
+  <circle cx="22" cy="51" r="1" fill="#e0a020"/>
+  <circle cx="26" cy="51" r="1" fill="#20e080"/>
+  <circle cx="30" cy="51" r="1" fill="#20e080"/>
+  
+  <!-- Glass reflection -->
+  <rect x="14" y="17" width="4" height="10" fill="#ffffff" opacity="0.2" rx="1"/>
+</svg>
